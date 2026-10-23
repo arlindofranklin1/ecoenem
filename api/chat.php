@@ -1,4 +1,3 @@
-
 <?php
 /*
  * EcoIA - endpoint PHP conectado ao Supabase Edge Function.
