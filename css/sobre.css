@@ -1,0 +1,402 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Inter', sans-serif;
+    background-color: #000000;
+    color:white;
+    overflow-x:hidden;
+}
+
+/* HEADER */
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 80px;
+
+    background: #2B4334;
+    backdrop-filter: blur(15px);
+
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.50);
+}
+
+.logo {
+    color: white;
+    font-size: 30px;
+    font-family: 'InterBold', sans-serif;
+
+    position: relative;
+    z-index: 9999;
+}
+
+.logo a {
+    color: white;
+    font-size: 30px;
+    font-family: 'InterBold', sans-serif;
+    text-decoration: none;
+}
+
+nav {
+    position: relative;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-family: 'InterSemiBold', sans-serif;
+    font-weight: 500;
+    z-index: 999999;
+
+    position: relative;
+    transition: color .3s;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+
+    width: 0;
+    height: 2px;
+
+    background: white;
+    transition: width .3s ease;
+}
+
+nav a:hover {
+    color: #B5C9BA;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+.desenvolvedores{
+    padding:80px 5%;
+    border-bottom: 4px solid transparent;
+    border-image: linear-gradient(
+        90deg,
+        #86A48F 0%,
+        #E7EDE8 20%,
+        #86A48F 40%,
+        #E7EDE8 60%,
+        #86A48F 80%,
+        #E7EDE8 100%
+    ) 1;
+}
+
+.desenvolvedores h2{
+    text-align:center;
+    font-size:40px;
+    font-family:'InterBold';
+    margin-bottom:60px;
+}
+
+.cards-dev{
+    display:flex;
+    justify-content:center;
+    gap:40px;
+    flex-wrap:wrap;
+    margin-bottom: 20px;
+}
+
+.dev-card{
+    width:320px;
+
+    background:rgba(43,67,52,.95);
+
+    border-radius:25px;
+
+    padding:30px;
+
+    text-align:center;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.3);
+
+    transition:.3s;
+}
+
+.dev-card:hover{
+    transform:translateY(-8px);
+}
+
+.dev-card img{
+    width:200px;
+    height:200px;
+
+    object-fit:cover;
+
+    border-radius:50%;
+
+    border:4px solid #86A48F;
+
+    margin-bottom:20px;
+}
+
+.dev-card h3{
+    font-family:'InterBold';
+    font-size: 25px;
+    margin-bottom:10px;
+}
+
+.dev-card p{
+    color:#D0DDD3;
+    line-height:28px;
+}
+
+.objetivo{
+    margin-top:0px;
+
+    background:linear-gradient(
+        90deg,
+        #496F56 0%,
+        #355241 100%
+    );
+
+    padding:80px 5%;
+    border-bottom: 4px solid transparent;
+    border-image: linear-gradient(
+        90deg,
+        #86A48F 0%,
+        #E7EDE8 20%,
+        #86A48F 40%,
+        #E7EDE8 60%,
+        #86A48F 80%,
+        #E7EDE8 100%
+    ) 1;
+}
+
+.conteudo{
+    max-width:1000px;
+    margin:auto;
+}
+
+.conteudo h2{
+    text-align:center;
+    font-size:40px;
+    font-family:'InterBold';
+    margin-bottom:40px;
+}
+
+.conteudo p{
+    line-height:32px;
+    font-size:18px;
+    margin-bottom:25px;
+    text-align:justify;
+}
+
+.referencias{
+    background-color: #18251d;
+    padding:80px 5%;
+    border-bottom: 4px solid transparent;
+    border-image: linear-gradient(
+        90deg,
+        #86A48F 0%,
+        #E7EDE8 20%,
+        #86A48F 40%,
+        #E7EDE8 60%,
+        #86A48F 80%,
+        #E7EDE8 100%
+    ) 1;
+}
+
+.referencias h2{
+    text-align:center;
+    font-size:40px;
+    font-family:'InterBold';
+    margin-bottom:40px;
+}
+
+.referencias p{
+    line-height:32px;
+    font-size:18px;
+    margin-bottom:25px;
+    text-align:justify;
+    width: 1000px;
+
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* RODAPÉ */
+
+footer {
+    height: 80px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #2B4334;
+
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.50);
+}
+
+footer p {
+    color: white;
+    font-family: 'InterSemiBold', sans-serif;
+    font-size: 16px;
+}
+
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'InterSemiBold';
+    src: url('../fonts/Inter-SemiBold.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'InterBold';
+    src: url('../fonts/Inter-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+
+@media (max-width: 768px) {
+
+    /* BODY */
+    body{
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: auto;
+    }
+
+    /* HEADER */
+    header {
+        padding: 0 15px;
+        height: 70px;
+    }
+
+    .logo a {
+        font-size: 20px;
+    }
+
+    /* MENU (QUADRADOS PADRÃO ECOENEM) */
+    nav {
+        position: fixed;
+        top: 90px;
+        right: 10px;
+
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        z-index: 99999;
+    }
+
+    nav a {
+        width: 45px;
+        height: 45px;
+
+        display: block;
+
+        background: rgba(43, 67, 52, 0.9);
+        border-radius: 12px;
+
+        font-size: 0;
+    }
+
+    nav a::after {
+        display: none !important;
+    }
+
+    /* DESENVOLVEDORES */
+    .desenvolvedores {
+        padding: 60px 15px;
+    }
+
+    .desenvolvedores h2{
+        font-size: 28px;
+        margin-bottom: 30px;
+    }
+
+    .cards-dev{
+        gap: 20px;
+    }
+
+    .dev-card{
+        width: 100%;
+        max-width: 300px;
+        padding: 20px;
+    }
+
+    .dev-card img{
+        width: 140px;
+        height: 140px;
+    }
+
+    .dev-card h3{
+        font-size: 20px;
+    }
+
+    /* OBJETIVO */
+    .objetivo{
+        padding: 60px 15px;
+    }
+
+    .conteudo h2{
+        font-size: 28px;
+    }
+
+    .conteudo p{
+        font-size: 16px;
+        line-height: 26px;
+        text-align: justify;
+    }
+
+    /* REFERÊNCIAS */
+    .referencias{
+        padding: 60px 15px;
+    }
+
+    .referencias h2{
+        font-size: 28px;
+    }
+
+    .referencias p{
+        width: 100%;
+        max-width: 100%;
+        font-size: 15px;
+        line-height: 24px;
+
+        margin-left: 0;
+        margin-right: 0;
+        text-align: justify;
+    }
+
+    /* FOOTER */
+    footer p{
+        font-size: 14px;
+        text-align: center;
+        padding: 0 10px;
+    }
+}

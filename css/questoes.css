@@ -1,0 +1,427 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body{
+    background: linear-gradient(90deg,#000,#355241,#496F56);
+    color:white;
+    overflow-x:hidden;
+    min-height:100vh;
+    display:flex;
+    font-family: 'Inter', sans-serif;
+    flex-direction:column;
+}
+
+/* HEADER (igual ao seu padrão) */
+
+header{
+    position:fixed;
+    top:0;
+    width:100%;
+    height:80px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 80px;
+    background:#2B4334;
+    z-index:9999;
+}
+
+
+.logo {
+    color: white;
+    font-size: 30px;
+    font-family: 'InterBold', sans-serif;
+
+    position: relative;
+    z-index: 9999;
+}
+
+.logo a {
+    color: white;
+    font-size: 30px;
+    font-family: 'InterBold', sans-serif;
+    text-decoration: none;
+}
+
+nav {
+    position: relative;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+nav a {
+    color: white;
+    font-family: 'InterSemiBold', sans-serif;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    z-index: 999999;
+
+    position: relative;
+    transition: color .3s;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+
+    width: 0;
+    height: 2px;
+
+    background: white;
+    transition: width .3s ease;
+}
+
+nav a:hover {
+    color: #B5C9BA;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+/* CONTAINER */
+
+.container{
+    margin-top:120px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    flex:1;
+}
+
+/* QUESTÃO */
+
+#questaoBox{
+    width:90%;
+    max-width:900px;
+}
+
+.questao{
+    background: linear-gradient(
+        to right,
+        #f5f5f5 0%,
+        #dadada 60%,
+        #cbcbcb 100%
+    );
+
+    padding:30px;
+    border-radius:20px;
+}
+
+.questao p{
+    color: #000000;
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    margin-bottom:20px;
+}
+
+.fonte{
+    font-family: 'InterBold', sans-serif;
+    font-size: 20px;
+    color: #000000;
+
+    margin-bottom: 15px;
+
+    text-transform: uppercase;
+}
+
+.questao img{
+    width:300px;
+    height: 100%;
+    border-radius:15px;
+    margin-bottom:20px;
+}
+
+/* ALTERNATIVAS */
+
+.alternativas{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.alt{
+    background: linear-gradient(
+        to right,
+        #f5f5f5 0%,
+        #dadada 60%,
+        #cbcbcb 100%
+    );
+    border: 1px solid #8e8e8e;
+    padding:15px;
+    color: #000000;
+    border-radius:12px;
+    cursor:pointer;
+}
+
+.alt:hover{
+    background:#9ab8a4;
+}
+
+/* BOTÕES */
+
+.botoes{
+    margin-top:20px;
+    margin-bottom: 20px;
+    display:flex;
+    gap:20px;
+}
+
+.botoes button{
+    width:50px;
+    height:50px;
+    border:none;
+    border-radius:50%;
+    background:#496F56;
+    color:white;
+    cursor:pointer;
+}
+
+.progresso-container{
+    width:90%;
+    max-width:900px;
+    height:12px;
+    background:#cfcfcf;
+    border-radius:20px;
+    overflow:hidden;
+    margin-bottom:10px;
+}
+
+#progressoBar{
+    width:0%;
+    height:100%;
+    background:#4f9869;
+    transition:0.4s;
+}
+
+#contadorQuestoes{
+    width:90%;
+    max-width:900px;
+    text-align:right;
+    margin-bottom:20px;
+    font-size:14px;
+    color:white;
+}
+
+.feedback-correto{
+    margin-top:20px;
+    padding:15px;
+
+    background:#d9f5df;
+    border:2px solid #1e8e3e;
+
+    color:#145c28;
+    border-radius:12px;
+}
+
+.feedback-errado{
+    margin-top:20px;
+    padding:15px;
+
+    background:#ffdede;
+    border:2px solid #c62828;
+
+    color:#7a0d0d;
+    border-radius:12px;
+}
+
+.resultado-final{
+    text-align:center;
+    font-family: 'Inter', sans-serif;
+}
+
+.resultado-final h2{
+    color:#2B4334;
+    font-family: 'InterBold', sans-serif;
+
+    margin-bottom:20px;
+}
+
+.resultado-final p{
+    font-family: 'Inter', sans-serif;
+    margin-bottom:15px;
+}
+
+.reiniciar-btn{
+    margin-top:15px;
+    padding:12px 25px;
+
+    border:none;
+    border-radius:10px;
+
+    background:#496F56;
+    color:white;
+
+    font-size:16px;
+    cursor:pointer;
+}
+
+.reiniciar-btn:hover{
+    opacity:0.9;
+}
+
+/* RODAPÉ */
+
+footer {
+    height: 80px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #2B4334;
+
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.50);
+}
+
+footer p {
+    color: white;
+    font-family: 'InterSemiBold', sans-serif;
+    font-size: 16px;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'InterSemiBold';
+    src: url('../fonts/Inter-SemiBold.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'InterBold';
+    src: url('../fonts/Inter-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@media (max-width: 768px) {
+
+    /* BODY */
+    body{
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: auto;
+
+        background: linear-gradient(
+            180deg,
+            #000000 0%,
+            #000000 40%,
+            #355241 75%,
+            #496F56 100%
+        );
+    }
+
+    /* HEADER */
+    header {
+        padding: 0 15px;
+        height: 70px;
+    }
+
+    .logo a {
+        font-size: 20px;
+    }
+
+    /* MENU (IGUAL ECOENEM) */
+    nav {
+        position: fixed;
+        top: 90px;
+        right: 10px;
+
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        z-index: 99999;
+    }
+
+    nav a {
+        width: 45px;
+        height: 45px;
+
+        display: block;
+
+        background: rgba(43, 67, 52, 0.9);
+        border-radius: 12px;
+
+        font-size: 0;
+    }
+
+    nav a::before,
+    nav a::after {
+        display: none !important;
+    }
+
+    /* CONTAINER (PADRÃO CENTRALIZADO) */
+    .container{
+        margin-top: 90px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #questaoBox{
+        width: 100%;
+        max-width: 900px;
+    }
+
+    /* QUESTÃO (MANTÉM ESTILO ORIGINAL, SÓ AJUSTA RESPONSIVO) */
+    .questao{
+        padding: 20px;
+    }
+
+    .questao p{
+        font-size: 16px;
+        line-height: 26px;
+    }
+
+    .fonte{
+        font-size: 16px;
+    }
+
+    .questao img{
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+    }
+
+    /* ALTERNATIVAS (SEM MUDAR LAYOUT) */
+    .alt{
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    /* BOTÕES (MESMO PADRÃO DO HERO) */
+    .botoes{
+        margin-top: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .botoes button{
+        width: 45px;
+        height: 45px;
+    }
+
+    /* FOOTER */
+    footer p{
+        font-size: 14px;
+    }
+}

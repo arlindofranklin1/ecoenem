@@ -1,0 +1,544 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Inter', sans-serif;
+    background:
+    linear-gradient(
+        90deg,
+        #000000 0%,
+        #000000 40%,
+        #355241 70%,
+        #496F56 100%
+    );
+
+    color:white;
+    overflow-x:hidden;
+}
+
+/* HEADER */
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 80px;
+
+    background: #2B4334;
+    backdrop-filter: blur(15px);
+
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.50);
+}
+
+.logo {
+    color: white;
+    font-size: 30px;
+    font-family: 'InterBold', sans-serif;
+
+    position: relative;
+    z-index: 9999;
+}
+
+.logo a {
+    color: white;
+    font-size: 30px;
+    font-family: 'InterBold', sans-serif;
+    text-decoration: none;
+}
+
+nav {
+    position: relative;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-family: 'InterSemiBold', sans-serif;
+    font-weight: 500;
+    z-index: 999999;
+
+    position: relative;
+    transition: color .3s;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+
+    width: 0;
+    height: 2px;
+
+    background: white;
+    transition: width .3s ease;
+}
+
+nav a:hover {
+    color: #B5C9BA;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+
+
+/* CONTEÚDO */
+
+
+.titulo {
+    text-align: center;
+
+    background:
+        linear-gradient(
+            90deg,
+            #496F56 0%,
+            #355241 100%
+        );
+
+    border-bottom: 4px solid transparent;
+    border-image: linear-gradient(
+        90deg,
+        #86A48F 0%,
+        #E7EDE8 20%,
+        #86A48F 40%,
+        #E7EDE8 60%,
+        #86A48F 80%,
+        #E7EDE8 100%
+    ) 1;
+
+    width: 100%;
+    padding-top: 150px;
+    padding-bottom: 80px;
+}
+
+
+
+.titulo h1{
+    font-size:70px;
+    font-family: 'InterBold', sans-serif;
+    margin-bottom:20px;
+}
+
+.titulo p{
+    max-width:900px;
+    margin:auto;
+    width: 570px;
+    line-height:32px;
+    color:#D0DDD3;
+    font-size:20px;
+}
+
+.titulo span{
+    display:block;
+    margin-top:20px;
+    color:#9EB5A5;
+}
+
+/* NÍVEIS */
+
+.organizacao{
+    margin-top:80px;
+    border-bottom: 4px solid transparent;
+    border-image: linear-gradient(
+        90deg,
+        #86A48F 0%,
+        #E7EDE8 20%,
+        #86A48F 40%,
+        #E7EDE8 60%,
+        #86A48F 80%,
+        #E7EDE8 100%
+    ) 1;
+
+    width: 100%;
+    padding-bottom: 80px;
+}
+
+.organizacao h2{
+    text-align:center;
+    font-family: 'InterBold', sans-serif;
+    margin-bottom:50px;
+    font-size:40px;
+}
+
+.cards{
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    flex-wrap:wrap;
+}
+
+/* CARD */
+
+.card{
+    width:250px;
+    height:250px;
+
+    perspective:1000px;
+    
+
+    cursor:pointer;
+}
+
+.card-inner{
+    width:100%;
+    height:100%;
+
+    position:relative;
+
+    transition:transform .8s;
+
+    transform-style:preserve-3d;
+}
+
+.card.flip .card-inner{
+    transform:rotateY(180deg);
+}
+
+.card-front,
+.card-back{
+    position:absolute;
+
+    width:100%;
+    height:100%;
+
+    border-radius:20px;
+
+    backface-visibility:hidden;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+    padding:20px;
+}
+
+.card-front{
+    background:#2B4334;
+    font-size:28px;
+    font-family:'InterBold';
+}
+
+.card-back{
+    background:#496F56;
+
+    transform:rotateY(180deg);
+
+    font-size:18px;
+    line-height:28px;
+}
+
+/* CONCEITOS */
+
+.conceitos{
+    margin-bottom:100px;
+    background:
+        linear-gradient(
+            90deg,
+            #86A48F 0%,
+            #496F56 100%
+        );
+        border-bottom: 4px solid transparent;
+    border-image: linear-gradient(
+        90deg,
+        #86A48F 0%,
+        #E7EDE8 20%,
+        #86A48F 40%,
+        #E7EDE8 60%,
+        #86A48F 80%,
+        #E7EDE8 100%
+    ) 1;
+
+    padding-top: 70px;
+    padding-bottom: 40px;
+        
+}
+
+.conceitos h2{
+    text-align:center;
+    margin-bottom:40px;
+    font-family: 'InterBold', sans-serif;
+    font-size:40px;
+}
+
+.texto{
+    max-width:1000px;
+    margin:auto;
+}
+
+.texto h3{
+    font-family: 'InterBold', sans-serif;
+    font-size: 20px;
+    color:#355241;
+    margin-top:25px;
+    margin-bottom:10px;
+}
+
+.texto p{
+    color:#FFFFFF;
+    line-height:30px;
+    text-align:justify;
+    margin-bottom: 40px;
+}
+
+/* VIDEOAULAS */
+
+.videoaulas {
+
+    border-bottom: 4px solid transparent;
+    border-image: linear-gradient(
+        90deg,
+        #86A48F 0%,
+        #E7EDE8 20%,
+        #86A48F 40%,
+        #E7EDE8 60%,
+        #86A48F 80%,
+        #E7EDE8 100%
+    ) 1;
+}
+
+.videoaulas h2 {
+    text-align: center;
+    font-size: 40px;
+    font-family: 'InterBold', sans-serif;
+    margin-bottom: 70px;
+}
+
+.videos {
+    width: 90%;
+    margin: auto;
+
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.video-card {
+    width: 550px;
+}
+
+.video-card iframe {
+    width: 100%;
+    height: 310px;
+
+    border: none;
+    border-radius: 20px;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.video-card h3 {
+    text-align: center;
+    margin-top: 15px;
+
+    font-family: 'InterSemiBold', sans-serif;
+    font-size: 20px;
+    padding-bottom: 80px;
+}
+
+/* RODAPÉ */
+
+footer {
+    height: 80px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #2B4334;
+
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.50);
+}
+
+footer p {
+    color: white;
+    font-family: 'InterSemiBold', sans-serif;
+    font-size: 16px;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'InterSemiBold';
+    src: url('../fonts/Inter-SemiBold.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'InterBold';
+    src: url('../fonts/Inter-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+
+
+@media (max-width: 768px) {
+
+    /* BODY */
+    body{
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: auto;
+    }
+
+    /* HEADER */
+    header {
+        padding: 0 15px;
+        height: 70px;
+    }
+
+    .logo a {
+        font-size: 20px;
+    }
+
+    /* MENU (QUADRADOS PADRÃO ECOENEM) */
+    nav {
+        position: fixed;
+        top: 90px;
+        right: 10px;
+
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        z-index: 99999;
+    }
+
+    nav a {
+        width: 45px;
+        height: 45px;
+
+        display: block;
+
+        background: rgba(43, 67, 52, 0.9);
+        border-radius: 12px;
+
+        font-size: 0;
+    }
+
+    nav a::after {
+        display: none !important;
+    }
+
+    /* TÍTULO */
+    .titulo {
+        padding-top: 110px;
+        padding-bottom: 50px;
+    }
+
+    .titulo h1 {
+        font-size: 38px;
+    }
+
+    .titulo p {
+        width: 100%;
+        max-width: 90%;
+        font-size: 16px;
+        line-height: 26px;
+    }
+
+    /* ORGANIZAÇÃO */
+    .organizacao {
+        margin-top: 40px;
+        padding-bottom: 50px;
+    }
+
+    .organizacao h2 {
+        font-size: 28px;
+    }
+
+    .cards {
+        gap: 15px;
+    }
+
+    .card {
+        width: 160px;
+        height: 160px;
+    }
+
+    .card-front {
+        font-size: 18px;
+    }
+
+    .card-back {
+        font-size: 13px;
+        line-height: 20px;
+    }
+
+    /* CONCEITOS */
+    .conceitos {
+        padding-top: 50px;
+        padding-bottom: 30px;
+    }
+
+    .conceitos h2 {
+        font-size: 28px;
+    }
+
+    .texto {
+        max-width: 90%;
+    }
+
+    .texto h3 {
+        font-size: 16px;
+    }
+
+    .texto p {
+        font-size: 14px;
+        line-height: 24px;
+    }
+
+    /* VÍDEOS */
+    .videoaulas h2 {
+        font-size: 28px;
+        margin-bottom: 40px;
+    }
+
+    .video-card {
+        width: 100%;
+    }
+
+    .video-card iframe {
+        height: 220px;
+    }
+
+    .video-card h3 {
+        font-size: 16px;
+        padding-bottom: 40px;
+    }
+
+    /* FOOTER */
+    footer p {
+        font-size: 14px;
+        text-align: center;
+        padding: 0 10px;
+    }
+}

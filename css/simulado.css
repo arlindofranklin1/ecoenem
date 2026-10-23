@@ -1,0 +1,431 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body{
+    background: linear-gradient(90deg,#000,#355241,#496F56);
+    color:white;
+    overflow-x:hidden;
+    min-height:100vh;
+    display:flex;
+    font-family: 'Inter', sans-serif;
+    flex-direction:column;
+}
+
+/* HEADER (mesmo padrão das outras páginas) */
+
+header{
+    position:fixed;
+    top:0;
+    width:100%;
+    height:80px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 80px;
+    background:#2B4334;
+    z-index:9999;
+}
+
+.logo {
+    color: white;
+    font-size: 30px;
+    font-family: 'InterBold', sans-serif;
+
+    position: relative;
+    z-index: 9999;
+}
+
+.logo a {
+    color: white;
+    font-size: 30px;
+    font-family: 'InterBold', sans-serif;
+    text-decoration: none;
+}
+
+nav {
+    position: relative;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+nav a {
+    color: white;
+    font-family: 'InterSemiBold', sans-serif;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    z-index: 999999;
+
+    position: relative;
+    transition: color .3s;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+
+    width: 0;
+    height: 2px;
+
+    background: white;
+    transition: width .3s ease;
+}
+
+nav a:hover {
+    color: #B5C9BA;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+/* CONTAINER */
+
+.container{
+    margin-top:120px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    flex:1;
+}
+
+/* TÍTULO */
+
+.titulo{
+    width:90%;
+    max-width:900px;
+    margin-bottom:25px;
+}
+
+.titulo h1{
+    font-family: 'InterBold', sans-serif;
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.titulo p{
+    color:#D0DDD3;
+    font-size:18px;
+    line-height:28px;
+}
+
+/* CAIXA DO FORMULÁRIO (mesmo estilo do card de questões) */
+
+.simulado-box{
+    width:90%;
+    max-width:900px;
+    margin-bottom:40px;
+
+    background: linear-gradient(
+        to right,
+        #f5f5f5 0%,
+        #dadada 60%,
+        #cbcbcb 100%
+    );
+
+    padding:30px;
+    border-radius:20px;
+    color:#000000;
+}
+
+.campo{
+    display:flex;
+    flex-direction:column;
+    margin-bottom:22px;
+}
+
+.campo > label{
+    font-family: 'InterBold', sans-serif;
+    font-size:18px;
+    color:#2B4334;
+    margin-bottom:10px;
+}
+
+.campo input[type="text"],
+.campo select{
+    width:100%;
+    padding:15px;
+
+    border: 1px solid #8e8e8e;
+    border-radius:12px;
+    outline:none;
+
+    background:#f5f5f5;
+    color:#000000;
+
+    font-family: 'Inter', sans-serif;
+    font-size:16px;
+}
+
+.campo input[type="text"]:focus,
+.campo select:focus{
+    border-color:#496F56;
+    box-shadow:0 0 0 3px rgba(73,111,86,.25);
+}
+
+/* OPÇÕES (radio no formato das alternativas) */
+
+.opcoes{
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+.opcao{
+    flex:1;
+    min-width:150px;
+    cursor:pointer;
+}
+
+.opcao{
+    position:relative;
+}
+
+/* esconde a bolinha do radio, mas mantém o campo acessível pelo teclado */
+.opcao input{
+    position:absolute;
+    opacity:0;
+    width:1px;
+    height:1px;
+}
+
+.opcao input:focus-visible + span{
+    outline:3px solid #2B4334;
+    outline-offset:2px;
+}
+
+.opcao span{
+    display:block;
+    text-align:center;
+
+    padding:15px;
+
+    background: linear-gradient(
+        to right,
+        #f5f5f5 0%,
+        #dadada 60%,
+        #cbcbcb 100%
+    );
+    border: 1px solid #8e8e8e;
+    border-radius:12px;
+
+    color:#000000;
+    transition:.3s;
+}
+
+.opcao span:hover{
+    background:#9ab8a4;
+}
+
+.opcao input:checked + span{
+    background:#496F56;
+    border-color:#2B4334;
+    color:white;
+    font-family: 'InterSemiBold', sans-serif;
+}
+
+/* MENSAGENS DE ERRO */
+
+.erro{
+    color:#c62828;
+    font-size:14px;
+    margin-top:8px;
+}
+
+.erro:empty{
+    display:none;
+}
+
+.feedback-errado{
+    margin-top:20px;
+    padding:15px;
+
+    background:#ffdede;
+    border:2px solid #c62828;
+
+    color:#7a0d0d;
+    border-radius:12px;
+}
+
+/* BOTÃO */
+
+.gerar-btn{
+    display:inline-block;
+    margin-top:5px;
+    padding:12px 25px;
+
+    border:none;
+    border-radius:10px;
+
+    background:#496F56;
+    color:white;
+
+    font-family: 'InterSemiBold', sans-serif;
+    font-size:16px;
+    text-decoration:none;
+    cursor:pointer;
+}
+
+.gerar-btn:hover{
+    opacity:0.9;
+}
+
+/* RESULTADO */
+
+.resultado{
+    margin-top:25px;
+    padding:20px;
+
+    background:#d9f5df;
+    border:2px solid #1e8e3e;
+    border-radius:12px;
+
+    color:#145c28;
+}
+
+.resultado h2{
+    font-family: 'InterBold', sans-serif;
+    color:#2B4334;
+    margin-bottom:15px;
+}
+
+.resultado p{
+    margin-bottom:8px;
+    line-height:24px;
+    word-break:break-word;
+}
+
+.pdf-btn{
+    margin-top:12px;
+}
+
+/* RODAPÉ */
+
+footer {
+    height: 80px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #2B4334;
+
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.50);
+}
+
+footer p {
+    color: white;
+    font-family: 'InterSemiBold', sans-serif;
+    font-size: 16px;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'InterSemiBold';
+    src: url('../fonts/Inter-SemiBold.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'InterBold';
+    src: url('../fonts/Inter-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@media (max-width: 768px) {
+
+    body{
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: auto;
+
+        background: linear-gradient(
+            180deg,
+            #000000 0%,
+            #000000 40%,
+            #355241 75%,
+            #496F56 100%
+        );
+    }
+
+    header {
+        padding: 0 15px;
+        height: 70px;
+    }
+
+    .logo a {
+        font-size: 20px;
+    }
+
+    /* MENU (IGUAL ECOENEM) */
+    nav {
+        position: fixed;
+        top: 90px;
+        right: 10px;
+
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        z-index: 99999;
+    }
+
+    nav a {
+        width: 45px;
+        height: 45px;
+
+        display: block;
+
+        background: rgba(43, 67, 52, 0.9);
+        border-radius: 12px;
+
+        font-size: 0;
+    }
+
+    nav a::before,
+    nav a::after {
+        display: none !important;
+    }
+
+    .container{
+        margin-top: 90px;
+    }
+
+    .titulo h1{
+        font-size: 28px;
+    }
+
+    .titulo p{
+        font-size: 16px;
+        line-height: 26px;
+    }
+
+    .simulado-box{
+        padding: 20px;
+    }
+
+    .opcao{
+        min-width: 100%;
+    }
+
+    footer p{
+        font-size: 14px;
+    }
+}

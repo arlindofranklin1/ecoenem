@@ -1,0 +1,313 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    background:
+        linear-gradient(90deg,
+
+            #000000 0%,
+            #000000 40%,
+            #355241 70%,
+            #496F56 100%);
+    height: 100vh;
+}
+
+/* HEADER */
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 80px;
+
+    background: #2B4334;
+    backdrop-filter: blur(15px);
+
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.50);
+}
+
+.logo {
+    color: white;
+    font-size: 30px;
+    font-family: 'InterBold', sans-serif;
+
+    position: relative;
+    z-index: 9999;
+}
+
+.logo a {
+    color: white;
+    font-size: 30px;
+    font-family: 'InterBold', sans-serif;
+    text-decoration: none;
+}
+
+nav {
+    position: relative;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+nav a {
+    color: white;
+    font-family: 'InterSemiBold', sans-serif;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    z-index: 999999;
+
+    position: relative;
+    transition: color .3s;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+
+    width: 0;
+    height: 2px;
+
+    background: white;
+    transition: width .3s ease;
+}
+
+nav a:hover {
+    color: #B5C9BA;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+/* HERO */
+
+.hero {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+}
+
+.left {
+    width: 50%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+
+    padding-left: 100px;
+
+    background:
+        linear-gradient(90deg,
+            #000000 0%,
+            #000000 45%,
+            rgba(0, 0, 0, 0) 100%);
+}
+
+.content {
+    max-width: 550px;
+    margin-top: 80px;
+
+    animation: fadeUp 1.5s ease;
+}
+
+.content h1 {
+    font-size: 120px;
+    font-family: 'InterBold', sans-serif;
+    color: white;
+
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.content h1:hover {
+    transform: scale(1.05);
+}
+
+.content p {
+    color: #D0DDD3;
+
+    margin-top: 15px;
+    text-align: justify;
+    font-family: 'Inter', sans-serif;
+
+    font-size: 25px;
+    line-height: 35px;
+}
+
+
+.right {
+    width: 50%;
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#earth-container {
+    width: 100%;
+    height: 100vh;
+
+    position: relative;
+    z-index: 1;
+}
+
+#earth-container canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    z-index: 1;
+}
+
+/* animação */
+
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'InterSemiBold';
+    src: url('../fonts/Inter-SemiBold.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'InterBold';
+    src: url('../fonts/Inter-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+
+
+@media (max-width: 768px) {
+
+    /* BODY */
+    body{
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: auto;
+        background: linear-gradient(
+            180deg,
+            #000000 0%,
+            #000000 40%,
+            #355241 75%,
+            #496F56 100%
+        );
+    }
+
+    /* HEADER */
+    header {
+        padding: 0 15px;
+        height: 70px;
+    }
+
+    .logo a {
+        font-size: 20px;
+    }
+
+    /* MENU VIRA BOTÕES LATERAIS */
+    nav {
+        position: fixed;
+        top: 90px;
+        right: 10px;
+
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        z-index: 99999;
+    }
+
+    nav a {
+        width: 45px;
+        height: 45px;
+
+        display: block;
+
+        background: rgba(43, 67, 52, 0.9);
+        border-radius: 12px;
+
+        font-size: 0; /* remove texto */
+    }
+
+    nav a::before,
+    nav a::after {
+        display: none !important;
+    }
+
+    /* HERO */
+    .hero {
+    flex-direction: column;
+    height: 100vh;
+}
+
+.left {
+    width: 100%;
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 0 20px;
+}
+
+.content {
+    text-align: center;
+    max-width: 100%;
+}
+
+    .content h1 {
+        font-size: 45px;
+    }
+
+    .content p {
+        font-size: 16px;
+        line-height: 26px;
+    }
+
+    /* PLANETA */
+    .right {
+        width: 100%;
+        height: 350px;
+
+        /* IMPORTANTE para toque funcionar */
+        pointer-events: auto;
+    }
+
+     #earth-container {
+        height: 350px;
+        touch-action: none;
+        pointer-events: auto;
+    }
+
+    #earth-container canvas {
+        pointer-events: auto;
+    }
+}
