@@ -1,42 +1,40 @@
 
 <?php
 /*
- * EcoIA - endpoint de chat conectado ao Supabase Edge Function.
- * Mantém compatibilidade com o frontend existente.
+ * EcoIA - endpoint PHP conectado ao Supabase Edge Function.
  * A chave da OpenRouter fica somente no Supabase.
  */
 
 header("Content-Type: application/json; charset=utf-8");
+header("Cache-Control: no-store");
 
-$modoDebug = true;
+$modoDebug = false;
 
 /*
  * CONFIGURAÇÃO
  *
- * ECOIA_GATEWAY_SECRET deve ser configurado como variável
- * de ambiente no servidor PHP, com o mesmo valor cadastrado
- * nos Secrets do Supabase.
- *
- * Não coloque o segredo diretamente neste arquivo.
+ * Confirme que esta URL corresponde ao projeto Supabase
+ * que contém a função Edge chamada "ecoia".
  */
-
 $url = "https://phjkdovpmunpuehvjucu.supabase.co/functions/v1/ecoia";
 $gatewaySecret = getenv("ECOIA_GATEWAY_SECRET");
 
 /* =========================
-   FUNÇÕES DE SAÍDA
+   FUNÇÕES DE RESPOSTA
 ========================= */
 
-function responder(string $texto): void
+function responder(string $texto, int $status = 200): void
 {
+    http_response_code($status);
+
     echo json_encode(
         ["resposta" => $texto],
-        JSON_UNESCAPED_UNICODE
+        JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE
     );
     exit;
 }
 
-function falhar(string $texto, $debug = null, int $status = 200): void
+function falhar(string $texto, int $status = 500, $debug = null): void
 {
     global $modoDebug;
 
@@ -51,26 +49,38 @@ function falhar(string $texto, $debug = null, int $status = 200): void
         $saida["debug"] = $debug;
     }
 
-    echo json_encode($saida, JSON_UNESCAPED_UNICODE);
+    echo json_encode(
+        $saida,
+        JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE
+    );
     exit;
 }
 
 /* =========================
-   VALIDAÇÃO DA CONFIGURAÇÃO
+   VALIDAR REQUISIÇÃO
 ========================= */
 
-if (!is_string($gatewaySecret) || trim($gatewaySecret) === "") {
+if (($_SERVER["REQUEST_METHOD"] ?? "") !== "POST") {
     falhar(
-        "Erro de configuração: o segredo de conexão com o Supabase não foi configurado no servidor PHP.",
-        null,
+        "Envie uma mensagem para a EcoIA usando o método POST.",
+        405
+    );
+}
+
+if (!is_string($gatewaySecret) || trim($gatewaySecret) === "") {
+    error_log("EcoIA: variável ECOIA_GATEWAY_SECRET não configurada.");
+
+    falhar(
+        "A EcoIA está temporariamente indisponível por uma configuração do servidor.",
         500
     );
 }
 
 if (!function_exists("curl_init")) {
+    error_log("EcoIA: extensão cURL não está habilitada.");
+
     falhar(
-        "Erro de configuração: a extensão cURL do PHP está desativada.",
-        null,
+        "O serviço de IA está temporariamente indisponível.",
         500
     );
 }
@@ -79,17 +89,32 @@ if (!function_exists("curl_init")) {
    MENSAGEM ATUAL
 ========================= */
 
-$mensagem = trim($_POST["mensagem"] ?? "");
+$mensagem = $_POST["mensagem"] ?? "";
+
+if (!is_string($mensagem)) {
+    falhar("A mensagem enviada é inválida.", 400);
+}
+
+$mensagem = trim($mensagem);
 
 if (strlen($mensagem) > 10000) {
-    falhar("A mensagem é muito longa. Tente resumir sua pergunta.", null, 400);
+    falhar(
+        "A mensagem é muito longa. Tente resumir sua pergunta.",
+        400
+    );
 }
 
 /* =========================
-   HISTÓRICO DO FRONTEND
+   HISTÓRICO
 ========================= */
 
-$historico = json_decode($_POST["mensagens"] ?? "[]", true);
+$historicoBruto = $_POST["mensagens"] ?? "[]";
+
+if (!is_string($historicoBruto)) {
+    falhar("O histórico enviado é inválido.", 400);
+}
+
+$historico = json_decode($historicoBruto, true);
 
 if (!is_array($historico)) {
     $historico = [];
@@ -123,19 +148,13 @@ foreach ($historico as $msg) {
     ];
 }
 
-/*
- * Mantém apenas as últimas 10 mensagens do histórico,
- * reduzindo o tamanho das requisições.
- */
+/* Mantém somente as últimas 10 mensagens. */
 $mensagensValidas = array_slice($mensagensValidas, -10);
 
-/* =========================
-   EVITAR DUPLICAÇÃO
-========================= */
-
+/* Evita adicionar a mensagem atual duas vezes. */
 if ($mensagem !== "") {
     $ultima = !empty($mensagensValidas)
-        ? end($mensagensValidas)
+        ? $mensagensValidas[count($mensagensValidas) - 1]
         : null;
 
     $jaIncluida = is_array($ultima)
@@ -151,11 +170,11 @@ if ($mensagem !== "") {
 }
 
 if (empty($mensagensValidas)) {
-    falhar("Digite uma mensagem para a EcoIA.", null, 400);
+    falhar("Digite uma mensagem para a EcoIA.", 400);
 }
 
 /* =========================
-   REQUISIÇÃO AO SUPABASE
+   PREPARAR REQUISIÇÃO
 ========================= */
 
 $dados = [
@@ -165,14 +184,22 @@ $dados = [
 
 $jsonDados = json_encode(
     $dados,
-    JSON_UNESCAPED_UNICODE
+    JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE
 );
 
 if ($jsonDados === false) {
-    falhar("Não foi possível preparar a mensagem para envio.", null, 500);
+    falhar("Não foi possível preparar a mensagem.", 500);
 }
 
+/* =========================
+   CHAMAR SUPABASE
+========================= */
+
 $ch = curl_init($url);
+
+if ($ch === false) {
+    falhar("Não foi possível iniciar a conexão com a IA.", 500);
+}
 
 curl_setopt_array($ch, [
     CURLOPT_RETURNTRANSFER => true,
@@ -181,6 +208,7 @@ curl_setopt_array($ch, [
     CURLOPT_TIMEOUT => 100,
     CURLOPT_HTTPHEADER => [
         "Content-Type: application/json",
+        "Accept: application/json",
         "x-ecoia-secret: " . trim($gatewaySecret)
     ],
     CURLOPT_POSTFIELDS => $jsonDados
@@ -189,7 +217,7 @@ curl_setopt_array($ch, [
 $response = curl_exec($ch);
 $erroNumero = curl_errno($ch);
 $erroTexto = curl_error($ch);
-$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
 curl_close($ch);
 
@@ -198,21 +226,19 @@ curl_close($ch);
 ========================= */
 
 if ($erroNumero !== 0) {
-    error_log("EcoIA - erro cURL $erroNumero: $erroTexto");
+    error_log(
+        "EcoIA: erro cURL " . $erroNumero . ": " . $erroTexto
+    );
 
-    $dicas = [
-        6 => "Não foi possível encontrar o servidor do Supabase.",
-        7 => "Não foi possível conectar ao Supabase.",
-        28 => "A IA demorou demais para responder. Tente novamente.",
-        35 => "Falha na conexão segura com o servidor.",
-        60 => "Não foi possível validar o certificado SSL."
-    ];
+    if ($erroNumero === 28) {
+        responder(
+            "A EcoIA demorou demais para responder. Tente novamente.",
+            504
+        );
+    }
 
-    $texto = $dicas[$erroNumero] ?? "Não foi possível conectar ao serviço de IA.";
-
-    falhar(
-        $texto,
-        ["codigo_curl" => $erroNumero],
+    responder(
+        "Não foi possível conectar ao serviço de IA. Tente novamente.",
         502
     );
 }
@@ -224,32 +250,33 @@ if ($erroNumero !== 0) {
 $resultado = json_decode((string) $response, true);
 
 if (!is_array($resultado)) {
-    error_log("EcoIA - resposta inválida do Supabase. HTTP $status");
+    error_log(
+        "EcoIA: resposta inválida do Supabase. HTTP " . $status
+    );
 
-    falhar(
+    responder(
         "O serviço de IA retornou uma resposta inválida.",
-        ["http" => $status],
         502
     );
 }
 
-/* =========================
-   ERROS DEVOLVIDOS PELA FUNÇÃO
-========================= */
+/* Trata erros HTTP ou erros enviados pela Edge Function. */
+if (
+    $status < 200 ||
+    $status >= 300 ||
+    !empty($resultado["erro"])
+) {
+    error_log(
+        "EcoIA: Edge Function retornou HTTP " . $status
+    );
 
-if ($status < 200 || $status >= 300 || !empty($resultado["erro"])) {
     $texto = $resultado["resposta"]
         ?? "Não foi possível obter uma resposta da EcoIA.";
 
-    $debug = $resultado["debug"] ?? null;
-
-    /*
-     * O frontend continua recebendo o campo "erro",
-     * para não adicionar respostas de erro ao histórico.
-     */
-    falhar(
-        $texto,
-        $debug,
+    responder(
+        is_string($texto)
+            ? $texto
+            : "Não foi possível obter uma resposta da EcoIA.",
         ($status >= 400 && $status <= 599) ? $status : 502
     );
 }
@@ -261,9 +288,8 @@ if ($status < 200 || $status >= 300 || !empty($resultado["erro"])) {
 $conteudo = $resultado["resposta"] ?? null;
 
 if (!is_string($conteudo) || trim($conteudo) === "") {
-    falhar(
+    responder(
         "A IA não retornou texto desta vez. Tente novamente.",
-        null,
         502
     );
 }
