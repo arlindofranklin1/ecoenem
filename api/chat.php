@@ -9,12 +9,6 @@ header("Cache-Control: no-store");
 
 $modoDebug = false;
 
-/*
- * CONFIGURAÇÃO
- *
- * Confirme que esta URL corresponde ao projeto Supabase
- * que contém a função Edge chamada "ecoia".
- */
 $url = "https://phjkdovpmunpuehvjucu.supabase.co/functions/v1/ecoia";
 $gatewaySecret = getenv("ECOIA_GATEWAY_SECRET");
 
@@ -60,10 +54,7 @@ function falhar(string $texto, int $status = 500, $debug = null): void
 ========================= */
 
 if (($_SERVER["REQUEST_METHOD"] ?? "") !== "POST") {
-    falhar(
-        "Envie uma mensagem para a EcoIA usando o método POST.",
-        405
-    );
+    falhar("Envie uma mensagem para a EcoIA usando o método POST.", 405);
 }
 
 if (!is_string($gatewaySecret) || trim($gatewaySecret) === "") {
@@ -78,17 +69,31 @@ if (!is_string($gatewaySecret) || trim($gatewaySecret) === "") {
 if (!function_exists("curl_init")) {
     error_log("EcoIA: extensão cURL não está habilitada.");
 
-    falhar(
-        "O serviço de IA está temporariamente indisponível.",
-        500
-    );
+    falhar("O serviço de IA está temporariamente indisponível.", 500);
 }
 
 /* =========================
-   MENSAGEM ATUAL
+   LER JSON OU FORMULÁRIO
 ========================= */
 
-$mensagem = $_POST["mensagem"] ?? "";
+$tipoConteudo = $_SERVER["CONTENT_TYPE"] ?? "";
+$entrada = [];
+
+if (stripos($tipoConteudo, "application/json") !== false) {
+    $corpo = file_get_contents("php://input");
+    $entrada = json_decode($corpo ?: "", true);
+
+    if (!is_array($entrada)) {
+        falhar("O corpo da requisição contém um JSON inválido.", 400);
+    }
+} else {
+    $entrada = $_POST;
+}
+
+/* Aceita os nomes usados pelo frontend. */
+$mensagem = $entrada["mensagem"]
+    ?? $entrada["pergunta"]
+    ?? "";
 
 if (!is_string($mensagem)) {
     falhar("A mensagem enviada é inválida.", 400);
@@ -96,24 +101,27 @@ if (!is_string($mensagem)) {
 
 $mensagem = trim($mensagem);
 
-if (strlen($mensagem) > 10000) {
-    falhar(
-        "A mensagem é muito longa. Tente resumir sua pergunta.",
-        400
-    );
+if ($mensagem === "") {
+    falhar("Digite uma mensagem para a EcoIA.", 400);
+}
+
+if (strlen($mensagem) > 5000) {
+    falhar("A mensagem deve ter no máximo 5.000 caracteres.", 400);
 }
 
 /* =========================
    HISTÓRICO
 ========================= */
 
-$historicoBruto = $_POST["mensagens"] ?? "[]";
+$historicoBruto = $entrada["mensagens"]
+    ?? $entrada["historico"]
+    ?? [];
 
-if (!is_string($historicoBruto)) {
-    falhar("O histórico enviado é inválido.", 400);
+if (is_string($historicoBruto)) {
+    $historico = json_decode($historicoBruto, true);
+} else {
+    $historico = $historicoBruto;
 }
-
-$historico = json_decode($historicoBruto, true);
 
 if (!is_array($historico)) {
     $historico = [];
@@ -137,39 +145,32 @@ foreach ($historico as $msg) {
         continue;
     }
 
-    if (strlen($content) > 10000) {
+    if (strlen($content) > 5000) {
         continue;
     }
 
     $mensagensValidas[] = [
         "role" => $role,
-        "content" => $content
+        "content" => trim($content)
     ];
 }
 
-/* Mantém somente as últimas 10 mensagens. */
 $mensagensValidas = array_slice($mensagensValidas, -10);
 
-/* Evita adicionar a mensagem atual duas vezes. */
-if ($mensagem !== "") {
-    $ultima = !empty($mensagensValidas)
-        ? $mensagensValidas[count($mensagensValidas) - 1]
-        : null;
+/* Evita duplicar a pergunta atual no histórico. */
+$ultima = !empty($mensagensValidas)
+    ? $mensagensValidas[count($mensagensValidas) - 1]
+    : null;
 
-    $jaIncluida = is_array($ultima)
-        && ($ultima["role"] ?? "") === "user"
-        && trim($ultima["content"] ?? "") === $mensagem;
+$jaIncluida = is_array($ultima)
+    && ($ultima["role"] ?? "") === "user"
+    && trim($ultima["content"] ?? "") === $mensagem;
 
-    if (!$jaIncluida) {
-        $mensagensValidas[] = [
-            "role" => "user",
-            "content" => $mensagem
-        ];
-    }
-}
-
-if (empty($mensagensValidas)) {
-    falhar("Digite uma mensagem para a EcoIA.", 400);
+if (!$jaIncluida) {
+    $mensagensValidas[] = [
+        "role" => "user",
+        "content" => $mensagem
+    ];
 }
 
 /* =========================
@@ -225,21 +226,13 @@ curl_close($ch);
 ========================= */
 
 if ($erroNumero !== 0) {
-    error_log(
-        "EcoIA: erro cURL " . $erroNumero . ": " . $erroTexto
-    );
+    error_log("EcoIA: erro cURL " . $erroNumero . ": " . $erroTexto);
 
     if ($erroNumero === 28) {
-        responder(
-            "A EcoIA demorou demais para responder. Tente novamente.",
-            504
-        );
+        responder("A EcoIA demorou demais para responder. Tente novamente.", 504);
     }
 
-    responder(
-        "Não foi possível conectar ao serviço de IA. Tente novamente.",
-        502
-    );
+    responder("Não foi possível conectar ao serviço de IA. Tente novamente.", 502);
 }
 
 /* =========================
@@ -249,33 +242,20 @@ if ($erroNumero !== 0) {
 $resultado = json_decode((string) $response, true);
 
 if (!is_array($resultado)) {
-    error_log(
-        "EcoIA: resposta inválida do Supabase. HTTP " . $status
-    );
+    error_log("EcoIA: resposta inválida do Supabase. HTTP " . $status);
 
-    responder(
-        "O serviço de IA retornou uma resposta inválida.",
-        502
-    );
+    responder("O serviço de IA retornou uma resposta inválida.", 502);
 }
 
-/* Trata erros HTTP ou erros enviados pela Edge Function. */
-if (
-    $status < 200 ||
-    $status >= 300 ||
-    !empty($resultado["erro"])
-) {
-    error_log(
-        "EcoIA: Edge Function retornou HTTP " . $status
-    );
+if ($status < 200 || $status >= 300 || !empty($resultado["erro"])) {
+    error_log("EcoIA: Edge Function retornou HTTP " . $status);
 
     $texto = $resultado["resposta"]
+        ?? $resultado["error"]
         ?? "Não foi possível obter uma resposta da EcoIA.";
 
     responder(
-        is_string($texto)
-            ? $texto
-            : "Não foi possível obter uma resposta da EcoIA.",
+        is_string($texto) ? $texto : "Não foi possível obter uma resposta da EcoIA.",
         ($status >= 400 && $status <= 599) ? $status : 502
     );
 }
@@ -287,10 +267,7 @@ if (
 $conteudo = $resultado["resposta"] ?? null;
 
 if (!is_string($conteudo) || trim($conteudo) === "") {
-    responder(
-        "A IA não retornou texto desta vez. Tente novamente.",
-        502
-    );
+    responder("A IA não retornou texto desta vez. Tente novamente.", 502);
 }
 
-responder($conteudo);
+responder(trim($conteudo));
