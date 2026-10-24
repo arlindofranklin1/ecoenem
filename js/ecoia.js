@@ -1,25 +1,18 @@
 const chat = document.getElementById("chat");
 const prompt = document.getElementById("prompt");
 const enviarBtn = document.getElementById("enviarBtn");
-
-
-
 const chatForm = document.getElementById("chatForm");
 
-/* previne de recarrer a página */
+let historico = [];
+let enviando = false;
+
+/* Evita recarregar a página ao enviar */
 chatForm.addEventListener("submit", (e) => {
     e.preventDefault();
     enviarMensagem();
 });
 
-
-// histórico da conversa
-let historico = [];
-
-/* =========================
-   ENVIO
-========================= */
-
+/* Envia com Enter; Shift + Enter permite nova linha */
 prompt.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
@@ -27,110 +20,133 @@ prompt.addEventListener("keydown", (e) => {
     }
 });
 
+function adicionarMensagemUsuario(texto) {
+    const mensagemDiv = document.createElement("div");
+    mensagemDiv.className = "mensagem usuario";
+
+    const bolha = document.createElement("div");
+    bolha.className = "bolha";
+    bolha.textContent = texto;
+
+    mensagemDiv.appendChild(bolha);
+    chat.appendChild(mensagemDiv);
+}
+
 async function enviarMensagem() {
+    if (enviando) return;
 
     const texto = prompt.value.trim();
 
-    if (texto === "") return;
+    if (!texto) return;
 
-    /* =========================
-       MOSTRA MENSAGEM DO USUÁRIO
-    ========================= */
+    if (texto.length > 5000) {
+        alert("Sua mensagem deve ter no máximo 5.000 caracteres.");
+        return;
+    }
 
-    chat.innerHTML += `
-        <div class="mensagem usuario">
-            <div class="bolha">
-            ${texto}
-            </div>
-        </div>
-    `;
+    enviando = true;
+    enviarBtn.disabled = true;
 
-    /* =========================
-       SALVA NO HISTÓRICO
-    ========================= */
+    adicionarMensagemUsuario(texto);
 
     historico.push({
         role: "user",
         content: texto
     });
 
-    /* =========================
-       PREPARA ENVIO (ÚLTIMAS 3 MENSAGENS)
-    ========================= */
-
-    const contexto = historico.slice(-3);
-
-    const formData = new FormData();
-    formData.append("mensagens", JSON.stringify(contexto));
+    // Guarda o histórico anterior à pergunta atual.
+    // O PHP adicionará a pergunta atual ao histórico enviado.
+    const contexto = historico.slice(-10, -1);
 
     prompt.value = "";
 
-    /* =========================
-       LOADING IA
-    ========================= */
-
     const respostaDiv = document.createElement("div");
     respostaDiv.className = "mensagem ia";
-    respostaDiv.innerHTML = `
-        <div class="bolha">
-            <div class="loader-bolas">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+
+    const bolhaLoading = document.createElement("div");
+    bolhaLoading.className = "bolha";
+    bolhaLoading.innerHTML = `
+        <div class="loader-bolas">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
     `;
 
+    respostaDiv.appendChild(bolhaLoading);
     chat.appendChild(respostaDiv);
     chat.scrollTop = chat.scrollHeight;
 
-    /* =========================
-       FETCH PHP
-    ========================= */
-
-    let data;
-
     try {
+        const formData = new FormData();
+
+        // Campo que o PHP procura para obter a pergunta atual.
+        formData.append("mensagem", texto);
+
+        // Histórico anterior, sem duplicar a pergunta atual.
+        formData.append("mensagens", JSON.stringify(contexto));
+
         const response = await fetch("api/chat.php", {
             method: "POST",
             body: formData
         });
 
-        data = await response.json();
-    } catch (erro) {
-        // servidor fora do ar, sem internet ou resposta que nao e JSON
-        data = {
-            resposta: "Não foi possível falar com a EcoIA. Verifique se o servidor PHP está rodando e tente novamente.",
-            erro: true
-        };
-    }
+        const corpo = await response.text();
+        let data;
 
-    const resposta = data.resposta || "A EcoIA não retornou resposta. Tente novamente.";
+        try {
+            data = JSON.parse(corpo);
+        } catch {
+            throw new Error(
+                `O servidor retornou uma resposta inválida (HTTP ${response.status}).`
+            );
+        }
 
-    /* =========================
-       MOSTRA RESPOSTA
-    ========================= */
+        if (!response.ok || data.erro) {
+            throw new Error(
+                data.resposta || data.error ||
+                `Não foi possível consultar a EcoIA (HTTP ${response.status}).`
+            );
+        }
 
-    respostaDiv.innerHTML = `
-    <div class="bolha">
-        ${marked.parse(resposta)}
-    </div>
-`;
+        const resposta = data.resposta;
 
-    /* =========================
-       SALVA RESPOSTA NO HISTÓRICO
-    ========================= */
+        if (typeof resposta !== "string" || !resposta.trim()) {
+            throw new Error("A EcoIA não retornou uma resposta válida.");
+        }
 
-    if (data.erro) {
-        // deu erro: tira a pergunta do historico para nao confundir a IA depois
-        historico.pop();
-    } else {
+        // Renderiza a resposta em Markdown.
+        bolhaLoading.replaceChildren();
+
+        if (typeof marked !== "undefined") {
+            bolhaLoading.innerHTML = marked.parse(resposta);
+        } else {
+            bolhaLoading.textContent = resposta;
+        }
+
         historico.push({
             role: "assistant",
             content: resposta
         });
-    }
 
-    chat.scrollTop = chat.scrollHeight;
+    } catch (erro) {
+        console.error("Erro na EcoIA:", erro);
+
+        bolhaLoading.textContent =
+            erro.message || "Não foi possível falar com a EcoIA. Tente novamente.";
+
+        // Remove a pergunta que falhou para não contaminar o histórico.
+        const ultima = historico[historico.length - 1];
+
+        if (ultima && ultima.role === "user" && ultima.content === texto) {
+            historico.pop();
+        }
+
+    } finally {
+        enviando = false;
+        enviarBtn.disabled = false;
+        prompt.focus();
+        chat.scrollTop = chat.scrollHeight;
+    }
 }
