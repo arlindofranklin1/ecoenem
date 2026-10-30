@@ -11,6 +11,9 @@ function render() {
 
     const q = questoes[atual];
 
+    document.getElementById("ecoiaConvite")
+    .classList.remove("ativo");
+
     let html = "";
 
     const letras = ["A", "B", "C", "D", "E"];
@@ -62,21 +65,22 @@ function responder(el, index, correta) {
 
     if(index === correta){
 
-    acertos++;
+        acertos++;
 
-    el.style.background = "#0ed33c";
+        // classe em vez de cor inline: o CSS cuida do visual de vidro
+        el.classList.add("correta");
 
-    feedback = `
-        <div class="feedback-correto">
-            <strong>Alternativa ${letras[correta]} correta.</strong><br><br>
-            ${q.explicacao}
-        </div>
-    `;
+        feedback = `
+            <div class="feedback-correto">
+                <strong>Alternativa ${letras[correta]} correta.</strong><br><br>
+                ${q.explicacao}
+            </div>
+        `;
 
     }else{
 
-        el.style.background = "#d50707";
-        alternativas[correta].style.background = "#0ed33c";
+        el.classList.add("errada");
+        alternativas[correta].classList.add("correta");
 
         feedback = `
             <div class="feedback-errado">
@@ -85,6 +89,52 @@ function responder(el, index, correta) {
             </div>
         `;
     }
+
+    // MOSTRA CONVITE PARA A ECOIA
+document.getElementById("ecoiaConvite")
+    .classList.add("ativo");
+
+// PREPARA PERGUNTA PARA A ECOIA
+const botaoEcoIA = document.getElementById("perguntarEcoIA");
+
+botaoEcoIA.onclick = () => {
+
+    const perguntaEcoIA = `
+Estou estudando uma questão de Biologia do EcoENEM e gostaria de entender melhor o conteúdo.
+
+QUESTÃO:
+${q.enunciado}
+
+ALTERNATIVAS:
+${q.alternativas.map((alt, i) =>
+    `${String.fromCharCode(65 + i)}) ${alt}`
+).join("\n")}
+
+MINHA RESPOSTA:
+${q.alternativas[index]}
+
+RESPOSTA CORRETA:
+${q.alternativas[correta]}
+
+EXPLICAÇÃO:
+${q.explicacao}
+
+Com base nessa questão, explique detalhadamente o conteúdo envolvido, por que a alternativa correta está certa e por que minha resposta está certa ou errada.
+
+Utilize uma linguagem simples e didática, como um professor explicando para um estudante que está se preparando para o ENEM.
+
+Se possível, dê exemplos práticos para facilitar meu entendimento.
+    `.trim();
+
+    // SALVA A PERGUNTA PARA A ECOIA
+    localStorage.setItem(
+        "ecoia_pergunta_inicial",
+        perguntaEcoIA
+    );
+
+    // REDIRECIONA PARA A ECOIA
+    window.location.href = "ecoia.php";
+};
 
     document.querySelector(".questao").insertAdjacentHTML(
         "beforeend",

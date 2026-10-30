@@ -1,25 +1,135 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+/* ==========================================================
+   EcoENEM — Conteúdo em Liquid Glass
+   Paleta: #000000  #2B4334  #355241  #496F56  #B5C9BA  #D0DDD3
+   ========================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-    font-family:'Inter', sans-serif;
+:root {
+    --verde-brilho: #B5C9BA;
+    --texto-suave: #D0DDD3;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(90deg,
+            #000000 0%,
+            #000000 40%,
+            #355241 70%,
+            #496F56 100%);
+
+    color: white;
+    overflow-x: hidden;
+}
+
+/* ----------------------------------------------------------
+   FUNDO — manchas de luz para o vidro refratar
+   ---------------------------------------------------------- */
+
+body::before,
+body::after {
+    content: '';
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(80px);
+}
+
+body::before {
+    width: 520px;
+    height: 520px;
+    left: -120px;
+    bottom: -140px;
+    background: radial-gradient(circle, rgba(73, 111, 86, 0.75), transparent 70%);
+    animation: deriva 18s ease-in-out infinite alternate;
+}
+
+body::after {
+    width: 420px;
+    height: 420px;
+    right: 5%;
+    top: -160px;
+    background: radial-gradient(circle, rgba(181, 201, 186, 0.28), transparent 70%);
+    animation: deriva 22s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes deriva {
+    from { transform: translate(0, 0); }
+    to   { transform: translate(60px, -40px); }
+}
+
+section,
+footer {
+    position: relative;
+    z-index: 1;
+}
+
+/* ----------------------------------------------------------
+   LIQUID GLASS — base compartilhada
+   ---------------------------------------------------------- */
+
+.titulo p,
+.texto,
+.video-card,
+footer p {
+    position: relative;
     background:
-    linear-gradient(
-        90deg,
-        #000000 0%,
-        #000000 40%,
-        #355241 70%,
-        #496F56 100%
-    );
-
-    color:white;
-    overflow-x:hidden;
+        linear-gradient(135deg,
+            rgba(255, 255, 255, 0.16) 0%,
+            rgba(255, 255, 255, 0.04) 45%,
+            rgba(255, 255, 255, 0.09) 100%),
+        rgba(10, 20, 14, 0.30);
+    -webkit-backdrop-filter: blur(20px) saturate(170%);
+    backdrop-filter: blur(20px) saturate(170%);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.45),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.10),
+        inset 0 0 28px rgba(181, 201, 186, 0.08),
+        0 14px 34px rgba(0, 0, 0, 0.42);
 }
 
-/* HEADER */
+/* reflexo de luz no topo */
+.titulo p::before,
+.texto::before,
+.video-card::before,
+footer p::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 12%;
+    width: 34%;
+    height: 2px;
+    border-radius: 999px;
+    background: radial-gradient(closest-side, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0));
+    filter: blur(1px);
+    pointer-events: none;
+}
+
+/* brilho esverdeado embaixo */
+.titulo p::after,
+.texto::after,
+.video-card::after,
+footer p::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 38%;
+    width: 38%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--verde-brilho), transparent);
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+/* ----------------------------------------------------------
+   HEADER — barra retangular em vidro; o botão só aparece no hover
+   ---------------------------------------------------------- */
 
 header {
     position: fixed;
@@ -34,293 +144,337 @@ header {
 
     padding: 0 80px;
 
-    background: #2B4334;
-    backdrop-filter: blur(15px);
-
     z-index: 9999;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.50);
+}
+
+/* a lâmina de vidro fica numa camada própria, para os botões
+   do hover também conseguirem desfocar o que está embaixo */
+header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+
+    background:
+        linear-gradient(180deg,
+            rgba(255, 255, 255, 0.14) 0%,
+            rgba(255, 255, 255, 0.04) 100%),
+        rgba(43, 67, 52, 0.35);
+    -webkit-backdrop-filter: blur(22px) saturate(170%);
+    backdrop-filter: blur(22px) saturate(170%);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.35),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.10),
+        0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* brilho esverdeado na borda de baixo */
+header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 38%;
+    width: 24%;
+    height: 1px;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, var(--verde-brilho), transparent);
+    opacity: 0.8;
 }
 
 .logo {
-    color: white;
-    font-size: 30px;
-    font-family: 'InterBold', sans-serif;
-
     position: relative;
-    z-index: 9999;
-}
-
-.logo a {
-    color: white;
-    font-size: 30px;
-    font-family: 'InterBold', sans-serif;
-    text-decoration: none;
+    z-index: 1;
 }
 
 nav {
     position: relative;
-    z-index: 9999;
+    z-index: 1;
 
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 6px;
+}
+
+.logo a,
+nav a {
+    position: relative;
+
+    color: white;
+    text-decoration: none;
+
+    padding: 10px 18px;
+    border-radius: 999px;
+
+    transition: color .25s, box-shadow .25s;
+}
+
+.logo a {
+    font-size: 28px;
+    font-family: 'InterBold', 'Inter', sans-serif;
+    letter-spacing: -0.01em;
 }
 
 nav a {
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-    font-family: 'InterSemiBold', sans-serif;
+    font-family: 'InterSemiBold', 'Inter', sans-serif;
+    font-size: 17px;
     font-weight: 500;
-    z-index: 999999;
-
-    position: relative;
-    transition: color .3s;
+    color: var(--texto-suave);
 }
 
-nav a::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -5px;
+/* hover: vira um botão de liquid glass (transparente e desfocado) */
+.logo a:hover,
+.logo a:focus-visible,
+nav a:hover,
+nav a:focus-visible {
+    color: white;
+    outline: none;
 
-    width: 0;
-    height: 2px;
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.16) 0%,
+            rgba(255, 255, 255, 0.04) 45%,
+            rgba(255, 255, 255, 0.09) 100%);
+    -webkit-backdrop-filter: blur(14px) saturate(170%);
+    backdrop-filter: blur(14px) saturate(170%);
 
-    background: white;
-    transition: width .3s ease;
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.45),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.10),
+        inset 0 0 22px rgba(181, 201, 186, 0.10),
+        0 8px 22px rgba(0, 0, 0, 0.30);
 }
 
-nav a:hover {
-    color: #B5C9BA;
-}
-
-nav a:hover::after {
-    width: 100%;
-}
-
-
-
-/* CONTEÚDO */
-
+/* ----------------------------------------------------------
+   TÍTULO
+   ---------------------------------------------------------- */
 
 .titulo {
     text-align: center;
 
-    background:
-        linear-gradient(
-            90deg,
-            #496F56 0%,
-            #355241 100%
-        );
-
-    border-bottom: 4px solid transparent;
-    border-image: linear-gradient(
-        90deg,
-        #86A48F 0%,
-        #E7EDE8 20%,
-        #86A48F 40%,
-        #E7EDE8 60%,
-        #86A48F 80%,
-        #E7EDE8 100%
-    ) 1;
-
     width: 100%;
-    padding-top: 150px;
-    padding-bottom: 80px;
+    padding: 150px 20px 70px;
 }
 
-
-
-.titulo h1{
-    font-size:70px;
+.titulo h1 {
+    font-size: 70px;
     font-family: 'InterBold', sans-serif;
-    margin-bottom:20px;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+    text-shadow: 0 6px 40px rgba(73, 111, 86, 0.55);
 }
 
-.titulo p{
-    max-width:900px;
-    margin:auto;
-    width: 570px;
-    line-height:32px;
-    color:#D0DDD3;
-    font-size:20px;
+.titulo p {
+    max-width: 640px;
+    margin: auto;
+    padding: 26px 32px;
+    border-radius: 32px;
+
+    line-height: 32px;
+    color: var(--texto-suave);
+    font-size: 20px;
 }
 
-.titulo span{
-    display:block;
-    margin-top:20px;
-    color:#9EB5A5;
+.titulo span {
+    display: block;
+    margin-top: 20px;
+    color: #9EB5A5;
 }
 
-/* NÍVEIS */
+/* ----------------------------------------------------------
+   NÍVEIS DE ORGANIZAÇÃO
+   ---------------------------------------------------------- */
 
-.organizacao{
-    margin-top:80px;
-    border-bottom: 4px solid transparent;
-    border-image: linear-gradient(
-        90deg,
-        #86A48F 0%,
-        #E7EDE8 20%,
-        #86A48F 40%,
-        #E7EDE8 60%,
-        #86A48F 80%,
-        #E7EDE8 100%
-    ) 1;
-
+.organizacao {
+    margin-top: 40px;
     width: 100%;
     padding-bottom: 80px;
 }
 
-.organizacao h2{
-    text-align:center;
+.organizacao h2,
+.conceitos h2,
+.videoaulas h2 {
+    text-align: center;
     font-family: 'InterBold', sans-serif;
-    margin-bottom:50px;
-    font-size:40px;
+    font-size: 40px;
+    letter-spacing: -0.01em;
 }
 
-.cards{
-    display:flex;
-    justify-content:center;
-    gap:25px;
-    flex-wrap:wrap;
+.organizacao h2 {
+    margin-bottom: 50px;
 }
 
-/* CARD */
-
-.card{
-    width:250px;
-    height:250px;
-
-    perspective:1000px;
-    
-
-    cursor:pointer;
+.cards {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+    padding: 0 20px;
 }
 
-.card-inner{
-    width:100%;
-    height:100%;
+/* CARD que vira.
+   O desfoque fica numa camada fixa (::after) atrás do card que gira,
+   porque backdrop-filter dentro de elementos 3D não é confiável. */
 
-    position:relative;
+.card {
+    position: relative;
+    width: 250px;
+    height: 250px;
 
-    transition:transform .8s;
+    perspective: 1000px;
 
-    transform-style:preserve-3d;
+    cursor: pointer;
 }
 
-.card.flip .card-inner{
-    transform:rotateY(180deg);
+.card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: 20px;
+    pointer-events: none;
+
+    -webkit-backdrop-filter: blur(20px) saturate(170%);
+    backdrop-filter: blur(20px) saturate(170%);
+}
+
+/* reflexo de luz fixo por cima do card */
+.card::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 14%;
+    width: 36%;
+    height: 2px;
+    z-index: 3;
+    border-radius: 999px;
+    background: radial-gradient(closest-side, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0));
+    filter: blur(1px);
+    pointer-events: none;
+}
+
+.card-inner {
+    width: 100%;
+    height: 100%;
+
+    position: relative;
+    z-index: 1;
+
+    transition: transform .8s;
+
+    transform-style: preserve-3d;
+}
+
+.card.flip .card-inner {
+    transform: rotateY(180deg);
 }
 
 .card-front,
-.card-back{
-    position:absolute;
+.card-back {
+    position: absolute;
 
-    width:100%;
-    height:100%;
+    width: 100%;
+    height: 100%;
 
-    border-radius:20px;
+    border-radius: 20px;
 
-    backface-visibility:hidden;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    text-align:center;
-    padding:20px;
+    text-align: center;
+    padding: 20px;
+
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.45),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.10),
+        inset 0 0 28px rgba(181, 201, 186, 0.08),
+        0 14px 34px rgba(0, 0, 0, 0.42);
 }
 
-.card-front{
-    background:#2B4334;
-    font-size:28px;
-    font-family:'InterBold';
-}
-
-.card-back{
-    background:#496F56;
-
-    transform:rotateY(180deg);
-
-    font-size:18px;
-    line-height:28px;
-}
-
-/* CONCEITOS */
-
-.conceitos{
-    margin-bottom:100px;
+.card-front {
     background:
-        linear-gradient(
-            90deg,
-            #86A48F 0%,
-            #496F56 100%
-        );
-        border-bottom: 4px solid transparent;
-    border-image: linear-gradient(
-        90deg,
-        #86A48F 0%,
-        #E7EDE8 20%,
-        #86A48F 40%,
-        #E7EDE8 60%,
-        #86A48F 80%,
-        #E7EDE8 100%
-    ) 1;
-
-    padding-top: 70px;
-    padding-bottom: 40px;
-        
+        linear-gradient(135deg,
+            rgba(255, 255, 255, 0.16) 0%,
+            rgba(255, 255, 255, 0.04) 45%,
+            rgba(255, 255, 255, 0.09) 100%),
+        rgba(43, 67, 52, 0.50);
+    font-size: 28px;
+    font-family: 'InterBold', 'Inter', sans-serif;
 }
 
-.conceitos h2{
-    text-align:center;
-    margin-bottom:40px;
-    font-family: 'InterBold', sans-serif;
-    font-size:40px;
+.card-back {
+    background:
+        linear-gradient(135deg,
+            rgba(255, 255, 255, 0.18) 0%,
+            rgba(255, 255, 255, 0.05) 45%,
+            rgba(255, 255, 255, 0.10) 100%),
+        rgba(73, 111, 86, 0.55);
+
+    transform: rotateY(180deg);
+
+    font-size: 18px;
+    line-height: 28px;
 }
 
-.texto{
-    max-width:1000px;
-    margin:auto;
+/* ----------------------------------------------------------
+   CONCEITOS
+   ---------------------------------------------------------- */
+
+.conceitos {
+    padding: 0 20px 100px;
 }
 
-.texto h3{
-    font-family: 'InterBold', sans-serif;
-    font-size: 20px;
-    color:#355241;
-    margin-top:25px;
-    margin-bottom:10px;
-}
-
-.texto p{
-    color:#FFFFFF;
-    line-height:30px;
-    text-align:justify;
+.conceitos h2 {
     margin-bottom: 40px;
 }
 
-/* VIDEOAULAS */
+.texto {
+    max-width: 1000px;
+    margin: auto;
+    padding: 44px 52px;
+    border-radius: 36px;
+}
+
+.texto h3 {
+    font-family: 'InterBold', sans-serif;
+    font-size: 20px;
+    color: var(--verde-brilho);
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+.texto h3:first-child {
+    margin-top: 0;
+}
+
+.texto p {
+    color: #FFFFFF;
+    line-height: 30px;
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.texto p:last-child {
+    margin-bottom: 0;
+}
+
+/* ----------------------------------------------------------
+   VIDEOAULAS
+   ---------------------------------------------------------- */
 
 .videoaulas {
-
-    border-bottom: 4px solid transparent;
-    border-image: linear-gradient(
-        90deg,
-        #86A48F 0%,
-        #E7EDE8 20%,
-        #86A48F 40%,
-        #E7EDE8 60%,
-        #86A48F 80%,
-        #E7EDE8 100%
-    ) 1;
+    padding: 0 20px 90px;
 }
 
 .videoaulas h2 {
-    text-align: center;
-    font-size: 40px;
-    font-family: 'InterBold', sans-serif;
-    margin-bottom: 70px;
+    margin-bottom: 60px;
 }
 
 .videos {
@@ -335,47 +489,115 @@ nav a:hover::after {
 
 .video-card {
     width: 550px;
+    padding: 16px 16px 8px;
+    border-radius: 32px;
+
+    transition: transform .25s ease;
+}
+
+.video-card:hover {
+    transform: translateY(-3px);
 }
 
 .video-card iframe {
+    display: block;
     width: 100%;
     height: 310px;
 
     border: none;
     border-radius: 20px;
 
-    box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 .video-card h3 {
     text-align: center;
-    margin-top: 15px;
+    margin-top: 16px;
 
     font-family: 'InterSemiBold', sans-serif;
     font-size: 20px;
-    padding-bottom: 80px;
+    padding-bottom: 10px;
 }
 
-/* RODAPÉ */
+/* ----------------------------------------------------------
+   RODAPÉ — pílula de vidro
+   ---------------------------------------------------------- */
 
 footer {
-    height: 80px;
-
     display: flex;
     justify-content: center;
     align-items: center;
 
-    background: #2B4334;
-
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.50);
+    padding: 8px 20px 28px;
 }
 
 footer p {
-    color: white;
+    padding: 14px 32px;
+    border-radius: 999px;
+
+    color: var(--texto-suave);
     font-family: 'InterSemiBold', sans-serif;
-    font-size: 16px;
+    font-size: 15px;
+    text-align: center;
 }
+
+/* ----------------------------------------------------------
+   BRILHO GIRATÓRIO NA BORDA (hover)
+   ---------------------------------------------------------- */
+
+@property --ang {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes giro {
+    to { --ang: 360deg; }
+}
+
+.logo a:hover::before,
+.logo a:focus-visible::before,
+nav a:hover::before,
+nav a:focus-visible::before,
+.card:hover::before,
+.video-card:hover::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    width: auto;
+    height: auto;
+    padding: 2px;
+    border-radius: inherit;
+    filter: none;
+    pointer-events: none;
+
+    background: conic-gradient(from var(--ang),
+            transparent 0%,
+            transparent 62%,
+            rgba(181, 201, 186, 0.9) 82%,
+            #ffffff 92%,
+            transparent 100%);
+
+    /* só o contorno, sem preencher */
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+
+    animation: giro 2.2s linear infinite;
+}
+
+/* o card tem cantos de 20px; o anel precisa acompanhar */
+.card:hover::before {
+    border-radius: 20px;
+}
+
+.video-card:hover::after {
+    opacity: 0;
+}
+
+/* ----------------------------------------------------------
+   FONTES
+   ---------------------------------------------------------- */
 
 @font-face {
     font-family: 'Inter';
@@ -398,60 +620,151 @@ footer p {
     font-style: normal;
 }
 
+/* ----------------------------------------------------------
+   ACESSIBILIDADE
+   ---------------------------------------------------------- */
 
+@media (prefers-reduced-motion: reduce) {
+    body::before,
+    body::after {
+        animation: none;
+    }
+
+    .logo a:hover::before,
+    .logo a:focus-visible::before,
+    nav a:hover::before,
+    nav a:focus-visible::before,
+    .card:hover::before,
+    .video-card:hover::before {
+        animation: none;
+    }
+
+    .card-inner,
+    .video-card,
+    nav a {
+        transition: none;
+    }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    header::before,
+    .titulo p,
+    .texto,
+    .video-card,
+    footer p {
+        background: rgba(43, 67, 52, 0.88);
+    }
+}
+
+/* ----------------------------------------------------------
+   TABLET
+   ---------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+    header {
+        padding: 0 28px;
+    }
+
+    nav a {
+        padding: 9px 14px;
+        font-size: 15px;
+    }
+
+    .video-card {
+        width: 100%;
+        max-width: 550px;
+    }
+}
+
+/* ----------------------------------------------------------
+   MOBILE
+   ---------------------------------------------------------- */
 
 @media (max-width: 768px) {
 
-    /* BODY */
-    body{
+    body {
         overflow-x: hidden;
         overflow-y: auto;
         height: auto;
+        background: linear-gradient(180deg,
+                #000000 0%,
+                #000000 40%,
+                #355241 75%,
+                #496F56 100%);
+    }
+
+    body::before {
+        width: 340px;
+        height: 340px;
+        left: -140px;
+        bottom: auto;
+        top: 220px;
+    }
+
+    body::after {
+        width: 300px;
+        height: 300px;
+        right: -120px;
+        top: -120px;
     }
 
     /* HEADER */
     header {
-        padding: 0 15px;
+        padding: 0 16px;
         height: 70px;
     }
 
     .logo a {
         font-size: 20px;
+        padding: 8px 14px;
     }
 
-    /* MENU (QUADRADOS PADRÃO ECOENEM) */
+    /* MENU: dock de vidro fixo na base, com texto visível */
     nav {
         position: fixed;
-        top: 90px;
-        right: 10px;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
 
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
+        max-width: calc(100% - 24px);
+        overflow-x: auto;
+        scrollbar-width: none;
 
+        padding: 6px;
+        gap: 4px;
+        border-radius: 999px;
+
+        background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.16) 0%,
+                rgba(255, 255, 255, 0.04) 45%,
+                rgba(255, 255, 255, 0.09) 100%),
+            rgba(10, 20, 14, 0.30);
+        -webkit-backdrop-filter: blur(20px) saturate(170%);
+        backdrop-filter: blur(20px) saturate(170%);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        box-shadow:
+            inset 0 1px 1px rgba(255, 255, 255, 0.45),
+            inset 0 -1px 1px rgba(255, 255, 255, 0.10),
+            0 14px 34px rgba(0, 0, 0, 0.42);
+
+        pointer-events: auto;
         z-index: 99999;
     }
 
-    nav a {
-        width: 45px;
-        height: 45px;
-
-        display: block;
-
-        background: rgba(43, 67, 52, 0.9);
-        border-radius: 12px;
-
-        font-size: 0;
+    nav::-webkit-scrollbar {
+        display: none;
     }
 
-    nav a::after {
-        display: none !important;
+    nav a {
+        flex-shrink: 0;
+        padding: 10px 13px;
+        font-size: 14px;
     }
 
     /* TÍTULO */
     .titulo {
         padding-top: 110px;
-        padding-bottom: 50px;
+        padding-bottom: 40px;
     }
 
     .titulo h1 {
@@ -460,19 +773,27 @@ footer p {
 
     .titulo p {
         width: 100%;
-        max-width: 90%;
+        max-width: 100%;
+        padding: 20px 22px;
+        border-radius: 26px;
         font-size: 16px;
         line-height: 26px;
     }
 
     /* ORGANIZAÇÃO */
     .organizacao {
-        margin-top: 40px;
+        margin-top: 24px;
         padding-bottom: 50px;
     }
 
-    .organizacao h2 {
+    .organizacao h2,
+    .conceitos h2,
+    .videoaulas h2 {
         font-size: 28px;
+    }
+
+    .organizacao h2 {
+        margin-bottom: 32px;
     }
 
     .cards {
@@ -491,20 +812,18 @@ footer p {
     .card-back {
         font-size: 13px;
         line-height: 20px;
+        padding: 14px;
     }
 
     /* CONCEITOS */
     .conceitos {
-        padding-top: 50px;
-        padding-bottom: 30px;
-    }
-
-    .conceitos h2 {
-        font-size: 28px;
+        padding-bottom: 60px;
     }
 
     .texto {
-        max-width: 90%;
+        max-width: 100%;
+        padding: 26px 22px;
+        border-radius: 26px;
     }
 
     .texto h3 {
@@ -514,31 +833,355 @@ footer p {
     .texto p {
         font-size: 14px;
         line-height: 24px;
+        margin-bottom: 22px;
     }
 
     /* VÍDEOS */
+    .videoaulas {
+        padding-bottom: 50px;
+    }
+
     .videoaulas h2 {
-        font-size: 28px;
-        margin-bottom: 40px;
+        margin-bottom: 32px;
+    }
+
+    .videos {
+        width: 100%;
     }
 
     .video-card {
         width: 100%;
+        padding: 12px 12px 4px;
+        border-radius: 26px;
     }
 
     .video-card iframe {
-        height: 220px;
+        height: 200px;
+        border-radius: 16px;
     }
 
     .video-card h3 {
         font-size: 16px;
-        padding-bottom: 40px;
     }
 
     /* FOOTER */
+    footer {
+        padding-bottom: 92px; /* espaço para o dock */
+    }
+
     footer p {
+        font-size: 13px;
+        padding: 12px 22px;
+    }
+}
+
+
+/* ----------------------------------------------------------
+   MOBILE — ECOENEM RESPONSIVO + MENU DE BOLINHAS
+   ---------------------------------------------------------- */
+
+@media (max-width: 768px) {
+
+    body {
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: auto;
+
+        background: linear-gradient(180deg,
+            #000000 0%,
+            #000000 40%,
+            #355241 75%,
+            #496F56 100%);
+    }
+
+    body::before {
+        width: 340px;
+        height: 340px;
+        left: -140px;
+        bottom: auto;
+        top: 220px;
+    }
+
+    body::after {
+        width: 300px;
+        height: 300px;
+        right: -120px;
+        top: -120px;
+    }
+
+    /* HEADER */
+    header {
+        height: 70px;
+        padding: 0 16px;
+        justify-content: space-between;
+    }
+
+    .logo a {
+        font-size: 20px;
+        padding: 8px 14px;
+    }
+
+    /* MENU — 5 BOLINHAS NO CANTO SUPERIOR DIREITO */
+    header nav {
+        position: fixed !important;
+
+        top: 50% !important;
+        right: 18px !important;
+        left: auto !important;
+
+        transform: translateY(-50%) !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        gap: 14px !important;
+
+        width: auto !important;
+        max-width: none !important;
+
+        padding: 0 !important;
+
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+
+        overflow: visible !important;
+
+        z-index: 99999 !important;
+    }
+
+    header nav a {
+        display: block !important;
+
+        width: 50px !important;
+        height: 50px !important;
+        min-width: 50px !important;
+        min-height: 50px !important;
+
+        flex-shrink: 0 !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        border-radius: 50% !important;
+
+        font-size: 0 !important;
+        line-height: 0 !important;
+
+        background: rgba(181, 201, 186, 0.30) !important;
+
+        border: 2px solid rgba(255, 255, 255, 0.65) !important;
+
+        box-shadow:
+            inset 0 1px 5px rgba(255,255,255,.35),
+            0 4px 14px rgba(0,0,0,.35) !important;
+
+        transition: .3s ease !important;
+    }
+
+    header nav a:hover,
+    header nav a:focus-visible,
+    header nav a:active {
+        background: rgba(181, 201, 186, 0.85) !important;
+
+        transform: scale(1.15);
+
+        border-color: white !important;
+
+        box-shadow:
+            0 0 12px rgba(181, 201, 186, .9),
+            0 0 25px rgba(181, 201, 186, .5) !important;
+
+        outline: none;
+    }
+
+    /* TÍTULO */
+    .titulo {
+        padding: 110px 16px 40px;
+    }
+
+    .titulo h1 {
+        font-size: clamp(32px, 8vw, 48px);
+    }
+
+    .titulo p {
+        width: 100%;
+        max-width: 100%;
+        padding: 20px 22px;
+        border-radius: 26px;
+        font-size: 16px;
+        line-height: 26px;
+    }
+
+    /* ORGANIZAÇÃO */
+    .organizacao {
+        margin-top: 24px;
+        padding-bottom: 50px;
+    }
+
+    .organizacao h2,
+    .conceitos h2,
+    .videoaulas h2 {
+        font-size: 28px;
+    }
+
+    .organizacao h2 {
+        margin-bottom: 32px;
+    }
+
+    .cards {
+        gap: 15px;
+        padding: 0 16px;
+    }
+
+    .card {
+        width: min(160px, calc(50vw - 25px));
+        height: min(160px, calc(50vw - 25px));
+    }
+
+    .card-front {
+        font-size: 18px;
+        padding: 12px;
+    }
+
+    .card-back {
+        font-size: 13px;
+        line-height: 20px;
+        padding: 12px;
+    }
+
+    /* CONCEITOS */
+    .conceitos {
+        padding: 0 14px 60px;
+    }
+
+    .conceitos h2 {
+        margin-bottom: 28px;
+    }
+
+    .texto {
+        width: 100%;
+        max-width: 100%;
+        padding: 26px 22px;
+        border-radius: 26px;
+    }
+
+    .texto h3 {
+        font-size: 16px;
+    }
+
+    .texto p {
         font-size: 14px;
-        text-align: center;
-        padding: 0 10px;
+        line-height: 24px;
+        margin-bottom: 22px;
+    }
+
+    /* VÍDEOS */
+    .videoaulas {
+        padding: 0 14px 50px;
+    }
+
+    .videoaulas h2 {
+        margin-bottom: 32px;
+    }
+
+    .videos {
+        width: 100%;
+        gap: 20px;
+    }
+
+    .video-card {
+        width: 100%;
+        max-width: 550px;
+        padding: 12px 12px 4px;
+        border-radius: 26px;
+    }
+
+    .video-card iframe {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        height: auto;
+        border-radius: 16px;
+    }
+
+    .video-card h3 {
+        font-size: 16px;
+    }
+
+    /* FOOTER */
+    footer {
+        padding: 8px 14px 35px;
+    }
+
+    footer p {
+        font-size: 13px;
+        padding: 12px 22px;
+        line-height: 21px;
+    }
+}
+
+/* CELULARES PEQUENOS */
+@media (max-width: 380px) {
+
+    header {
+        padding: 0 12px;
+    }
+
+    header nav {
+        right: 12px !important;
+        gap: 11px !important;
+    }
+
+    header nav a {
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+    }
+
+    .titulo h1 {
+        font-size: 32px;
+    }
+
+    .card {
+        width: calc(50vw - 24px);
+        height: calc(50vw - 24px);
+    }
+}
+
+/* TABLETS */
+@media (min-width: 769px) and (max-width: 1100px) {
+
+    header {
+        padding: 0 28px;
+    }
+
+    .titulo h1 {
+        font-size: 56px;
+    }
+
+    .cards {
+        gap: 18px;
+    }
+
+    .card {
+        width: 220px;
+        height: 220px;
+    }
+
+    .videos {
+        width: 95%;
+        gap: 24px;
+    }
+
+    .video-card {
+        width: calc(50% - 12px);
+    }
+
+    .video-card iframe {
+        height: auto;
+        aspect-ratio: 16 / 9;
     }
 }

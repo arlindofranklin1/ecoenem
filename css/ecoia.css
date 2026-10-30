@@ -1,227 +1,826 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+/* ==========================================================
+   EcoIA — Liquid Glass + histórico lateral
+   Paleta: #000000  #1B2B22  #2B4334  #355241  #496F56  #B5C9BA  #D0DDD3
+   ========================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-    font-family:'Inter', sans-serif;
-    background: linear-gradient(
-        to bottom,
-        #000000 0%,
-        #000000 40%,
-        #111814 75%,
-        #1B2B22 850%
-    );
-
-    color:white;
-
-    overflow:hidden;
-    height:100vh;
+:root {
+    --verde-brilho: #B5C9BA;
+    --texto-suave: #D0DDD3;
+    --larg-hist: 300px;
 }
 
-/* HEADER */
+body {
+    /* --w = quanto a tela é empurrada para a direita pelo histórico */
+    --w: 0px;
+
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(to bottom,
+            #000000 0%,
+            #000000 40%,
+            #111814 75%,
+            #1B2B22 100%);
+
+    color: white;
+
+    overflow: hidden;
+    height: 100vh;
+    height: 100dvh;
+
+    padding-left: var(--w);
+    transition: padding-left .35s ease;
+}
+
+body.hist-aberto {
+    --w: var(--larg-hist);
+}
+
+/* evita animar o empurrão quando a página carrega já com o histórico aberto */
+body.sem-anim,
+body.sem-anim * {
+    transition: none !important;
+}
+
+/* ----------------------------------------------------------
+   FUNDO — manchas de luz para o vidro refratar
+   ---------------------------------------------------------- */
+
+body::before,
+body::after {
+    content: '';
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(80px);
+}
+
+body::before {
+    width: 520px;
+    height: 520px;
+    left: -120px;
+    bottom: -140px;
+    background: radial-gradient(circle, rgba(73, 111, 86, 0.65), transparent 70%);
+    animation: deriva 18s ease-in-out infinite alternate;
+}
+
+body::after {
+    width: 420px;
+    height: 420px;
+    right: 5%;
+    top: -160px;
+    background: radial-gradient(circle, rgba(181, 201, 186, 0.22), transparent 70%);
+    animation: deriva 22s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes deriva {
+    from { transform: translate(0, 0); }
+    to   { transform: translate(60px, -40px); }
+}
+
+/* ----------------------------------------------------------
+   LIQUID GLASS — base compartilhada
+   ---------------------------------------------------------- */
+
+.bolha,
+.input-area,
+.historico,
+.sugestao,
+.novo-chat,
+.menu-btn {
+    position: relative;
+    background:
+        linear-gradient(135deg,
+            rgba(255, 255, 255, 0.16) 0%,
+            rgba(255, 255, 255, 0.04) 45%,
+            rgba(255, 255, 255, 0.09) 100%),
+        rgba(10, 20, 14, 0.30);
+    -webkit-backdrop-filter: blur(20px) saturate(170%);
+    backdrop-filter: blur(20px) saturate(170%);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.45),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.10),
+        inset 0 0 28px rgba(181, 201, 186, 0.08),
+        0 14px 34px rgba(0, 0, 0, 0.42);
+}
+
+/* reflexo de luz no topo */
+.bolha::before,
+.input-area::before,
+.sugestao::before,
+.novo-chat::before,
+.menu-btn::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 12%;
+    width: 34%;
+    height: 2px;
+    border-radius: 999px;
+    background: radial-gradient(closest-side, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0));
+    filter: blur(1px);
+    pointer-events: none;
+}
+
+/* brilho esverdeado embaixo */
+.bolha::after,
+.input-area::after,
+.sugestao::after,
+.novo-chat::after,
+.menu-btn::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 38%;
+    width: 38%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--verde-brilho), transparent);
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+/* ----------------------------------------------------------
+   HEADER — barra retangular em vidro; o botão só aparece no hover
+   ---------------------------------------------------------- */
 
 header {
     position: fixed;
     top: 0;
-    left: 0;
-    width: 100%;
+    left: var(--w);
+    width: calc(100% - var(--w));
     height: 80px;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    padding: 0 80px;
-
-    background: #2B4334;
-    backdrop-filter: blur(15px);
+    padding: 0 80px 0 40px;
 
     z-index: 9999;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.50);
+    transition: left .35s ease, width .35s ease;
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+
+    background:
+        linear-gradient(180deg,
+            rgba(255, 255, 255, 0.14) 0%,
+            rgba(255, 255, 255, 0.04) 100%),
+        rgba(43, 67, 52, 0.35);
+    -webkit-backdrop-filter: blur(22px) saturate(170%);
+    backdrop-filter: blur(22px) saturate(170%);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.35),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.10),
+        0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 38%;
+    width: 24%;
+    height: 1px;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, var(--verde-brilho), transparent);
+    opacity: 0.8;
+}
+
+.header-esq {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .logo {
-    color: white;
-    font-size: 30px;
-    font-family: 'InterBold', sans-serif;
-
     position: relative;
-    z-index: 9999;
-}
-
-.logo a {
-    color: white;
-    font-size: 30px;
-    font-family: 'InterBold', sans-serif;
-    text-decoration: none;
+    z-index: 1;
 }
 
 nav {
     position: relative;
-    z-index: 9999;
+    z-index: 1;
 
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 6px;
+}
+
+.logo a,
+nav a {
+    position: relative;
+
+    color: white;
+    text-decoration: none;
+
+    padding: 10px 18px;
+    border-radius: 999px;
+
+    transition: color .25s, box-shadow .25s;
+}
+
+.logo a {
+    font-size: 28px;
+    font-family: 'InterBold', 'Inter', sans-serif;
+    letter-spacing: -0.01em;
 }
 
 nav a {
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-    font-family: 'InterSemiBold', sans-serif;
+    font-family: 'InterSemiBold', 'Inter', sans-serif;
+    font-size: 17px;
     font-weight: 500;
-    z-index: 999999;
-
-    position: relative;
-    transition: color .3s;
+    color: var(--texto-suave);
 }
 
-nav a::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -5px;
+/* três tracinhos: círculo de liquid glass logo abaixo do cabeçalho */
+.menu-btn {
+    position: fixed;
+    top: 96px;
+    left: calc(var(--w) + 28px);
+    z-index: 9990;
 
-    width: 0;
+    width: 54px;
+    height: 54px;
+    padding: 0;
+    border-radius: 50%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+
+    cursor: pointer;
+
+    transition: left .35s ease, transform .25s ease;
+}
+
+.menu-btn:hover {
+    transform: translateY(-2px);
+}
+
+.menu-btn span {
+    display: block;
+    width: 20px;
     height: 2px;
-
+    border-radius: 2px;
     background: white;
-    transition: width .3s ease;
 }
 
-nav a:hover {
-    color: #B5C9BA;
+.menu-btn:hover::after {
+    opacity: 0;
 }
 
-nav a:hover::after {
+/* hover: vira um botão de liquid glass (transparente e desfocado) */
+.logo a:hover,
+.logo a:focus-visible,
+nav a:hover,
+nav a:focus-visible {
+    color: white;
+    outline: none;
+
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.16) 0%,
+            rgba(255, 255, 255, 0.04) 45%,
+            rgba(255, 255, 255, 0.09) 100%);
+    -webkit-backdrop-filter: blur(14px) saturate(170%);
+    backdrop-filter: blur(14px) saturate(170%);
+
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.45),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.10),
+        inset 0 0 22px rgba(181, 201, 186, 0.10),
+        0 8px 22px rgba(0, 0, 0, 0.30);
+}
+
+/* ----------------------------------------------------------
+   HISTÓRICO (painel lateral que empurra a tela)
+   ---------------------------------------------------------- */
+
+.historico {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--larg-hist);
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 22px 18px 18px;
+    border-radius: 0 28px 28px 0;
+    border-left: none;
+
+    background:
+        linear-gradient(135deg,
+            rgba(255, 255, 255, 0.14) 0%,
+            rgba(255, 255, 255, 0.04) 45%,
+            rgba(255, 255, 255, 0.08) 100%),
+        rgba(10, 20, 14, 0.55);
+
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: transform .35s ease, visibility 0s linear .35s;
+
+    z-index: 10001;
+}
+
+body.hist-aberto .historico {
+    transform: none;
+    visibility: visible;
+    transition: transform .35s ease, visibility 0s;
+}
+
+.hist-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding-left: 6px;
+}
+
+.hist-topo h2 {
+    font-family: 'InterBold', sans-serif;
+    font-size: 20px;
+}
+
+.fechar-hist {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: none;
+    color: var(--texto-suave);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background .25s, color .25s;
+}
+
+.fechar-hist:hover,
+.fechar-hist:focus-visible {
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+    outline: none;
+}
+
+.novo-chat {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
     width: 100%;
+    padding: 14px 18px;
+    border-radius: 999px;
+
+    color: white;
+    font-family: 'InterSemiBold', 'Inter', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+
+    background:
+        linear-gradient(135deg,
+            rgba(73, 111, 86, 0.75) 0%,
+            rgba(53, 82, 65, 0.55) 55%,
+            rgba(73, 111, 86, 0.65) 100%);
+    transition: transform .25s ease;
 }
 
-.chat-container{
-    width:90%;
-    max-width:1200px;
-
-    margin:50px auto 100px;
+.novo-chat:hover {
+    transform: translateY(-2px);
 }
 
-#chat{
-    height:calc(100vh - 200px);
-
-    overflow-y:auto;
-
-    display:flex;
-    flex-direction:column;
-
-    gap:20px;
-
-    padding:20px 0;
+.hist-rotulo {
+    margin: 26px 0 10px 8px;
+    font-size: 14px;
+    color: #9EB5A5;
 }
 
-.mensagem{
-    display:flex;
+.hist-lista {
+    list-style: none;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-right: 2px;
 }
 
-.mensagem.usuario{
-    justify-content:flex-end;
+.hist-vazio {
+    margin: 4px 8px;
+    font-size: 14px;
+    line-height: 22px;
+    color: #9EB5A5;
+}
+
+.chat-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-radius: 16px;
+    border: 1px solid transparent;
+    transition: background .25s, border-color .25s;
+}
+
+.chat-item:hover,
+.chat-item:focus-within {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.chat-item.ativo {
+    background: rgba(73, 111, 86, 0.40);
+    border-color: rgba(181, 201, 186, 0.30);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25);
+}
+
+.chat-titulo {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 6px 12px 14px;
+
+    background: none;
+    border: none;
+    border-radius: 16px;
+
+    color: var(--texto-suave);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+
+.chat-item.ativo .chat-titulo,
+.chat-titulo:hover {
+    color: white;
+}
+
+.chat-titulo:focus-visible,
+.excluir:focus-visible {
+    outline: 2px solid var(--verde-brilho);
+    outline-offset: -2px;
+}
+
+.excluir {
+    width: 34px;
+    height: 34px;
+    margin-right: 6px;
+    flex-shrink: 0;
+
+    border: none;
+    border-radius: 50%;
+    background: none;
+    color: var(--texto-suave);
+    font-size: 13px;
+    cursor: pointer;
+
+    opacity: 0;
+    transition: opacity .2s, background .2s, color .2s;
+}
+
+.chat-item:hover .excluir,
+.chat-item:focus-within .excluir {
+    opacity: 0.8;
+}
+
+.excluir:hover {
+    opacity: 1;
+    background: rgba(213, 7, 7, 0.35);
+    color: white;
+}
+
+.hist-lista::-webkit-scrollbar {
+    width: 6px;
+}
+
+.hist-lista::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.hist-lista::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 10px;
+}
+
+/* cortina escura (só no celular) */
+.fundo-hist {
+    display: none;
+}
+
+/* ----------------------------------------------------------
+   CHAT
+   ---------------------------------------------------------- */
+
+.chat-container {
+    position: relative;
+    z-index: 1;
+
+    width: 90%;
+    max-width: 1200px;
+    height: 100vh;
+    height: 100dvh;
+
+    margin: 0 auto;
+}
+
+/* tela de boas-vindas: aparece enquanto não há perguntas */
+.boas-vindas {
+    display: none;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    padding: 90px 20px 150px;
+    pointer-events: none;
+}
+
+body.chat-vazio .boas-vindas {
+    display: flex;
+}
+
+.boas-vindas h1 {
+    font-family: 'InterBold', sans-serif;
+    font-size: clamp(48px, 7vw, 84px);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    text-shadow: 0 6px 40px rgba(73, 111, 86, 0.6);
+    margin-bottom: 20px;
+}
+
+.boas-vindas p {
+    max-width: 560px;
+    font-size: 19px;
+    line-height: 30px;
+    color: var(--texto-suave);
+    margin-bottom: 32px;
+}
+
+.sugestoes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    max-width: 760px;
+    pointer-events: auto;
+}
+
+.sugestao {
+    padding: 12px 22px;
+    border-radius: 999px;
+
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+
+    transition: transform .25s ease;
+}
+
+.sugestao:hover {
+    transform: translateY(-2px);
+}
+
+/* o chat rola por baixo do cabeçalho e da caixa de texto (ambos em vidro) */
+#chat {
+    height: 100%;
+    overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 20px;
+
+    padding: 100px 8px 140px;
+}
+
+.mensagem {
+    display: flex;
+    animation: surgir .3s ease both;
+}
+
+@keyframes surgir {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.mensagem.usuario {
+    justify-content: flex-end;
     font-family: 'Inter';
 }
 
-.mensagem.ia{
-    justify-content:flex-start;
+.mensagem.ia {
+    justify-content: flex-start;
     font-family: 'Inter';
 }
 
-.bolha{
-    max-width:70%;
+.bolha {
+    max-width: 75%;
 
-    padding:15px 20px;
+    padding: 16px 22px;
 
-    border-radius:20px;
+    border-radius: 24px;
 
-    line-height:28px;
+    line-height: 28px;
+    color: #EEF4F0;
 }
 
-.usuario .bolha{
-    background:#496F56;
+.usuario .bolha {
+    border-radius: 24px 24px 8px 24px;
+    background:
+        linear-gradient(135deg,
+            rgba(255, 255, 255, 0.18) 0%,
+            rgba(255, 255, 255, 0.05) 45%,
+            rgba(255, 255, 255, 0.10) 100%),
+        rgba(73, 111, 86, 0.60);
 }
 
-.ia .bolha{
-    background:#2B4334;
+.ia .bolha {
+    border-radius: 24px 24px 24px 8px;
 }
 
-.mensagem img{
-    max-width:300px;
+.mensagem img {
+    max-width: 300px;
 
-    border-radius:15px;
+    border-radius: 18px;
 
-    margin-top:10px;
+    margin-top: 10px;
 }
 
-
-.input-area{
-    position:fixed;
-    bottom:20px;
-    left:50%;
-    transform:translateX(-50%);
-
-    width:90%;
-    max-width:1200px;
+/* texto em markdown dentro das respostas */
+.bolha p {
+    margin-bottom: 12px;
 }
 
-#prompt{
-    width:100%;
-    height:70px;
+.bolha > :last-child {
+    margin-bottom: 0;
+}
 
-    resize:none;
+.bolha ul,
+.bolha ol {
+    padding-left: 24px;
+    margin-bottom: 12px;
+}
 
-    border:none;
-    outline:none;
+.bolha li {
+    margin-bottom: 4px;
+}
+
+.bolha h1,
+.bolha h2,
+.bolha h3 {
+    font-family: 'InterBold', sans-serif;
+    font-size: 19px;
+    margin: 14px 0 8px;
+}
+
+.bolha strong {
+    color: white;
+}
+
+.bolha a {
+    color: var(--verde-brilho);
+}
+
+.bolha code {
+    padding: 2px 7px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.35);
+    font-family: Consolas, monospace;
+    font-size: 0.92em;
+}
+
+.bolha pre {
+    overflow-x: auto;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.40);
+}
+
+.bolha pre code {
+    padding: 0;
+    background: none;
+}
+
+/* CAIXA DE TEXTO */
+
+.input-area {
+    position: fixed;
+    bottom: 20px;
+    left: calc(50% + var(--w) / 2);
+    transform: translateX(-50%);
+
+    width: min(calc((100% - var(--w)) * 0.9), 1200px);
+    border-radius: 36px;
+
+    z-index: 5;
+    transition: left .35s ease, width .35s ease;
+}
+
+#prompt {
+    display: block;
+    width: 100%;
+    height: 70px;
+
+    resize: none;
+
+    border: none;
+    outline: none;
+    background: transparent;
+    border-radius: 36px;
 
     font-family: 'Inter';
-    border-radius:20px;
+    line-height: 22px;
 
-    padding:20px 120px 20px 20px;
+    padding: 24px 90px 24px 28px;
 
-    background:#2B4334;
+    color: white;
 
-    color:white;
-
-    font-size:17px;
+    font-size: 17px;
 }
 
-#enviarBtn{
-    position:absolute;
-
-    top:50%;
-
-    transform:translateY(-50%);
-
-    width:45px;
-    height:45px;
-
-    border:none;
-
-    border-radius:50%;
-
-    cursor:pointer;
-
-    color:white;
-
-    background:#496F56;
+#prompt::placeholder {
+    color: rgba(208, 221, 211, 0.6);
 }
 
-#enviarBtn{
-    right:15px;
+#enviarBtn {
+    position: absolute;
+
+    top: 50%;
+    right: 12px;
+
+    transform: translateY(-50%);
+
+    width: 48px;
+    height: 48px;
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    color: white;
+
+    background:
+        linear-gradient(135deg,
+            rgba(73, 111, 86, 0.80) 0%,
+            rgba(53, 82, 65, 0.60) 55%,
+            rgba(73, 111, 86, 0.70) 100%);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.5),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.12),
+        0 6px 18px rgba(0, 0, 0, 0.35);
+
+    transition: transform .25s ease;
 }
 
-#enviarBtn:hover{
-    background:#86A48F;
+#enviarBtn:hover {
+    transform: translateY(-50%) scale(1.06);
 }
 
-.loader-bolas{
+#enviarBtn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+#enviarBtn:focus-visible,
+.sugestao:focus-visible,
+.novo-chat:focus-visible,
+.menu-btn:focus-visible {
+    outline: 2px solid var(--verde-brilho);
+    outline-offset: 3px;
+}
+
+/* ----------------------------------------------------------
+   LOADER
+   ---------------------------------------------------------- */
+
+.loader-bolas {
     position: relative;
     width: 40px;
     height: 40px;
@@ -230,87 +829,126 @@ nav a:hover::after {
     animation: girar 1.2s linear infinite;
 }
 
-.loader-bolas span{
+.loader-bolas span {
     position: absolute;
 
     width: 10px;
     height: 10px;
 
     border-radius: 50%;
-    background: white;
+    background: var(--verde-brilho);
 }
 
-.loader-bolas span:nth-child(1){
+.loader-bolas span:nth-child(1) {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
 }
 
-.loader-bolas span:nth-child(2){
+.loader-bolas span:nth-child(2) {
     right: 0;
     top: 50%;
     transform: translateY(-50%);
 }
 
-.loader-bolas span:nth-child(3){
+.loader-bolas span:nth-child(3) {
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
 }
 
-.loader-bolas span:nth-child(4){
+.loader-bolas span:nth-child(4) {
     left: 0;
     top: 50%;
     transform: translateY(-50%);
 }
 
-@keyframes girar{
-    from{
-        transform: rotate(0deg);
-    }
-
-    to{
-        transform: rotate(360deg);
-    }
+@keyframes girar {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
 }
 
-/* SCROLLBAR DO CHAT */
+/* ----------------------------------------------------------
+   SCROLLBARS
+   ---------------------------------------------------------- */
 
-#chat::-webkit-scrollbar {
-    width: 8px;
-}
-
-#chat::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-#chat::-webkit-scrollbar-thumb {
-    background: #496F56;
-    border-radius: 10px;
-}
-
-#chat::-webkit-scrollbar-thumb:hover {
-    background: #86A48F;
-}
-
-/* SCROLLBAR DO TEXTAREA */
-
+#chat::-webkit-scrollbar,
 #prompt::-webkit-scrollbar {
     width: 8px;
 }
 
+#chat::-webkit-scrollbar-track,
 #prompt::-webkit-scrollbar-track {
     background: transparent;
 }
 
+#chat::-webkit-scrollbar-thumb,
 #prompt::-webkit-scrollbar-thumb {
-    background: #496F56;
+    background: rgba(255, 255, 255, 0.22);
     border-radius: 10px;
 }
 
+#chat::-webkit-scrollbar-thumb:hover,
 #prompt::-webkit-scrollbar-thumb:hover {
-    background: #86A48F;
+    background: rgba(255, 255, 255, 0.38);
 }
+
+/* ----------------------------------------------------------
+   BRILHO GIRATÓRIO NA BORDA (hover)
+   ---------------------------------------------------------- */
+
+@property --ang {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes giro {
+    to { --ang: 360deg; }
+}
+
+.logo a:hover::before,
+.logo a:focus-visible::before,
+nav a:hover::before,
+nav a:focus-visible::before,
+.menu-btn:hover::before,
+.menu-btn:focus-visible::before,
+.sugestao:hover::before,
+.novo-chat:hover::before,
+#enviarBtn:hover::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    width: auto;
+    height: auto;
+    padding: 2px;
+    border-radius: inherit;
+    filter: none;
+    pointer-events: none;
+
+    background: conic-gradient(from var(--ang),
+            transparent 0%,
+            transparent 62%,
+            rgba(181, 201, 186, 0.9) 82%,
+            #ffffff 92%,
+            transparent 100%);
+
+    /* só o contorno, sem preencher */
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+
+    animation: giro 2.2s linear infinite;
+}
+
+.sugestao:hover::after,
+.novo-chat:hover::after {
+    opacity: 0;
+}
+
+/* ----------------------------------------------------------
+   FONTES
+   ---------------------------------------------------------- */
 
 @font-face {
     font-family: 'Inter';
@@ -333,112 +971,965 @@ nav a:hover::after {
     font-style: normal;
 }
 
+/* ----------------------------------------------------------
+   ACESSIBILIDADE
+   ---------------------------------------------------------- */
 
+@media (prefers-reduced-motion: reduce) {
+    body::before,
+    body::after,
+    .mensagem {
+        animation: none;
+    }
+
+    .logo a:hover::before,
+    .logo a:focus-visible::before,
+    nav a:hover::before,
+    nav a:focus-visible::before,
+    .menu-btn:hover::before,
+    .menu-btn:focus-visible::before,
+    .sugestao:hover::before,
+    .novo-chat:hover::before,
+    #enviarBtn:hover::before {
+        animation: none;
+    }
+
+    body,
+    header,
+    .input-area,
+    .historico,
+    .sugestao,
+    .novo-chat,
+    .menu-btn,
+    nav a {
+        transition: none;
+    }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    header::before,
+    .bolha,
+    .input-area,
+    .historico {
+        background: rgba(27, 43, 34, 0.92);
+    }
+}
+
+/* ----------------------------------------------------------
+   TABLET
+   ---------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+    header {
+        padding: 0 28px 0 20px;
+    }
+
+    nav a {
+        padding: 9px 14px;
+        font-size: 15px;
+    }
+
+    .bolha {
+        max-width: 85%;
+    }
+}
+
+/* ----------------------------------------------------------
+   MOBILE
+   ---------------------------------------------------------- */
 
 @media (max-width: 768px) {
 
-    /* BODY */
-    body{
-        overflow-x: hidden;
-        overflow-y: auto;
-        height: auto;
+    /* no celular o histórico fica por cima, sem empurrar a tela */
+    body.hist-aberto {
+        --w: 0px;
+    }
 
-        background: linear-gradient(
-            180deg,
-            #000000 0%,
-            #000000 40%,
-            #111814 75%,
-            #1B2B22 100%
-        );
+    .historico {
+        width: min(84vw, 320px);
+    }
+
+    .fundo-hist {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+
+        background: rgba(0, 0, 0, 0.55);
+        -webkit-backdrop-filter: blur(3px);
+        backdrop-filter: blur(3px);
+
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .35s ease;
+    }
+
+    body.hist-aberto .fundo-hist {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .excluir {
+        opacity: 0.7;
     }
 
     /* HEADER */
     header {
-        padding: 0 15px;
+        padding: 0 12px;
         height: 70px;
+    }
+
+    .header-esq {
+        gap: 4px;
+    }
+
+    .menu-btn {
+        top: 82px;
+        left: 14px;
+        width: 48px;
+        height: 48px;
     }
 
     .logo a {
         font-size: 20px;
+        padding: 8px 12px;
     }
 
-    /* MENU (QUADRADOS IGUAL ECOENEM) */
+    /* MENU: dock de vidro fixo na base, com texto visível */
     nav {
         position: fixed;
-        top: 90px;
-        right: 10px;
+        bottom: 14px;
+        left: 50%;
+        transform: translateX(-50%);
+
+        max-width: calc(100% - 24px);
+        overflow-x: auto;
+        scrollbar-width: none;
+
+        padding: 6px;
+        gap: 4px;
+        border-radius: 999px;
+
+        background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.16) 0%,
+                rgba(255, 255, 255, 0.04) 45%,
+                rgba(255, 255, 255, 0.09) 100%),
+            rgba(10, 20, 14, 0.30);
+        -webkit-backdrop-filter: blur(20px) saturate(170%);
+        backdrop-filter: blur(20px) saturate(170%);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        box-shadow:
+            inset 0 1px 1px rgba(255, 255, 255, 0.45),
+            inset 0 -1px 1px rgba(255, 255, 255, 0.10),
+            0 14px 34px rgba(0, 0, 0, 0.42);
+
+        pointer-events: auto;
+        z-index: 99999;
+    }
+
+    nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    nav a {
+        flex-shrink: 0;
+        padding: 10px 13px;
+        font-size: 14px;
+    }
+
+    /* CHAT */
+    .chat-container {
+        width: 95%;
+    }
+
+    #chat {
+        gap: 14px;
+        padding: 84px 4px 170px;
+    }
+
+    .bolha {
+        max-width: 88%;
+        font-size: 15px;
+        line-height: 24px;
+        padding: 13px 18px;
+    }
+
+    .mensagem img {
+        max-width: 200px;
+    }
+
+    .boas-vindas {
+        padding: 80px 12px 170px;
+    }
+
+    .boas-vindas p {
+        font-size: 16px;
+        line-height: 26px;
+        margin-bottom: 24px;
+    }
+
+    .sugestao {
+        font-size: 14px;
+        padding: 10px 18px;
+    }
+
+    /* a caixa de texto sobe para ficar acima do dock */
+    .input-area {
+        width: 95%;
+        bottom: 78px;
+        border-radius: 30px;
+    }
+
+    #prompt {
+        height: 60px;
+        font-size: 15px;
+        padding: 19px 74px 19px 20px;
+        border-radius: 30px;
+    }
+
+    #enviarBtn {
+        width: 42px;
+        height: 42px;
+        right: 9px;
+    }
+}
+
+
+/* ==========================================================
+   HISTÓRICO — FUNDO PADRÃO E BRILHO GIRATÓRIO
+========================================================== */
+
+/* Todos os chats terão o fundo verde de vidro */
+.chat-item {
+    position: relative;
+    isolation: isolate;
+    overflow: visible;
+
+    background: rgba(73, 111, 86, 0.40);
+    border: 1px solid rgba(181, 201, 186, 0.30);
+
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25);
+
+    transition: background .25s ease, box-shadow .25s ease;
+}
+
+/* O fundo permanece igual mesmo quando selecionado */
+.chat-item.ativo {
+    background: rgba(73, 111, 86, 0.40);
+    border-color: rgba(181, 201, 186, 0.30);
+}
+
+/* Pequeno destaque ao passar o mouse */
+.chat-item:hover,
+.chat-item:focus-within {
+    background: rgba(73, 111, 86, 0.52);
+}
+
+/* Brilho giratório: aparece somente no chat aberto */
+.chat-item.ativo::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    padding: 2px;
+    border-radius: inherit;
+
+    background: conic-gradient(
+        from var(--ang),
+        transparent 0%,
+        transparent 62%,
+        rgba(181, 201, 186, 0.9) 82%,
+        #ffffff 92%,
+        transparent 100%
+    );
+
+    -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+
+    -webkit-mask-composite: xor;
+
+    mask:
+        linear-gradient(#000 0 0) content-box exclude,
+        linear-gradient(#000 0 0);
+
+    pointer-events: none;
+    z-index: 0;
+
+    animation: giro 2.2s linear infinite;
+}
+
+/* Mantém os botões acima do brilho */
+.chat-item > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* O brilho não aparece nos outros chats */
+.chat-item:not(.ativo)::before {
+    content: none;
+}
+
+/* Respeita a preferência por movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+    .chat-item.ativo::before {
+        animation: none;
+    }
+}
+
+
+/* ==========================================================
+   CORREÇÃO — SOMBRA COMPLETA DAS MENSAGENS
+========================================================== */
+
+#chat {
+    /* Mais espaço para a sombra das bolhas */
+    padding: 110px 40px 180px !important;
+
+    /* Evita que a sombra fique cortada nas extremidades */
+    scroll-padding-top: 40px;
+    scroll-padding-bottom: 40px;
+}
+
+/* Ajuste para celulares */
+@media (max-width: 768px) {
+    #chat {
+        padding: 100px 24px 160px !important;
+    }
+}
+
+
+/* ==========================================================
+   ECOIA — RESPONSIVIDADE COMPLETA
+   Desktop, tablet e celular
+   ========================================================== */
+
+/* ==========================================================
+   TABLETS
+   ========================================================== */
+
+@media (min-width: 769px) and (max-width: 1100px) {
+
+    header {
+        padding: 0 25px;
+    }
+
+    header nav {
+        gap: 2px;
+    }
+
+    header nav a {
+        padding: 9px 11px;
+        font-size: 14px;
+    }
+
+    .chat-container {
+        width: 94%;
+    }
+
+    #chat {
+        padding-left: 25px !important;
+        padding-right: 25px !important;
+    }
+
+    .bolha {
+        max-width: 85%;
+    }
+
+    .input-area {
+        width: min(calc((100% - var(--w)) * .92), 1100px);
+    }
+
+    .boas-vindas h1 {
+        font-size: clamp(48px, 7vw, 72px);
+    }
+
+    .historico {
+        width: 280px;
+    }
+
+}
+
+/* ==========================================================
+   CELULARES
+   ========================================================== */
+
+@media (max-width: 768px) {
+
+    /* FUNDO E TELA */
+
+    body {
+        --w: 0px;
+
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+
+        min-height: 0;
+
+        overflow: hidden;
+        overflow-x: hidden;
+
+        padding-left: 0;
+
+        background: linear-gradient(to bottom,
+            #000000 0%,
+            #000000 35%,
+            #111814 70%,
+            #1B2B22 100%);
+    }
+
+    body.hist-aberto {
+        --w: 0px;
+    }
+
+    /* HEADER */
+
+    header {
+        position: fixed;
+
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 65px;
+
+        padding: 0 15px;
+
+        justify-content: space-between;
+
+        z-index: 9999;
+    }
+
+    .header-esq {
+        gap: 5px;
+    }
+
+    .logo a {
+        font-size: 20px;
+        padding: 8px 10px;
+    }
+
+    /* MENU: 5 BOLINHAS NO CANTO SUPERIOR DIREITO */
+
+    header nav {
+        position: absolute;
+
+        top: 50%;
+        right: 12px;
+
+        left: auto;
+
+        transform: translateY(-50%);
 
         display: flex;
+
         flex-direction: column;
-        gap: 12px;
+        align-items: center;
+
+        gap: 9px;
+
+        width: auto;
+        max-width: none;
+
+        padding: 0;
+        margin: 0;
+
+        overflow: visible;
+
+        background: none;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
 
         z-index: 99999;
     }
 
-    nav a {
-        width: 45px;
-        height: 45px;
-
+    header nav a {
         display: block;
 
-        background: rgba(43, 67, 52, 0.9);
-        border-radius: 12px;
+        width: 40px;
+        height: 40px;
+
+        min-width: 11px;
+
+        padding: 0;
+        margin: 0;
+
+        flex-shrink: 0;
+
+        border-radius: 50%;
 
         font-size: 0;
+        line-height: 0;
+
+        background: rgba(255,255,255,.30);
+
+        border: 1px solid rgba(255,255,255,.65);
+
+        box-shadow: 0 0 5px rgba(255,255,255,.15);
+
+        transition: .3s ease;
     }
 
-    nav a::before,
-    nav a::after {
-        display: none !important;
+    header nav a:hover,
+    header nav a:focus-visible {
+        background: var(--verde-brilho);
+
+        transform: scale(1.4);
+
+        box-shadow:
+            0 0 10px rgba(181,201,186,.8),
+            0 0 20px rgba(181,201,186,.4);
+
+        outline: none;
     }
 
-    /* CHAT CONTAINER */
-    .chat-container{
-        width: 95%;
-        margin: 70px auto 120px;
+    /* BOTÃO DO HISTÓRICO */
+
+    .menu-btn {
+        position: fixed;
+
+        top: 78px;
+        left: 14px;
+
+        width: 44px;
+        height: 44px;
+
+        z-index: 9990;
     }
 
-    #chat{
-        height: calc(100vh - 260px);
-        padding: 10px 0;
-        gap: 12px;
+    /* HISTÓRICO */
+
+    .historico {
+        position: fixed;
+
+        top: 0;
+        left: 0;
+        bottom: 0;
+
+        width: min(85vw, 320px);
+
+        padding: 18px 14px;
+
+        border-radius: 0 24px 24px 0;
+
+        z-index: 10001;
+    }
+
+    .fundo-hist {
+        display: block;
+
+        position: fixed;
+        inset: 0;
+
+        z-index: 10000;
+
+        background: rgba(0,0,0,.55);
+
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+
+        transition: opacity .3s ease;
+    }
+
+    body.hist-aberto .fundo-hist {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .hist-topo h2 {
+        font-size: 19px;
+    }
+
+    .novo-chat {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+
+    .chat-titulo {
+        font-size: 14px;
+    }
+
+    .excluir {
+        opacity: .8;
+    }
+
+    /* ÁREA PRINCIPAL DO CHAT */
+
+    .chat-container {
+        width: 100%;
+        max-width: 100%;
+
+        height: 100vh;
+        height: 100dvh;
+
+        margin: 0;
+
+        overflow: hidden;
+    }
+
+    #chat {
+        width: 100%;
+        height: 100%;
+
+        padding: 95px 16px 105px !important;
+
+        gap: 15px;
+
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        scroll-behavior: smooth;
+        overscroll-behavior: contain;
     }
 
     /* MENSAGENS */
-    .bolha{
-        max-width: 85%;
+
+    .mensagem {
+        width: 100%;
+    }
+
+    .bolha {
+        max-width: 90%;
+
+        padding: 13px 16px;
+
+        border-radius: 20px;
+
+        font-size: 14px;
+        line-height: 24px;
+
+        overflow-wrap: anywhere;
+        word-break: normal;
+    }
+
+    .usuario .bolha {
+        border-radius: 20px 20px 7px 20px;
+    }
+
+    .ia .bolha {
+        border-radius: 20px 20px 20px 7px;
+    }
+
+    .mensagem img {
+        max-width: min(100%, 220px);
+        height: auto;
+    }
+
+    .bolha pre {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    /* TELA DE BOAS-VINDAS */
+
+    .boas-vindas {
+        padding: 90px 22px 115px;
+
+        justify-content: center;
+
+        overflow-y: auto;
+    }
+
+    .boas-vindas h1 {
+        font-size: clamp(38px, 10vw, 55px);
+
+        margin-bottom: 16px;
+    }
+
+    .boas-vindas p {
+        max-width: 100%;
+
         font-size: 15px;
         line-height: 24px;
+
+        margin-bottom: 22px;
     }
 
-    .mensagem img{
-        max-width: 200px;
+    .sugestoes {
+        width: 100%;
+
+        gap: 9px;
     }
 
-    /* INPUT FIXO */
-    .input-area{
-        width: 95%;
-        bottom: 10px;
+    .sugestao {
+        max-width: 100%;
+
+        padding: 10px 15px;
+
+        font-size: 13px;
     }
 
-    #prompt{
-        height: 60px;
-        font-size: 15px;
-        padding: 15px 100px 15px 15px;
+    /* CAMPO DE TEXTO */
+
+    .input-area {
+        position: fixed;
+
+        bottom: 12px;
+
+        left: 50%;
+        transform: translateX(-50%);
+
+        width: calc(100% - 28px);
+        max-width: 700px;
+
+        border-radius: 28px;
+
+        z-index: 9998;
     }
 
-    #imagemBtn,
-    #enviarBtn{
+    #prompt {
+        width: 100%;
+        height: 58px;
+
+        padding: 17px 65px 17px 18px;
+
+        font-size: 14px;
+        line-height: 22px;
+
+        border-radius: 28px;
+    }
+
+    #enviarBtn {
+        width: 42px;
+        height: 42px;
+
+        right: 8px;
+    }
+
+    /* SCROLL */
+
+    #chat::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    #chat::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,.2);
+        border-radius: 10px;
+    }
+
+}
+
+/* ==========================================================
+   CELULARES PEQUENOS
+   ========================================================== */
+
+@media (max-width: 380px) {
+
+    header {
+        padding: 0 10px;
+    }
+
+    .logo a {
+        font-size: 18px;
+    }
+
+    header nav {
+        right: 8px;
+        gap: 7px;
+    }
+
+    header nav a {
+        width: 9px;
+        height: 9px;
+        min-width: 9px;
+    }
+
+    .menu-btn {
+        left: 10px;
         width: 40px;
         height: 40px;
     }
 
-    #imagemBtn{
-        right: 55px;
+    .historico {
+        width: 88vw;
     }
 
-    #enviarBtn{
-        right: 10px;
+    .bolha {
+        max-width: 94%;
+        padding: 11px 13px;
+        font-size: 13px;
+        line-height: 22px;
     }
 
+    .boas-vindas {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .boas-vindas h1 {
+        font-size: 36px;
+    }
+
+    .boas-vindas p {
+        font-size: 14px;
+        line-height: 22px;
+    }
+
+    .input-area {
+        width: calc(100% - 20px);
+    }
+
+}
+
+/* ==========================================================
+   CELULARES NA HORIZONTAL
+   ========================================================== */
+
+@media (max-width: 900px) and (max-height: 500px) {
+
+    .boas-vindas {
+        padding-top: 75px;
+        padding-bottom: 85px;
+    }
+
+    .boas-vindas h1 {
+        font-size: 38px;
+        margin-bottom: 10px;
+    }
+
+    .boas-vindas p {
+        font-size: 14px;
+        line-height: 21px;
+        margin-bottom: 12px;
+    }
+
+    .sugestoes {
+        gap: 6px;
+    }
+
+    #chat {
+        padding-top: 85px !important;
+        padding-bottom: 85px !important;
+    }
+
+    .input-area {
+        bottom: 8px;
+    }
+
+    .menu-btn {
+        top: 74px;
+    }
+
+}
+
+/* ==========================================================
+   ACESSIBILIDADE
+   ========================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    header nav a,
+    .historico,
+    .fundo-hist,
+    .input-area,
+    .menu-btn {
+        transition: none !important;
+    }
+
+}
+
+/* ==========================================================
+   ECOIA — MENU RESPONSIVO COM BOLINHAS GRANDES
+   ========================================================== */
+
+@media (max-width: 768px) {
+
+    /* Menu vertical no canto superior direito */
+    header nav {
+        position: fixed !important;
+
+        top: 50% !important;
+        right: 18px !important;
+        left: auto !important;
+
+        transform: translateY(-50%) !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        gap: 14px !important;
+
+        width: auto !important;
+        max-width: none !important;
+
+        padding: 0 !important;
+
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+
+        overflow: visible !important;
+
+        z-index: 99999 !important;
+    }
+
+    /* Bolinhas */
+    header nav a {
+        display: block !important;
+
+        width: 50px !important;
+        height: 50px !important;
+        min-width: 50px !important;
+        min-height: 50px !important;
+
+        flex-shrink: 0 !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        border-radius: 50% !important;
+
+        font-size: 0 !important;
+        line-height: 0 !important;
+
+        background: rgba(181, 201, 186, 0.30) !important;
+
+        border: 2px solid rgba(255, 255, 255, 0.65) !important;
+
+        box-shadow:
+            inset 0 1px 5px rgba(255,255,255,.35),
+            0 4px 14px rgba(0,0,0,.35) !important;
+
+        transition: .3s ease !important;
+    }
+
+    /* Ao tocar ou selecionar */
+    header nav a:hover,
+    header nav a:focus-visible,
+    header nav a:active {
+        background: rgba(181, 201, 186, 0.85) !important;
+
+        transform: scale(1.15);
+
+        border-color: white !important;
+
+        box-shadow:
+            0 0 12px rgba(181, 201, 186, .9),
+            0 0 25px rgba(181, 201, 186, .5) !important;
+
+        outline: none;
+    }
+}
+
+/* Celulares menores */
+@media (max-width: 380px) {
+    header nav {
+        right: 12px !important;
+        gap: 11px !important;
+    }
+
+    header nav a {
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+    }
 }

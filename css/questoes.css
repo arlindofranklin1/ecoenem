@@ -1,293 +1,576 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+/* ==========================================================
+   EcoENEM — Questões em Liquid Glass
+   Paleta: #000000  #2B4334  #355241  #496F56  #B5C9BA  #D0DDD3
+   ========================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     font-family: 'Inter', sans-serif;
 }
 
-body{
-    background: linear-gradient(90deg,#000,#355241,#496F56);
-    color:white;
-    overflow-x:hidden;
-    min-height:100vh;
-    display:flex;
-    font-family: 'Inter', sans-serif;
-    flex-direction:column;
+:root {
+    --verde-brilho: #B5C9BA;
+    --texto-suave: #D0DDD3;
 }
 
-/* HEADER (igual ao seu padrão) */
-
-header{
-    position:fixed;
-    top:0;
-    width:100%;
-    height:80px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:0 80px;
-    background:#2B4334;
-    z-index:9999;
-}
-
-
-.logo {
+body {
+    background: linear-gradient(90deg, #000, #355241, #496F56);
     color: white;
-    font-size: 30px;
-    font-family: 'InterBold', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    font-family: 'Inter', sans-serif;
+    flex-direction: column;
+}
 
+/* ----------------------------------------------------------
+   FUNDO — manchas de luz para o vidro refratar
+   ---------------------------------------------------------- */
+
+body::before,
+body::after {
+    content: '';
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(80px);
+}
+
+body::before {
+    width: 520px;
+    height: 520px;
+    left: -120px;
+    bottom: -140px;
+    background: radial-gradient(circle, rgba(73, 111, 86, 0.75), transparent 70%);
+    animation: deriva 18s ease-in-out infinite alternate;
+}
+
+body::after {
+    width: 420px;
+    height: 420px;
+    right: 5%;
+    top: -160px;
+    background: radial-gradient(circle, rgba(181, 201, 186, 0.28), transparent 70%);
+    animation: deriva 22s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes deriva {
+    from { transform: translate(0, 0); }
+    to   { transform: translate(60px, -40px); }
+}
+
+/* ----------------------------------------------------------
+   LIQUID GLASS — base compartilhada
+   ---------------------------------------------------------- */
+
+.questao,
+.alt,
+.botoes button,
+.reiniciar-btn,
+footer p {
     position: relative;
+    background:
+        linear-gradient(135deg,
+            rgba(255, 255, 255, 0.16) 0%,
+            rgba(255, 255, 255, 0.04) 45%,
+            rgba(255, 255, 255, 0.09) 100%);
+    -webkit-backdrop-filter: blur(20px) saturate(170%);
+    backdrop-filter: blur(20px) saturate(170%);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.45),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.10),
+        inset 0 0 28px rgba(181, 201, 186, 0.08),
+        0 14px 34px rgba(0, 0, 0, 0.42);
+}
+
+/* reflexo de luz no topo */
+.questao::before,
+.alt::before,
+.botoes button::before,
+.reiniciar-btn::before,
+footer p::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 12%;
+    width: 34%;
+    height: 2px;
+    border-radius: 999px;
+    background: radial-gradient(closest-side, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0));
+    filter: blur(1px);
+    pointer-events: none;
+}
+
+/* brilho esverdeado embaixo */
+.questao::after,
+.alt::after,
+.botoes button::after,
+.reiniciar-btn::after,
+footer p::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 38%;
+    width: 38%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--verde-brilho), transparent);
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+/* ----------------------------------------------------------
+   HEADER — barra retangular em vidro; o botão só aparece no hover
+   ---------------------------------------------------------- */
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 80px;
+
     z-index: 9999;
 }
 
-.logo a {
-    color: white;
-    font-size: 30px;
-    font-family: 'InterBold', sans-serif;
-    text-decoration: none;
+/* a lâmina de vidro fica numa camada própria, para os botões
+   do hover também conseguirem desfocar o que está embaixo */
+header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+
+    background:
+        linear-gradient(180deg,
+            rgba(255, 255, 255, 0.14) 0%,
+            rgba(255, 255, 255, 0.04) 100%),
+        rgba(43, 67, 52, 0.35);
+    -webkit-backdrop-filter: blur(22px) saturate(170%);
+    backdrop-filter: blur(22px) saturate(170%);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.35),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.10),
+        0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* brilho esverdeado na borda de baixo */
+header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 38%;
+    width: 24%;
+    height: 1px;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, var(--verde-brilho), transparent);
+    opacity: 0.8;
+}
+
+.logo {
+    position: relative;
+    z-index: 1;
 }
 
 nav {
     position: relative;
-    z-index: 9999;
+    z-index: 1;
 
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 6px;
+}
+
+.logo a,
+nav a {
+    position: relative;
+
+    color: white;
+    text-decoration: none;
+
+    padding: 10px 18px;
+    border-radius: 999px;
+
+    transition: color .25s, box-shadow .25s;
+}
+
+.logo a {
+    font-size: 28px;
+    font-family: 'InterBold', 'Inter', sans-serif;
+    letter-spacing: -0.01em;
 }
 
 nav a {
-    color: white;
-    font-family: 'InterSemiBold', sans-serif;
-    text-decoration: none;
-    font-size: 18px;
+    font-family: 'InterSemiBold', 'Inter', sans-serif;
+    font-size: 17px;
     font-weight: 500;
-    z-index: 999999;
+    color: var(--texto-suave);
+}
 
+/* hover: vira um botão de liquid glass (transparente e desfocado) */
+.logo a:hover,
+.logo a:focus-visible,
+nav a:hover,
+nav a:focus-visible {
+    color: white;
+    outline: none;
+
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.16) 0%,
+            rgba(255, 255, 255, 0.04) 45%,
+            rgba(255, 255, 255, 0.09) 100%);
+    -webkit-backdrop-filter: blur(14px) saturate(170%);
+    backdrop-filter: blur(14px) saturate(170%);
+
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.45),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.10),
+        inset 0 0 22px rgba(181, 201, 186, 0.10),
+        0 8px 22px rgba(0, 0, 0, 0.30);
+}
+
+/* ----------------------------------------------------------
+   CONTEÚDO
+   ---------------------------------------------------------- */
+
+.container {
     position: relative;
-    transition: color .3s;
+    z-index: 1;
+
+    margin-top: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
 }
 
-nav a::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -5px;
+/* PROGRESSO */
 
-    width: 0;
-    height: 2px;
+.progresso-container {
+    width: 90%;
+    max-width: 900px;
+    height: 12px;
 
-    background: white;
-    transition: width .3s ease;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow:
+        inset 0 1px 3px rgba(0, 0, 0, 0.45),
+        0 1px 0 rgba(255, 255, 255, 0.12);
+
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 10px;
 }
 
-nav a:hover {
-    color: #B5C9BA;
+#progressoBar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #496F56, #4f9869 60%, #9fd9b3);
+    box-shadow: 0 0 12px rgba(79, 152, 105, 0.7);
+    border-radius: 20px;
+    transition: 0.4s;
 }
 
-nav a:hover::after {
-    width: 100%;
-}
-/* CONTAINER */
-
-.container{
-    margin-top:120px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    flex:1;
+#contadorQuestoes {
+    width: 90%;
+    max-width: 900px;
+    text-align: right;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: var(--texto-suave);
 }
 
 /* QUESTÃO */
 
-#questaoBox{
-    width:90%;
-    max-width:900px;
+#questaoBox {
+    width: 90%;
+    max-width: 900px;
 }
 
-.questao{
-    background: linear-gradient(
-        to right,
-        #f5f5f5 0%,
-        #dadada 60%,
-        #cbcbcb 100%
-    );
-
-    padding:30px;
-    border-radius:20px;
+.questao {
+    padding: 32px;
+    border-radius: 32px;
+    background:
+        linear-gradient(135deg,
+            rgba(255, 255, 255, 0.14) 0%,
+            rgba(255, 255, 255, 0.04) 45%,
+            rgba(255, 255, 255, 0.08) 100%),
+        rgba(10, 20, 14, 0.38);
 }
 
-.questao p{
-    color: #000000;
+.questao p {
+    color: #EEF4F0;
     font-family: 'Inter', sans-serif;
     font-size: 20px;
-    margin-bottom:20px;
+    line-height: 31px;
+    margin-bottom: 20px;
 }
 
-.fonte{
+.fonte {
     font-family: 'InterBold', sans-serif;
     font-size: 20px;
-    color: #000000;
+    color: white;
 
     margin-bottom: 15px;
 
     text-transform: uppercase;
 }
 
-.questao img{
-    width:300px;
-    height: 100%;
-    border-radius:15px;
-    margin-bottom:20px;
+.questao img {
+    width: 300px;
+    height: auto;
+    border-radius: 18px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 /* ALTERNATIVAS */
 
-.alternativas{
-    display:flex;
-    flex-direction:column;
-    gap:15px;
+.alternativas {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
-.alt{
-    background: linear-gradient(
-        to right,
-        #f5f5f5 0%,
-        #dadada 60%,
-        #cbcbcb 100%
-    );
-    border: 1px solid #8e8e8e;
-    padding:15px;
-    color: #000000;
-    border-radius:12px;
-    cursor:pointer;
+.alt {
+    padding: 16px 20px;
+    color: white;
+    line-height: 24px;
+    border-radius: 20px;
+    cursor: pointer;
+
+    transition: transform .25s ease, background .25s ease, box-shadow .25s ease;
 }
 
-.alt:hover{
-    background:#9ab8a4;
+.alt:hover {
+    transform: translateY(-2px);
+    background:
+        linear-gradient(135deg,
+            rgba(73, 111, 86, 0.65) 0%,
+            rgba(53, 82, 65, 0.45) 55%,
+            rgba(73, 111, 86, 0.55) 100%);
 }
 
-/* BOTÕES */
-
-.botoes{
-    margin-top:20px;
-    margin-bottom: 20px;
-    display:flex;
-    gap:20px;
+.alt.correta {
+    transform: none;
+    border-color: rgba(120, 255, 160, 0.7);
+    background:
+        linear-gradient(135deg,
+            rgba(14, 211, 60, 0.55) 0%,
+            rgba(14, 211, 60, 0.25) 100%);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.5),
+        inset 0 0 28px rgba(14, 211, 60, 0.25),
+        0 0 22px rgba(14, 211, 60, 0.35),
+        0 14px 34px rgba(0, 0, 0, 0.42);
 }
 
-.botoes button{
-    width:50px;
-    height:50px;
-    border:none;
-    border-radius:50%;
-    background:#496F56;
-    color:white;
-    cursor:pointer;
+.alt.errada {
+    transform: none;
+    border-color: rgba(255, 120, 120, 0.7);
+    background:
+        linear-gradient(135deg,
+            rgba(213, 7, 7, 0.6) 0%,
+            rgba(213, 7, 7, 0.28) 100%);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.4),
+        inset 0 0 28px rgba(213, 7, 7, 0.25),
+        0 0 22px rgba(213, 7, 7, 0.3),
+        0 14px 34px rgba(0, 0, 0, 0.42);
 }
 
-.progresso-container{
-    width:90%;
-    max-width:900px;
-    height:12px;
-    background:#cfcfcf;
-    border-radius:20px;
-    overflow:hidden;
-    margin-bottom:10px;
+/* FEEDBACK */
+
+.feedback-correto,
+.feedback-errado {
+    margin-top: 22px;
+    padding: 18px 22px;
+    border-radius: 22px;
+    line-height: 25px;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25);
 }
 
-#progressoBar{
-    width:0%;
-    height:100%;
-    background:#4f9869;
-    transition:0.4s;
+.feedback-correto {
+    background: rgba(30, 142, 62, 0.28);
+    border: 1px solid rgba(120, 255, 160, 0.55);
+    color: #DDF8E3;
 }
 
-#contadorQuestoes{
-    width:90%;
-    max-width:900px;
-    text-align:right;
-    margin-bottom:20px;
-    font-size:14px;
-    color:white;
+.feedback-errado {
+    background: rgba(198, 40, 40, 0.28);
+    border: 1px solid rgba(255, 130, 130, 0.55);
+    color: #FFE2E2;
 }
 
-.feedback-correto{
-    margin-top:20px;
-    padding:15px;
+/* BOTÕES ANTERIOR / PRÓXIMA */
 
-    background:#d9f5df;
-    border:2px solid #1e8e3e;
-
-    color:#145c28;
-    border-radius:12px;
+.botoes {
+    margin-top: 24px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 20px;
 }
 
-.feedback-errado{
-    margin-top:20px;
-    padding:15px;
+.botoes button {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
 
-    background:#ffdede;
-    border:2px solid #c62828;
-
-    color:#7a0d0d;
-    border-radius:12px;
+    transition: transform .25s ease;
 }
 
-.resultado-final{
-    text-align:center;
+.botoes button:hover {
+    transform: translateY(-2px);
+}
+
+.botoes button:active {
+    transform: scale(0.95);
+}
+
+.botoes button:focus-visible,
+.reiniciar-btn:focus-visible,
+.alt:focus-visible {
+    outline: 2px solid var(--verde-brilho);
+    outline-offset: 3px;
+}
+
+/* RESULTADO FINAL */
+
+.resultado-final {
+    text-align: center;
     font-family: 'Inter', sans-serif;
 }
 
-.resultado-final h2{
-    color:#2B4334;
+.resultado-final h2 {
+    color: white;
     font-family: 'InterBold', sans-serif;
-
-    margin-bottom:20px;
+    margin-bottom: 20px;
 }
 
-.resultado-final p{
+.resultado-final p {
     font-family: 'Inter', sans-serif;
-    margin-bottom:15px;
+    margin-bottom: 15px;
 }
 
-.reiniciar-btn{
-    margin-top:15px;
-    padding:12px 25px;
+.reiniciar-btn {
+    margin-top: 15px;
+    padding: 14px 28px;
+    border-radius: 999px;
 
-    border:none;
-    border-radius:10px;
+    color: white;
+    font-family: 'InterSemiBold', 'Inter', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
 
-    background:#496F56;
-    color:white;
-
-    font-size:16px;
-    cursor:pointer;
+    background:
+        linear-gradient(135deg,
+            rgba(73, 111, 86, 0.75) 0%,
+            rgba(53, 82, 65, 0.55) 55%,
+            rgba(73, 111, 86, 0.65) 100%);
+    transition: transform .25s ease;
 }
 
-.reiniciar-btn:hover{
-    opacity:0.9;
+.reiniciar-btn:hover {
+    transform: translateY(-2px);
 }
 
-/* RODAPÉ */
+/* ----------------------------------------------------------
+   RODAPÉ — pílula de vidro
+   ---------------------------------------------------------- */
 
 footer {
-    height: 80px;
+    position: relative;
+    z-index: 1;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    background: #2B4334;
-
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.50);
+    padding: 8px 20px 28px;
 }
 
 footer p {
-    color: white;
-    font-family: 'InterSemiBold', sans-serif;
-    font-size: 16px;
+    padding: 14px 32px;
+    border-radius: 999px;
+
+    color: var(--texto-suave);
+    font-family: 'InterSemiBold', 'Inter', sans-serif;
+    font-size: 15px;
+    text-align: center;
 }
+
+/* ----------------------------------------------------------
+   BRILHO GIRATÓRIO NA BORDA (hover)
+   ---------------------------------------------------------- */
+
+@property --ang {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes giro {
+    to { --ang: 360deg; }
+}
+
+.logo a:hover::before,
+.logo a:focus-visible::before,
+nav a:hover::before,
+nav a:focus-visible::before,
+.alt:hover::before,
+.botoes button:hover::before,
+.reiniciar-btn:hover::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    width: auto;
+    height: auto;
+    padding: 2px;
+    border-radius: inherit;
+    filter: none;
+    pointer-events: none;
+
+    background: conic-gradient(from var(--ang),
+            transparent 0%,
+            transparent 62%,
+            rgba(181, 201, 186, 0.9) 82%,
+            #ffffff 92%,
+            transparent 100%);
+
+    /* só o contorno, sem preencher */
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+
+    animation: giro 2.2s linear infinite;
+}
+
+.alt:hover::after,
+.botoes button:hover::after,
+.reiniciar-btn:hover::after {
+    opacity: 0;
+}
+
+/* ----------------------------------------------------------
+   FONTES
+   ---------------------------------------------------------- */
 
 @font-face {
     font-family: 'Inter';
@@ -310,118 +593,608 @@ footer p {
     font-style: normal;
 }
 
+/* ----------------------------------------------------------
+   ACESSIBILIDADE
+   ---------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    body::before,
+    body::after {
+        animation: none;
+    }
+
+    .logo a:hover::before,
+.logo a:focus-visible::before,
+    nav a:hover::before,
+    nav a:focus-visible::before,
+    .alt:hover::before,
+    .botoes button:hover::before,
+    .reiniciar-btn:hover::before {
+        animation: none;
+    }
+
+    .alt,
+    .botoes button,
+    .reiniciar-btn,
+    nav a {
+        transition: none;
+    }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    header::before,
+    .questao,
+    footer p {
+        background: rgba(43, 67, 52, 0.88);
+    }
+}
+
+/* ----------------------------------------------------------
+   TABLET
+   ---------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+    header {
+        padding: 0 28px;
+    }
+
+    nav a {
+        padding: 9px 14px;
+        font-size: 15px;
+    }
+}
+
+/* ----------------------------------------------------------
+   MOBILE
+   ---------------------------------------------------------- */
+
 @media (max-width: 768px) {
 
-    /* BODY */
-    body{
+    body {
         overflow-x: hidden;
         overflow-y: auto;
         height: auto;
 
-        background: linear-gradient(
-            180deg,
-            #000000 0%,
-            #000000 40%,
-            #355241 75%,
-            #496F56 100%
-        );
+        background: linear-gradient(180deg,
+                #000000 0%,
+                #000000 40%,
+                #355241 75%,
+                #496F56 100%);
     }
 
-    /* HEADER */
+    body::before {
+        width: 340px;
+        height: 340px;
+        left: -140px;
+        bottom: auto;
+        top: 220px;
+    }
+
+    body::after {
+        width: 300px;
+        height: 300px;
+        right: -120px;
+        top: -120px;
+    }
+
     header {
-        padding: 0 15px;
+        padding: 0 16px;
         height: 70px;
     }
 
     .logo a {
         font-size: 20px;
+        padding: 8px 14px;
     }
 
-    /* MENU (IGUAL ECOENEM) */
+    /* menu vira dock de vidro na base */
     nav {
         position: fixed;
-        top: 90px;
-        right: 10px;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
 
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
+        max-width: calc(100% - 24px);
+        overflow-x: auto;
+        scrollbar-width: none;
 
+        padding: 6px;
+        gap: 4px;
+        border-radius: 999px;
+
+        background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.16) 0%,
+                rgba(255, 255, 255, 0.04) 45%,
+                rgba(255, 255, 255, 0.09) 100%),
+            rgba(10, 20, 14, 0.30);
+        -webkit-backdrop-filter: blur(20px) saturate(170%);
+        backdrop-filter: blur(20px) saturate(170%);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        box-shadow:
+            inset 0 1px 1px rgba(255, 255, 255, 0.45),
+            inset 0 -1px 1px rgba(255, 255, 255, 0.10),
+            0 14px 34px rgba(0, 0, 0, 0.42);
+
+        pointer-events: auto;
         z-index: 99999;
     }
 
+    nav::-webkit-scrollbar {
+        display: none;
+    }
+
     nav a {
-        width: 45px;
-        height: 45px;
-
-        display: block;
-
-        background: rgba(43, 67, 52, 0.9);
-        border-radius: 12px;
-
-        font-size: 0;
+        flex-shrink: 0;
+        padding: 10px 13px;
+        font-size: 14px;
     }
 
-    nav a::before,
-    nav a::after {
-        display: none !important;
+    .container {
+        margin-top: 96px;
     }
 
-    /* CONTAINER (PADRÃO CENTRALIZADO) */
-    .container{
-        margin-top: 90px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    #questaoBox{
-        width: 100%;
+    #questaoBox {
+        width: 92%;
         max-width: 900px;
     }
 
-    /* QUESTÃO (MANTÉM ESTILO ORIGINAL, SÓ AJUSTA RESPONSIVO) */
-    .questao{
+    .questao {
         padding: 20px;
+        border-radius: 26px;
     }
 
-    .questao p{
+    .questao p {
         font-size: 16px;
         line-height: 26px;
     }
 
-    .fonte{
+    .fonte {
         font-size: 16px;
     }
 
-    .questao img{
+    .questao img {
         width: 100%;
         max-width: 300px;
         height: auto;
     }
 
-    /* ALTERNATIVAS (SEM MUDAR LAYOUT) */
-    .alt{
-        padding: 12px;
+    .alt {
+        padding: 13px 16px;
         font-size: 14px;
+        border-radius: 18px;
     }
 
-    /* BOTÕES (MESMO PADRÃO DO HERO) */
-    .botoes{
+    .botoes {
         margin-top: 20px;
         margin-bottom: 20px;
-        display: flex;
         gap: 15px;
         justify-content: center;
     }
 
-    .botoes button{
-        width: 45px;
-        height: 45px;
+    .botoes button {
+        width: 50px;
+        height: 50px;
     }
 
-    /* FOOTER */
-    footer p{
+    footer {
+        padding-bottom: 92px; /* espaço para o dock */
+    }
+
+    footer p {
+        font-size: 13px;
+        padding: 12px 22px;
+    }
+}
+
+/* ==========================================================
+   CONVITE ECOIA — CARTÃO FLUTUANTE
+========================================================== */
+
+.ecoia-convite {
+    position: fixed;
+    right: 35px;
+    bottom: 45px;
+
+    width: 310px;
+    padding: 22px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+
+    z-index: 100;
+
+    border-radius: 26px;
+
+    background:
+        linear-gradient(135deg,
+            rgba(255, 255, 255, 0.16),
+            rgba(255, 255, 255, 0.04) 50%,
+            rgba(255, 255, 255, 0.09)),
+        rgba(10, 20, 14, 0.65);
+
+    -webkit-backdrop-filter: blur(22px) saturate(170%);
+    backdrop-filter: blur(22px) saturate(170%);
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.35),
+        inset 0 0 25px rgba(181, 201, 186, 0.08),
+        0 14px 34px rgba(0, 0, 0, 0.42);
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transform: translateY(50px);
+
+    transition:
+        opacity .5s ease,
+        visibility .5s ease,
+        transform .5s ease;
+}
+
+/* CARTÃO VISÍVEL */
+
+.ecoia-convite.ativo {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+
+    transform: translateY(0);
+
+    animation: subirEcoIA .6s ease forwards,
+               flutuarEcoIA 3.5s ease-in-out .6s infinite;
+}
+
+/* ENTRADA DE BAIXO PARA CIMA */
+
+@keyframes subirEcoIA {
+    from {
+        transform: translateY(50px);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* MOVIMENTO SUAVE */
+
+@keyframes flutuarEcoIA {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-7px);
+    }
+}
+
+/* GLOBO */
+
+.ecoia-icone {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--verde-brilho);
+
+    filter: drop-shadow(0 0 10px rgba(181, 201, 186, 0.3));
+}
+
+.ecoia-icone svg {
+    width: 42px;
+    height: 42px;
+}
+
+/* TEXTOS */
+
+.ecoia-texto strong {
+    font-family: 'InterBold', sans-serif;
+    font-size: 18px;
+    color: white;
+}
+
+.ecoia-texto p {
+    margin-top: 7px;
+
+    font-size: 14px;
+    line-height: 22px;
+
+    color: var(--texto-suave);
+}
+
+/* BOTÃO */
+
+#perguntarEcoIA {
+    width: 100%;
+    padding: 13px 16px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border-radius: 14px;
+
+    border: 1px solid rgba(181, 201, 186, 0.35);
+
+    background: linear-gradient(
+        135deg,
+        rgba(73, 111, 86, 0.75),
+        rgba(43, 67, 52, 0.65)
+    );
+
+    color: white;
+
+    font-family: 'InterSemiBold', sans-serif;
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition: .3s ease;
+}
+
+#perguntarEcoIA:hover {
+    background: linear-gradient(
+        135deg,
+        rgba(100, 150, 115, 0.8),
+        rgba(53, 82, 65, 0.85)
+    );
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 5px 20px rgba(73, 111, 86, 0.3);
+}
+
+#perguntarEcoIA span {
+    font-size: 20px;
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+    .ecoia-convite {
+        right: 15px;
+        bottom: 105px;
+
+        width: min(290px, calc(100% - 30px));
+        padding: 18px;
+    }
+
+}
+
+/* ----------------------------------------------------------
+   MOBILE — MENU EM BOLINHAS NO CANTO DIREITO
+   ---------------------------------------------------------- */
+
+@media (max-width: 768px) {
+
+    body {
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: auto;
+
+        background: linear-gradient(180deg,
+            #000000 0%,
+            #000000 40%,
+            #355241 75%,
+            #496F56 100%);
+    }
+
+    body::before {
+        width: 340px;
+        height: 340px;
+        left: -140px;
+        bottom: auto;
+        top: 220px;
+    }
+
+    body::after {
+        width: 300px;
+        height: 300px;
+        right: -120px;
+        top: -120px;
+    }
+
+    header {
+        padding: 0 16px;
+        height: 70px;
+    }
+
+    .logo a {
+        font-size: 20px;
+        padding: 8px 14px;
+    }
+
+    /* MENU ORIGINAL TRANSFORMADO EM BOLINHAS */
+    header nav {
+        position: fixed;
+        top: 50%;
+        right: 18px;
+        left: auto;
+        bottom: auto;
+
+        transform: translateY(-50%);
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        width: auto;
+        max-width: none;
+        gap: 14px;
+
+        padding: 0;
+        margin: 0;
+
+        overflow: visible;
+        background: none;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+
+        z-index: 99999;
+    }
+
+    header nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    header nav a {
+        flex: none;
+
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 0;
+        margin: 0;
+
+        border-radius: 50%;
+
+        font-size: 0;
+        line-height: 0;
+        color: transparent;
+
+        background: linear-gradient(
+            135deg,
+            rgba(181, 201, 186, 0.32),
+            rgba(255, 255, 255, 0.07)
+        );
+
+        -webkit-backdrop-filter: blur(18px) saturate(170%);
+        backdrop-filter: blur(18px) saturate(170%);
+
+        border: 2px solid rgba(255, 255, 255, 0.35);
+
+        box-shadow:
+            inset 0 1px 2px rgba(255, 255, 255, 0.35),
+            0 5px 18px rgba(0, 0, 0, 0.35);
+
+        transition: .3s ease;
+    }
+
+    header nav a:hover,
+    header nav a:focus-visible,
+    header nav a:active {
+        color: transparent;
+        background: rgba(181, 201, 186, 0.45);
+
+        border-color: white;
+
+        box-shadow:
+            0 0 12px rgba(181, 201, 186, 0.7),
+            0 0 25px rgba(255, 255, 255, 0.25);
+
+        transform: scale(1.12);
+        outline: none;
+    }
+
+    .container {
+        margin-top: 96px;
+    }
+
+    .progresso-container,
+    #contadorQuestoes {
+        width: 92%;
+    }
+
+    #questaoBox {
+        width: 92%;
+        max-width: 900px;
+    }
+
+    .questao {
+        padding: 20px;
+        border-radius: 26px;
+    }
+
+    .questao p {
+        font-size: 16px;
+        line-height: 26px;
+    }
+
+    .fonte {
+        font-size: 16px;
+    }
+
+    .questao img {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+    }
+
+    .alt {
+        padding: 13px 16px;
         font-size: 14px;
+        border-radius: 18px;
+    }
+
+    .botoes {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .botoes button {
+        width: 50px;
+        height: 50px;
+    }
+
+    footer {
+        padding-bottom: 28px;
+    }
+
+    footer p {
+        font-size: 13px;
+        padding: 12px 22px;
+    }
+
+    .ecoia-convite {
+        right: 15px;
+        bottom: 105px;
+        width: min(290px, calc(100% - 30px));
+        padding: 18px;
+    }
+}
+
+/* CELULARES MENORES */
+
+@media (max-width: 380px) {
+
+    header nav {
+        right: 12px;
+        gap: 11px;
+    }
+
+    header nav a {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+    }
+
+    .questao {
+        padding: 16px;
+    }
+
+    .questao p {
+        font-size: 15px;
+        line-height: 24px;
     }
 }

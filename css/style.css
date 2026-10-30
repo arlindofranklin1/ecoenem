@@ -1,16 +1,28 @@
+/* ==========================================================
+   EcoENEM — Liquid Glass
+   Paleta original mantida:
+   #000000  #2B4334  #355241  #496F56  #B5C9BA  #D0DDD3
+   ========================================================== */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+:root {
+    --verde-escuro: #2B4334;
+    --verde-medio: #355241;
+    --verde-claro: #496F56;
+    --verde-brilho: #B5C9BA;
+    --texto-suave: #D0DDD3;
 }
 
 body {
     overflow: hidden;
     font-family: 'Inter', sans-serif;
-    background:
-        linear-gradient(90deg,
-
+    background: linear-gradient(90deg,
             #000000 0%,
             #000000 40%,
             #355241 70%,
@@ -18,7 +30,94 @@ body {
     height: 100vh;
 }
 
-/* HEADER */
+/* ----------------------------------------------------------
+   FUNDO — manchas de luz para o vidro ter o que refratar
+   ---------------------------------------------------------- */
+
+body::before,
+body::after {
+    content: '';
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(80px);
+}
+
+body::before {
+    width: 520px;
+    height: 520px;
+    left: -120px;
+    bottom: -140px;
+    background: radial-gradient(circle, rgba(73, 111, 86, 0.75), transparent 70%);
+    animation: deriva 18s ease-in-out infinite alternate;
+}
+
+body::after {
+    width: 420px;
+    height: 420px;
+    left: 30%;
+    top: -160px;
+    background: radial-gradient(circle, rgba(181, 201, 186, 0.28), transparent 70%);
+    animation: deriva 22s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes deriva {
+    from { transform: translate(0, 0); }
+    to   { transform: translate(60px, -40px); }
+}
+
+/* ----------------------------------------------------------
+   LIQUID GLASS — base reutilizável
+   ---------------------------------------------------------- */
+
+.glass {
+    position: relative;
+    background:
+        linear-gradient(135deg,
+            rgba(255, 255, 255, 0.16) 0%,
+            rgba(255, 255, 255, 0.04) 45%,
+            rgba(255, 255, 255, 0.09) 100%);
+    -webkit-backdrop-filter: blur(20px) saturate(170%);
+    backdrop-filter: blur(20px) saturate(170%);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.45),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.10),
+        inset 0 0 28px rgba(181, 201, 186, 0.08),
+        0 14px 34px rgba(0, 0, 0, 0.42);
+}
+
+/* brilho especular no topo (o "reflexo de luz" das referências) */
+.glass::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 12%;
+    width: 34%;
+    height: 2px;
+    border-radius: 999px;
+    background: radial-gradient(closest-side, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0));
+    filter: blur(1px);
+    pointer-events: none;
+}
+
+/* brilho esverdeado na borda inferior */
+.glass::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 38%;
+    width: 38%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--verde-brilho), transparent);
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+/* ----------------------------------------------------------
+   HEADER — barra retangular em vidro; o botão só aparece no hover
+   ---------------------------------------------------------- */
 
 header {
     position: fixed;
@@ -33,80 +132,124 @@ header {
 
     padding: 0 80px;
 
-    background: #2B4334;
-    backdrop-filter: blur(15px);
-
     z-index: 9999;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.50);
+}
+
+/* a lâmina de vidro fica numa camada própria, para os botões
+   do hover também conseguirem desfocar o que está embaixo */
+header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+
+    background:
+        linear-gradient(180deg,
+            rgba(255, 255, 255, 0.14) 0%,
+            rgba(255, 255, 255, 0.04) 100%),
+        rgba(43, 67, 52, 0.35);
+    -webkit-backdrop-filter: blur(22px) saturate(170%);
+    backdrop-filter: blur(22px) saturate(170%);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.35),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.10),
+        0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* brilho esverdeado na borda de baixo */
+header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 38%;
+    width: 24%;
+    height: 1px;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, var(--verde-brilho), transparent);
+    opacity: 0.8;
 }
 
 .logo {
-    color: white;
-    font-size: 30px;
-    font-family: 'InterBold', sans-serif;
-
     position: relative;
-    z-index: 9999;
-}
-
-.logo a {
-    color: white;
-    font-size: 30px;
-    font-family: 'InterBold', sans-serif;
-    text-decoration: none;
+    z-index: 1;
 }
 
 nav {
     position: relative;
-    z-index: 9999;
+    z-index: 1;
 
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 6px;
+}
+
+.logo a,
+nav a {
+    position: relative;
+
+    color: white;
+    text-decoration: none;
+
+    padding: 10px 18px;
+    border-radius: 999px;
+
+    transition: color .25s, box-shadow .25s;
+}
+
+.logo a {
+    font-size: 28px;
+    font-family: 'InterBold', 'Inter', sans-serif;
+    letter-spacing: -0.01em;
 }
 
 nav a {
-    color: white;
-    font-family: 'InterSemiBold', sans-serif;
-    text-decoration: none;
-    font-size: 18px;
+    font-family: 'InterSemiBold', 'Inter', sans-serif;
+    font-size: 17px;
     font-weight: 500;
-    z-index: 999999;
-
-    position: relative;
-    transition: color .3s;
+    color: var(--texto-suave);
 }
 
-nav a::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -5px;
+/* hover: vira um botão de liquid glass (transparente e desfocado) */
+.logo a:hover,
+.logo a:focus-visible,
+nav a:hover,
+nav a:focus-visible {
+    color: white;
+    outline: none;
 
-    width: 0;
-    height: 2px;
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.16) 0%,
+            rgba(255, 255, 255, 0.04) 45%,
+            rgba(255, 255, 255, 0.09) 100%);
+    -webkit-backdrop-filter: blur(14px) saturate(170%);
+    backdrop-filter: blur(14px) saturate(170%);
 
-    background: white;
-    transition: width .3s ease;
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.45),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.10),
+        inset 0 0 22px rgba(181, 201, 186, 0.10),
+        0 8px 22px rgba(0, 0, 0, 0.30);
 }
 
-nav a:hover {
-    color: #B5C9BA;
-}
-
-nav a:hover::after {
-    width: 100%;
-}
-
-/* HERO */
+/* ----------------------------------------------------------
+   HERO
+   ---------------------------------------------------------- */
 
 .hero {
+    position: relative;
+    z-index: 1;
     width: 100%;
     height: 100vh;
     display: flex;
 }
 
 .left {
+    position: relative;
+    z-index: 2;
     width: 50%;
     height: 100%;
 
@@ -114,25 +257,27 @@ nav a:hover::after {
     align-items: center;
 
     padding-left: 100px;
-
-    background:
-        linear-gradient(90deg,
-            #000000 0%,
-            #000000 45%,
-            rgba(0, 0, 0, 0) 100%);
 }
 
 .content {
-    max-width: 550px;
+    max-width: 600px;
     margin-top: 80px;
 
-    animation: fadeUp 1.5s ease;
+    animation: fadeUp 1.2s ease both;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 .content h1 {
-    font-size: 120px;
-    font-family: 'InterBold', sans-serif;
+    font-size: clamp(56px, 8vw, 120px);
+    font-family: 'InterBold', 'Inter', sans-serif;
+    letter-spacing: -0.03em;
+    line-height: 1;
     color: white;
+    text-shadow: 0 6px 40px rgba(73, 111, 86, 0.55);
 
     display: inline-block;
     transition: transform 0.3s ease;
@@ -142,17 +287,93 @@ nav a:hover::after {
     transform: scale(1.05);
 }
 
-.content p {
-    color: #D0DDD3;
-
-    margin-top: 15px;
-    text-align: justify;
-    font-family: 'Inter', sans-serif;
-
-    font-size: 25px;
-    line-height: 35px;
+/* parágrafo dentro de um painel de vidro */
+.content .painel {
+    margin-top: 22px;
+    padding: 26px 30px;
+    border-radius: 32px;
 }
 
+.content .painel p {
+    color: var(--texto-suave);
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    line-height: 31px;
+    text-align: justify;
+}
+
+/* ----------------------------------------------------------
+   BOTÕES (pílulas de vidro)
+   ---------------------------------------------------------- */
+
+.acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 22px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 15px 26px;
+    border-radius: 999px;
+
+    color: white;
+    font-family: 'InterSemiBold', 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+
+    transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+}
+
+.btn svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.btn:focus-visible {
+    outline: 2px solid var(--verde-brilho);
+    outline-offset: 3px;
+}
+
+/* botão principal: vidro tingido de verde */
+.btn-principal {
+    background:
+        linear-gradient(135deg,
+            rgba(73, 111, 86, 0.75) 0%,
+            rgba(53, 82, 65, 0.55) 55%,
+            rgba(73, 111, 86, 0.65) 100%);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.5),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.12),
+        inset 0 0 28px rgba(181, 201, 186, 0.14),
+        0 14px 34px rgba(0, 0, 0, 0.45);
+}
+
+.btn-principal:hover {
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.6),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.15),
+        inset 0 0 32px rgba(181, 201, 186, 0.22),
+        0 18px 40px rgba(73, 111, 86, 0.45);
+}
+
+/* ----------------------------------------------------------
+   GLOBO — NÃO ALTERADO
+   ---------------------------------------------------------- */
 
 .right {
     width: 50%;
@@ -179,8 +400,9 @@ nav a:hover::after {
     z-index: 1;
 }
 
-/* animação */
-
+/* ----------------------------------------------------------
+   FONTES
+   ---------------------------------------------------------- */
 
 @font-face {
     font-family: 'Inter';
@@ -203,105 +425,192 @@ nav a:hover::after {
     font-style: normal;
 }
 
+/* ----------------------------------------------------------
+   ACESSIBILIDADE
+   ---------------------------------------------------------- */
 
+@media (prefers-reduced-motion: reduce) {
+    body::before,
+    body::after,
+    .content {
+        animation: none;
+    }
+
+    .btn,
+    nav a,
+    .content h1 {
+        transition: none;
+    }
+}
+
+/* navegadores sem backdrop-filter: vidro um pouco mais opaco */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    header::before,
+    .glass {
+        background: rgba(43, 67, 52, 0.85);
+    }
+}
+
+/* ----------------------------------------------------------
+   TABLET / TELAS MÉDIAS
+   ---------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+    header {
+        padding: 0 28px;
+    }
+
+    nav a {
+        padding: 9px 14px;
+        font-size: 15px;
+    }
+
+    .left {
+        padding-left: 48px;
+    }
+}
+
+/* ----------------------------------------------------------
+   MOBILE
+   ---------------------------------------------------------- */
 
 @media (max-width: 768px) {
 
-    /* BODY */
-    body{
+    body {
         overflow-x: hidden;
         overflow-y: auto;
         height: auto;
-        background: linear-gradient(
-            180deg,
-            #000000 0%,
-            #000000 40%,
-            #355241 75%,
-            #496F56 100%
-        );
+        background: linear-gradient(180deg,
+                #000000 0%,
+                #000000 40%,
+                #355241 75%,
+                #496F56 100%);
     }
 
-    /* HEADER */
+    body::before {
+        width: 340px;
+        height: 340px;
+        left: -140px;
+        bottom: auto;
+        top: 180px;
+    }
+
+    body::after {
+        width: 300px;
+        height: 300px;
+        left: auto;
+        right: -120px;
+        top: -120px;
+    }
+
+    /* HEADER: barra de vidro com a logo */
     header {
-        padding: 0 15px;
+        padding: 0 16px;
         height: 70px;
     }
 
     .logo a {
         font-size: 20px;
+        padding: 8px 14px;
     }
 
-    /* MENU VIRA BOTÕES LATERAIS */
+    /* MENU: vira um dock de vidro fixo na base, com texto visível */
     nav {
         position: fixed;
-        top: 90px;
-        right: 10px;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
 
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
+        max-width: calc(100% - 24px);
+        overflow-x: auto;
+        scrollbar-width: none;
 
+        padding: 6px;
+        gap: 4px;
+        border-radius: 999px;
+
+        background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.16) 0%,
+                rgba(255, 255, 255, 0.04) 45%,
+                rgba(255, 255, 255, 0.09) 100%),
+            rgba(10, 20, 14, 0.30);
+        -webkit-backdrop-filter: blur(20px) saturate(170%);
+        backdrop-filter: blur(20px) saturate(170%);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        box-shadow:
+            inset 0 1px 1px rgba(255, 255, 255, 0.45),
+            inset 0 -1px 1px rgba(255, 255, 255, 0.10),
+            0 14px 34px rgba(0, 0, 0, 0.42);
+
+        pointer-events: auto;
         z-index: 99999;
     }
 
-    nav a {
-        width: 45px;
-        height: 45px;
-
-        display: block;
-
-        background: rgba(43, 67, 52, 0.9);
-        border-radius: 12px;
-
-        font-size: 0; /* remove texto */
+    nav::-webkit-scrollbar {
+        display: none;
     }
 
-    nav a::before,
-    nav a::after {
-        display: none !important;
+    nav a {
+        flex-shrink: 0;
+        padding: 10px 13px;
+        font-size: 14px;
     }
 
     /* HERO */
     .hero {
-    flex-direction: column;
-    height: 100vh;
-}
+        flex-direction: column;
+        height: auto;
+    }
 
-.left {
-    width: 100%;
-    height: 100vh;
+    .left {
+        width: 100%;
+        height: auto;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+        justify-content: center;
+        padding: 96px 20px 16px;
+    }
 
-    padding: 0 20px;
-}
-
-.content {
-    text-align: center;
-    max-width: 100%;
-}
+    .content {
+        text-align: center;
+        max-width: 100%;
+        margin-top: 0;
+    }
 
     .content h1 {
-        font-size: 45px;
+        font-size: 48px;
     }
 
-    .content p {
+    .content .painel {
+        padding: 20px 22px;
+        border-radius: 26px;
+    }
+
+    .content .painel p {
         font-size: 16px;
         line-height: 26px;
+        text-align: center;
     }
 
-    /* PLANETA */
+    .acoes {
+        justify-content: center;
+    }
+
+    .btn {
+        padding: 13px 22px;
+        font-size: 15px;
+    }
+
+    /* PLANETA (sem alterações de comportamento) */
     .right {
         width: 100%;
         height: 350px;
+        margin-bottom: 90px; /* espaço para o dock */
 
         /* IMPORTANTE para toque funcionar */
         pointer-events: auto;
     }
 
-     #earth-container {
+    #earth-container {
         height: 350px;
         touch-action: none;
         pointer-events: auto;
@@ -309,5 +618,262 @@ nav a:hover::after {
 
     #earth-container canvas {
         pointer-events: auto;
+    }
+}
+
+/* ----------------------------------------------------------
+   BRILHO GIRATÓRIO NA BORDA (hover)
+   ---------------------------------------------------------- */
+
+@property --ang {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes giro {
+    to { --ang: 360deg; }
+}
+
+.btn.glass:hover::before,
+.logo a:hover::before,
+.logo a:focus-visible::before,
+nav a:hover::before,
+nav a:focus-visible::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    width: auto;
+    height: auto;
+    padding: 2px;
+    border-radius: inherit;
+    filter: none;
+    pointer-events: none;
+
+    background: conic-gradient(from var(--ang),
+            transparent 0%,
+            transparent 62%,
+            rgba(181, 201, 186, 0.9) 82%,
+            #ffffff 92%,
+            transparent 100%);
+
+    /* mostra só o contorno, não o preenchimento */
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+
+    animation: giro 2.2s linear infinite;
+}
+
+/* o brilho fixo de baixo some enquanto o contorno gira */
+.btn.glass:hover::after {
+    opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn.glass:hover::before,
+    .logo a:hover::before,
+.logo a:focus-visible::before,
+    nav a:hover::before,
+    nav a:focus-visible::before {
+        animation: none;
+    }
+}
+
+
+/* ==========================================================
+   MENU RESPONSIVO — BOLINHAS NO CANTO SUPERIOR DIREITO
+   Utiliza o NAV original, sem adicionar HTML.
+   ========================================================== */
+
+@media (max-width: 768px) {
+
+    header {
+        height: 70px;
+        padding: 0 20px;
+        justify-content: space-between;
+    }
+
+    /* Menu original transformado em bolinhas */
+    header nav {
+    position: absolute;
+
+    top: 50%;
+    right: 0;
+
+    transform: translateY(-50%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 0;
+    margin: 0;
+
+    background: none;
+    border: none;
+    box-shadow: none;
+
+    overflow: visible;
+    z-index: 99999;
+}
+
+    /* Remove o formato de botão e transforma em círculo */
+    header nav a {
+        display: block;
+
+        width: 40px;
+        height: 40px;
+
+        min-width: 9px;
+        padding: 0;
+
+        border-radius: 50%;
+
+        font-size: 0;
+        line-height: 0;
+
+        background: rgba(255,255,255,.35);
+        border: 1px solid rgba(255,255,255,.65);
+
+        box-shadow: 0 0 5px rgba(255,255,255,.12);
+
+        transition: .3s ease;
+    }
+
+    /* Destaque ao tocar ou passar o mouse */
+    header nav a:hover,
+    header nav a:focus-visible {
+        background: var(--verde-brilho);
+
+        transform: scale(1.4);
+
+        box-shadow:
+            0 0 10px rgba(181,201,186,.8),
+            0 0 20px rgba(181,201,186,.4);
+
+        outline: none;
+    }
+
+    /* Logo */
+    .logo a {
+        font-size: 21px;
+    }
+
+}
+
+/* Celulares pequenos */
+@media (max-width: 380px) {
+
+    header {
+        padding: 0 15px;
+    }
+
+    header nav {
+        right: 13px;
+        gap: 8px;
+    }
+
+}
+
+/* ==========================================================
+   ECOIA — MENU RESPONSIVO COM BOLINHAS GRANDES
+   ========================================================== */
+
+@media (max-width: 768px) {
+
+    /* Menu vertical no canto superior direito */
+    header nav {
+        position: fixed !important;
+
+        top: 50% !important;
+        right: 18px !important;
+        left: auto !important;
+
+        transform: translateY(-50%) !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        gap: 14px !important;
+
+        width: auto !important;
+        max-width: none !important;
+
+        padding: 0 !important;
+
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+
+        overflow: visible !important;
+
+        z-index: 99999 !important;
+    }
+
+    /* Bolinhas */
+    header nav a {
+        display: block !important;
+
+        width: 50px !important;
+        height: 50px !important;
+        min-width: 50px !important;
+        min-height: 50px !important;
+
+        flex-shrink: 0 !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        border-radius: 50% !important;
+
+        font-size: 0 !important;
+        line-height: 0 !important;
+
+        background: rgba(181, 201, 186, 0.30) !important;
+
+        border: 2px solid rgba(255, 255, 255, 0.65) !important;
+
+        box-shadow:
+            inset 0 1px 5px rgba(255,255,255,.35),
+            0 4px 14px rgba(0,0,0,.35) !important;
+
+        transition: .3s ease !important;
+    }
+
+    /* Ao tocar ou selecionar */
+    header nav a:hover,
+    header nav a:focus-visible,
+    header nav a:active {
+        background: rgba(181, 201, 186, 0.85) !important;
+
+        transform: scale(1.15);
+
+        border-color: white !important;
+
+        box-shadow:
+            0 0 12px rgba(181, 201, 186, .9),
+            0 0 25px rgba(181, 201, 186, .5) !important;
+
+        outline: none;
+    }
+}
+
+/* Celulares menores */
+@media (max-width: 380px) {
+    header nav {
+        right: 12px !important;
+        gap: 11px !important;
+    }
+
+    header nav a {
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
     }
 }

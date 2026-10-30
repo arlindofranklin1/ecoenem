@@ -142,6 +142,51 @@ shuffle($questoes);
 
     </div>
 
+    <!-- CONVITE PARA A ECOIA -->
+<div id="ecoiaConvite" class="ecoia-convite">
+
+    <div class="ecoia-icone">
+        <svg viewBox="0 0 48 48"
+             fill="none"
+             xmlns="http://www.w3.org/2000/svg">
+
+            <circle cx="24" cy="24" r="19"
+                stroke="currentColor"
+                stroke-width="1.6"/>
+
+            <path d="M5 24H43"
+                stroke="currentColor"
+                stroke-width="1.4"/>
+
+            <path d="M24 5C29 10 32 17 32 24C32 31 29 38 24 43"
+                stroke="currentColor"
+                stroke-width="1.4"/>
+
+            <path d="M24 5C19 10 16 17 16 24C16 31 19 38 24 43"
+                stroke="currentColor"
+                stroke-width="1.4"/>
+
+            <path d="M8 14H40M8 34H40"
+                stroke="currentColor"
+                stroke-width="1.2"/>
+        </svg>
+    </div>
+
+    <div class="ecoia-texto">
+        <strong>Quer saber mais?</strong>
+
+        <p>
+            Peça mais detalhes sobre esta questão para a EcoIA.
+        </p>
+    </div>
+
+    <button id="perguntarEcoIA">
+        Perguntar para EcoIA
+        <span>→</span>
+    </button>
+
+</div>
+
     <script>
         const questoes = <?php echo json_encode($questoes); ?>;
     </script>
