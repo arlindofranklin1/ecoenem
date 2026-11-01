@@ -267,11 +267,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <p><strong>Objetivo:</strong> <?php echo $opcoes_objetivo[$objetivo]; ?></p>
                     <p><strong>Código do simulado:</strong> <?php echo $_SESSION["simulado"]["codigo"]; ?></p>
 
-<p>Nome salvo na sessão:
-    <?php echo $_SESSION["simulado"]["nome"]; ?>
-</p>
-
-                    <a class="gerar-btn pdf-btn" href="gerar_simulado.php" target="_blank">Baixar simulado em PDF</a>
+                    <a class="gerar-btn pdf-btn" href="gerar_simulado.php?codigo=<?php echo urlencode($_SESSION["simulado"]["codigo"]); ?>" target="_blank">Baixar simulado em PDF</a>
                 </div>
             <?php endif; ?>
 
