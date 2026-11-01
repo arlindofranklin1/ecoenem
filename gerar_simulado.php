@@ -34,8 +34,6 @@ if (empty($_SESSION["simulado"])) {
 
 $simulado = $_SESSION["simulado"];
 
-echo "Nome recuperado: " . $simulado["nome"];
-exit;
 
 
 // Busca no banco as questões sorteadas, mantendo a ordem do simulado
