@@ -89,3 +89,26 @@ Apresenta informações sobre o projeto, incluindo:
 # Objetivo
 
 O objetivo do "EcoENEM" é oferecer uma plataforma de estudos voltada para Ecologia, unindo conteúdos didáticos, inteligência artificial e atividades práticas para tornar a preparação para o ENEM mais eficiente, interativa e acessível aos estudantes.
+
+# Autenticação e perfil (Supabase)
+
+A versão atual inclui login, cadastro, perfil e estatísticas pessoais via Supabase Auth, Database e Storage.
+
+## Variáveis de ambiente no Render
+
+Configure no serviço Web as variáveis SUPABASE_URL e SUPABASE_ANON_KEY (ou publishable key). Não configure a service_role no navegador nem a inclua no repositório. Mantenha também ECOIA_GATEWAY_SECRET já utilizado pela EcoIA.
+
+## Banco de dados
+
+Execute o arquivo sql/supabase_ecoenem.sql no SQL Editor do projeto Supabase. O script cria profiles, user_stats, trigger de cadastro, RPCs, políticas RLS e o bucket avatars.
+
+## Teste
+
+1. Configure as variáveis no Render e faça novo deploy.
+2. Execute o SQL no Supabase.
+3. Acesse /login.php e crie uma conta em /cadastro.php.
+4. Se a confirmação de e-mail estiver habilitada, confirme a mensagem recebida antes de entrar.
+5. Entre, navegue pelas páginas, responda questões, use a EcoIA e gere um PDF de simulado.
+6. Abra /perfil.php para conferir foto, biografia e estatísticas.
+
+As estatísticas são atualizadas por RPCs autenticadas. A geração do PDF de um mesmo simulado é contabilizada uma única vez na sessão.

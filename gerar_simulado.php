@@ -15,6 +15,8 @@
  */
 
 session_start();
+require_once __DIR__ . "/includes/auth_guard.php";
+require_once __DIR__ . "/includes/supabase_config.php";
 
 // Impede que o navegador reutilize um PDF antigo armazenado em cache.
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
@@ -262,4 +264,16 @@ if ($simulado["objetivo"] == "revisar") {
 
 // Nome do arquivo: simuladao-ecoenem-nome-do-estudante.pdf
 $nomeArquivo = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "-", iconv("UTF-8", "ASCII//TRANSLIT", $nome)));
+// Contabiliza uma única vez a geração deste PDF, mesmo se a página for recarregada.
+if (empty($_SESSION["simulado_contabilizado"])) {
+    $token = $_COOKIE["ecoenem_access_token"] ?? "";
+    if ($token && function_exists("curl_init") && supabase_url() && supabase_anon_key()) {
+        $ch = curl_init(supabase_url() . "/rest/v1/rpc/incrementar_estatistica");
+        curl_setopt_array($ch, [CURLOPT_POST => true, CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 8, CURLOPT_POSTFIELDS => json_encode(["p_campo" => "simulados_feitos"]), CURLOPT_HTTPHEADER => ["Content-Type: application/json", "apikey: " . supabase_anon_key(), "Authorization: Bearer " . $token]]);
+        $resposta = curl_exec($ch); $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE); curl_close($ch);
+        if ($status >= 200 && $status < 300) $_SESSION["simulado_contabilizado"] = true;
+        else error_log("EcoENEM: não foi possível contabilizar simulado. HTTP " . $status);
+    }
+}
+
 $pdf->Output("I", "simuladao-ecoenem-" . trim($nomeArquivo, "-") . ".pdf");

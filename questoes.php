@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . "/includes/auth_guard.php"; ?>
 <?php
 
 $questoes = [
@@ -104,6 +105,7 @@ shuffle($questoes);
     <link rel="shortcut icon" href="imgs/ecoenemicon.png" type="image/x-icon">
 
     <link rel="stylesheet" href="css/questoes.css">
+<link rel="stylesheet" href="css/auth-ui.css">
 </head>
 
 <body>
@@ -201,6 +203,10 @@ shuffle($questoes);
 
     <script src="js/questoes.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.ECOENEM_SERVER_SESSION = <?php echo json_encode($ecoenem_sessao_servidor, JSON_UNESCAPED_SLASHES); ?>;</script>
+<script src="js/auth.js"></script>
+<script src="js/auth-ui.js"></script>
 </body>
 
 </html>

@@ -6,10 +6,12 @@
 
 header("Content-Type: application/json; charset=utf-8");
 header("Cache-Control: no-store");
+require_once __DIR__ . "/../includes/auth_guard.php";
 
 $modoDebug = false;
 
-$url = "https://phjkdovpmunpuehvjucu.supabase.co/functions/v1/ecoia";
+$supabaseUrl = rtrim((string)(getenv("SUPABASE_URL") ?: "https://phjkdovpmunpuehvjucu.supabase.co"), "/");
+$url = $supabaseUrl . "/functions/v1/ecoia";
 $gatewaySecret = getenv("ECOIA_GATEWAY_SECRET");
 
 /* =========================

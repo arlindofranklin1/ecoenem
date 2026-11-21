@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . "/includes/auth_guard.php"; ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -11,6 +12,7 @@
 
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="css/auth-ui.css">
 </head>
 
 <body class="chat-vazio">
@@ -117,5 +119,9 @@
 <!-- histórico de conversas (precisa vir depois do ecoia.js) -->
 <script src="js/historico.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.ECOENEM_SERVER_SESSION = <?php echo json_encode($ecoenem_sessao_servidor, JSON_UNESCAPED_SLASHES); ?>;</script>
+<script src="js/auth.js"></script>
+<script src="js/auth-ui.js"></script>
 </body>
 </html>

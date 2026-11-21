@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . "/includes/auth_guard.php"; ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -12,6 +13,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
+<link rel="stylesheet" href="css/auth-ui.css">
 </head>
 <body>
 
@@ -73,5 +75,9 @@
 
 <script src="js/script.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.ECOENEM_SERVER_SESSION = <?php echo json_encode($ecoenem_sessao_servidor, JSON_UNESCAPED_SLASHES); ?>;</script>
+<script src="js/auth.js"></script>
+<script src="js/auth-ui.js"></script>
 </body>
 </html>

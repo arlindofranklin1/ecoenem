@@ -378,6 +378,12 @@
             // Exibe a resposta.
             adicionarMensagem("assistant", resposta);
 
+            // Conta somente interações concluídas com resposta válida da EcoIA.
+            if (window.EcoAuth) {
+                EcoAuth.client.then(cliente => cliente.rpc("incrementar_estatistica", { p_campo: "uso_ia" }))
+                    .then(({ error }) => { if (error) console.warn("Falha ao registrar uso da EcoIA:", error); });
+            }
+
             // Salva a conversa completa.
             salvarConversa();
 

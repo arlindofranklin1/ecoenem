@@ -56,6 +56,11 @@ function responder(el, index, correta) {
         respondidasQuestoes[atual] = true;
         respondidas++;
         atualizarProgresso();
+        // Registra a questão no contador do usuário com incremento atômico.
+        if (window.EcoAuth) {
+            EcoAuth.client.then(cliente => cliente.rpc("incrementar_estatistica", { p_campo: "questoes_respondidas" }))
+                .then(({ error }) => { if (error) console.warn("Falha ao registrar questão:", error); });
+        }
     }
 
     const q = questoes[atual];
