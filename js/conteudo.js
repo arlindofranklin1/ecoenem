@@ -79,14 +79,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     target * progress
                 );
 
-                if (progress < 1 && !manualReduced && !systemReduced.matches) {
+                if (progress < 1 && !systemReduced.matches) {
                     requestAnimationFrame(animate);
                 } else {
                     element.textContent = target;
                 }
             }
 
-            if (manualReduced || systemReduced.matches) {
+            if (systemReduced.matches) {
                 element.textContent = target;
             } else {
                 requestAnimationFrame(animate);
@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (active && window.innerWidth <= 768) {
                     link.scrollIntoView({
-                        behavior: manualReduced ? "auto" : "smooth",
+                        behavior: systemReduced.matches ? "auto" : "smooth",
                         block: "nearest",
                         inline: "center"
                     });
@@ -173,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if ($("#guideText")) {
         setInterval(function () {
-            if (document.hidden || manualReduced || systemReduced.matches) return;
+            if (document.hidden || systemReduced.matches) return;
 
             guideIndex = (guideIndex + 1) % guideMessages.length;
             $("#guideText").textContent = guideMessages[guideIndex];
@@ -1196,7 +1196,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             slot.classList.add("wrong");
 
-            if (!manualReduced && !systemReduced.matches) {
+            if (!systemReduced.matches) {
                 slot.animate([
                     { transform: "translateX(0)" },
                     { transform: "translateX(-5px)" },
@@ -1390,7 +1390,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     $("#playCycle").addEventListener("click", function () {
         const cards = $$(".cycle-step");
-        const delay = manualReduced || systemReduced.matches ? 0 : 550;
+        const delay = systemReduced.matches ? 0 : 550;
 
         cards.forEach(function (card) {
             card.classList.remove("current");
@@ -1412,7 +1412,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const successionStages = [
         {
             title: "Rocha nua",
-            description: "Superfície sem solo desenvolvido e sem uma comunidade estabelecida."
+            description: "Área inicialmente sem solo desenvolvido e sem comunidade estabelecida; a colonização depende das condições locais."
         },
         {
             title: "Líquens",
@@ -1435,8 +1435,8 @@ document.addEventListener("DOMContentLoaded", function () {
             description: "O ambiente passa a apresentar maior estratificação vegetal."
         },
         {
-            title: "Floresta madura",
-            description: "Comunidade mais complexa, em equilíbrio dinâmico e sujeita a mudanças."
+            title: "Comunidade mais desenvolvida",
+            description: "Comunidade com estrutura mais complexa, em equilíbrio dinâmico e sujeita a mudanças, conforme as condições locais."
         }
     ];
 
@@ -1492,6 +1492,91 @@ document.addEventListener("DOMContentLoaded", function () {
 
     updateSuccession();
 
+    /* Gráfico conceitual animado da sucessão ecológica — mesmo canvas Liquid Glass do simulador populacional. */
+    const successionCanvas = $("#successionCanvas");
+    const successionButton = $("#animateSuccessionChart");
+    const successionSeries = [
+        { label: "Biomassa", color: "#D0DDD3", values: [3, 8, 18, 34, 52, 69, 78] },
+        { label: "Diversidade", color: "#B5C9BA", values: [2, 12, 25, 39, 51, 57, 55] },
+        { label: "Complexidade", color: "#8FB59A", values: [1, 3, 10, 23, 43, 62, 76] }
+    ];
+    let successionProgress = 0;
+    let successionFrame = null;
+
+    function drawSuccessionChart(progress) {
+        if (!successionCanvas) return;
+        const rect = successionCanvas.getBoundingClientRect();
+        const width = Math.max(280, rect.width);
+        const height = 230;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        successionCanvas.width = Math.round(width * dpr);
+        successionCanvas.height = Math.round(height * dpr);
+        const ctx = successionCanvas.getContext("2d");
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, width, height);
+        const pad = { left: 38, right: 14, top: 22, bottom: 35 };
+        const gw = width - pad.left - pad.right;
+        const gh = height - pad.top - pad.bottom;
+        ctx.strokeStyle = "rgba(255,255,255,.22)";
+        ctx.lineWidth = 1;
+        for (let tick = 0; tick <= 4; tick++) {
+            const y = pad.top + gh - tick * gh / 4;
+            ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(width - pad.right, y); ctx.stroke();
+        }
+        ctx.beginPath(); ctx.moveTo(pad.left, pad.top); ctx.lineTo(pad.left, height - pad.bottom); ctx.lineTo(width - pad.right, height - pad.bottom); ctx.stroke();
+        ctx.fillStyle = "#D0DDD3"; ctx.font = "10px Inter, sans-serif";
+        ctx.fillText("Tendência relativa", pad.left, 13);
+        ["Início", "Intermediária", "Mais desenvolvida"].forEach((label, i) => {
+            const x = pad.left + i * gw / 2;
+            ctx.fillText(label, Math.max(0, Math.min(width - ctx.measureText(label).width, x - (i ? 28 : 0))), height - 10);
+        });
+        successionSeries.forEach(series => {
+            const totalSegments = series.values.length - 1;
+            const visible = Math.max(0, Math.min(totalSegments, progress * totalSegments));
+            ctx.strokeStyle = series.color; ctx.lineWidth = 2.6; ctx.lineJoin = "round"; ctx.lineCap = "round";
+            ctx.beginPath();
+            for (let i = 0; i <= Math.floor(visible); i++) {
+                const x = pad.left + (i / totalSegments) * gw;
+                const y = pad.top + gh - (series.values[i] / 100) * gh;
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            const fractional = visible - Math.floor(visible);
+            if (visible < totalSegments && visible >= 0) {
+                const i = Math.floor(visible);
+                const v = series.values[i] + (series.values[i + 1] - series.values[i]) * fractional;
+                ctx.lineTo(pad.left + (visible / totalSegments) * gw, pad.top + gh - (v / 100) * gh);
+            }
+            ctx.stroke();
+        });
+    }
+
+    function animateSuccessionChart() {
+        if (!successionCanvas) return;
+        if (successionFrame) cancelAnimationFrame(successionFrame);
+        if (systemReduced.matches) { successionProgress = 1; drawSuccessionChart(1); return; }
+        const started = performance.now();
+        const duration = 1800;
+        function frame(now) {
+            successionProgress = Math.min(1, (now - started) / duration);
+            drawSuccessionChart(successionProgress);
+            if (successionProgress < 1) successionFrame = requestAnimationFrame(frame);
+            else successionFrame = null;
+        }
+        successionFrame = requestAnimationFrame(frame);
+    }
+    if (successionCanvas) {
+        drawSuccessionChart(0);
+        const successionObserver = new IntersectionObserver(function (entries) {
+            if (entries.some(entry => entry.isIntersecting)) {
+                animateSuccessionChart();
+                successionObserver.disconnect();
+            }
+        }, { threshold: 0.25 });
+        successionObserver.observe(successionCanvas);
+    }
+    if (successionButton) successionButton.addEventListener("click", animateSuccessionChart);
+    window.addEventListener("resize", function () { drawSuccessionChart(successionProgress || 1); });
+
     /* ======================================================
        12. DINÂMICA POPULACIONAL
        ====================================================== */
@@ -1520,7 +1605,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const canvas = $("#populationCanvas");
         const ctx = canvas.getContext("2d");
 
-        const width = canvas.clientWidth;
+        const width = Math.max(280, canvas.clientWidth);
         const height = 220;
         const dpr = window.devicePixelRatio || 1;
 
@@ -1608,7 +1693,7 @@ document.addEventListener("DOMContentLoaded", function () {
             populationValues.push(next);
         }
 
-        const steps = manualReduced || systemReduced.matches
+        const steps = systemReduced.matches
             ? populationValues.length
             : populationValues.length;
 
@@ -1625,7 +1710,7 @@ document.addEventListener("DOMContentLoaded", function () {
             drawChart(populationValues.slice(0, index + 1), capacity);
             index++;
 
-            if (manualReduced || systemReduced.matches) {
+            if (systemReduced.matches) {
                 animatePopulation();
             } else {
                 requestAnimationFrame(animatePopulation);

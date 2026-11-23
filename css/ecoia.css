@@ -1933,3 +1933,20 @@ nav a:focus-visible::before,
         min-height: 44px !important;
     }
 }
+/* Base responsiva compartilhada — sem alterar a navegação desktop */
+@media(max-width:768px){
+ html,body{max-width:100%;min-width:0;overflow-x:hidden}
+ img,video,iframe,canvas{max-width:100%;height:auto}
+ main,section,article,.container,.chat-container,.perfil-container{min-width:0;max-width:100%}
+ p,h1,h2,h3,h4,li,a,button{overflow-wrap:anywhere}
+ input,textarea,select,button{max-width:100%}
+ header{box-sizing:border-box;padding-left:16px!important;padding-right:16px!important}
+ header nav{display:none!important}
+ body{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
+}
+@media(max-width:420px){
+ .perfil-container{width:calc(100% - 24px)}
+ .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+@media(max-width:768px){.input-area{bottom:calc(88px + env(safe-area-inset-bottom,0px))!important;z-index:9998}.chat-container{height:100dvh;max-width:100%;width:100%}}

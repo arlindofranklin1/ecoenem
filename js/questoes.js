@@ -36,7 +36,7 @@ function render() {
 
         <p>${q.enunciado}</p>
 
-        ${q.imagem ? `<img src="${q.imagem}">` : ""}
+        ${q.imagem ? `<img src="${q.imagem}" alt="Imagem de apoio à questão">` : ""}
 
         <div class="alternativas">
             ${html}

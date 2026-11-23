@@ -1221,3 +1221,18 @@ nav a:focus-visible::before,
  .questao{padding:15px;border-radius:18px}
  .alt{padding:12px;font-size:13px}
 }
+
+/* Estrutura fluida da página de questões em telas estreitas */
+@media(max-width:768px){
+ body{display:flex;flex-direction:column;align-items:stretch;min-width:0;padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
+ header{height:70px;min-height:70px;padding:0 16px;justify-content:space-between}
+ header nav{display:none!important}
+ .container{width:100%;max-width:100%;margin:88px auto 0;padding:0 14px;min-width:0}
+ #questaoBox,.progresso-container,#contadorQuestoes{width:100%;max-width:100%;min-width:0}
+ .questao,.alternativas,.alt{min-width:0;max-width:100%}
+ .questao img{height:auto;max-width:100%}
+ .botoes{display:flex;justify-content:space-between;gap:12px}
+ .ecoia-convite{position:relative!important;inset:auto!important;margin:22px auto;width:calc(100% - 28px)!important;max-width:600px}
+ footer{margin-top:20px}
+}
+@media(max-width:380px){.container{padding-left:10px;padding-right:10px}.questao{padding:14px}.alt{padding:11px;font-size:13px}}

@@ -191,7 +191,7 @@
             <p>É o endereço de uma espécie: o lugar onde ela encontra condições para viver.</p>
             <div class="example">
                 <b>Exemplo</b>
-                <p>O habitat do leão é associado às savanas africanas.</p>
+                <p>O mandacaru (<i>Cereus jamacaru</i>) tem como habitat áreas da Caatinga, onde enfrenta longos períodos secos e alta insolação. Seu caule armazena água e suas folhas modificadas em espinhos ajudam a reduzir a perda de água.</p>
             </div>
         </article>
 
@@ -201,14 +201,14 @@
             <p>É a profissão da espécie: seu modo de vida, alimentação, reprodução e função ecológica.</p>
             <div class="example">
                 <b>Exemplo</b>
-                <p>O leão atua como predador e participa do controle de populações de herbívoros.</p>
+                <p>A asa-branca (<i>Patagioenas picazuro</i>) alimenta-se principalmente de frutos e sementes e se desloca entre áreas em busca de alimento. Ao consumir frutos, pode contribuir para a dispersão de sementes; assim, participa das relações alimentares e da dinâmica da vegetação.</p>
             </div>
         </article>
     </div>
 
     <div class="warning glass">
         <strong>Habitat x Nicho ecológico</strong>
-        <p>Habitat representa onde a espécie vive. Nicho ecológico representa como ela vive e interage com o ambiente.</p>
+        <p><b>Habitat</b> é o lugar onde uma espécie vive. Na Caatinga, o preá (<i>Galea spixii</i>) pode ocupar áreas com vegetação baixa, onde encontra alimento e abrigo. <b>Nicho ecológico</b> é o conjunto de condições, recursos, hábitos e funções que caracterizam seu modo de vida: o preá consome partes de plantas, utiliza a cobertura vegetal para se proteger e também serve de alimento a predadores. Portanto, habitat responde “onde vive?” e nicho responde “como vive e qual é seu papel?”.</p>
     </div>
 
     <div class="concept-grid">
@@ -274,12 +274,16 @@
     <div class="warning glass">
         <strong>Espécies invasoras</strong>
         <p>
-            São organismos introduzidos fora de sua área natural de
-            distribuição que conseguem se estabelecer e se espalhar.
-            Quando causam impactos, podem competir com espécies nativas,
-            modificar habitats, transmitir doenças e alterar cadeias
-            alimentares. A tilápia-do-nilo, introduzida em diversos
-            ambientes, é um exemplo que exige atenção no manejo ambiental.
+            Uma espécie <b>exótica</b> é aquela transportada, de forma intencional ou acidental, para fora de sua área natural. Ela só é considerada <b>exótica invasora</b> quando consegue se estabelecer, espalhar-se e causar impactos ecológicos, econômicos ou sociais.
+        </p>
+        <p>
+            <b>Exemplo brasileiro — algaroba (<i>Prosopis juliflora</i>):</b> árvore originária do México, da América Central e do norte da América do Sul. Foi introduzida no Nordeste a partir da década de 1940, inicialmente para fornecer forragem na seca e também madeira e lenha. É resistente à estiagem, cresce rapidamente, rebrota após cortes e produz vagens cujas sementes podem ser dispersadas por animais.
+        </p>
+        <p>
+            Em determinados ambientes da Caatinga, especialmente baixios e áreas próximas a cursos d’água, a algaroba pode formar agrupamentos densos e competir com plantas nativas por espaço, luz e recursos. Estudos em áreas de Monteiro e Gurjão, na Paraíba, registraram mudanças na composição e na estrutura da vegetação e redução da diversidade em locais invadidos. Esses efeitos dependem do ambiente e da intensidade da invasão: nem toda planta introduzida se torna invasora, e os impactos não são iguais em todos os locais.
+        </p>
+        <p>
+            A tilápia-do-nilo, por exemplo, também exige atenção em ambientes aquáticos onde foi introduzida; a avaliação de seu caráter invasor e de seus efeitos deve considerar cada ecossistema.
         </p>
     </div>
 
@@ -387,8 +391,8 @@
             <h3>Competição intraespecífica</h3>
             <div class="effect"><span>- Prejuízo</span><span>- Prejuízo</span></div>
             <p>Indivíduos da mesma espécie disputam recursos limitados, como alimento, território e parceiros.</p>
-            <div class="relation-example"><b>Exemplo:</b> machos de leões disputando acesso a territórios e oportunidades reprodutivas.</div>
-            <div class="relation-curiosity"><b>Curiosidade:</b> a competição pode regular o tamanho das populações.</div>
+            <div class="relation-example"><b>Exemplo:</b> dois indivíduos machos da mesma espécie de sabiá-laranjeira (<i>Turdus rufiventris</i>) podem defender e disputar um território com recursos alimentares e locais adequados para reprodução.</div>
+            <div class="relation-curiosity"><b>Por que é intraespecífica?</b> Porque os dois competidores pertencem à mesma espécie. A disputa por território e recursos pode influenciar o acesso a alimento e a parceiros reprodutivos.</div>
         </article>
 
         <article class="relation-card glass" data-type="inter-harmonica" data-name="Mutualismo">
@@ -737,7 +741,7 @@
     <div class="section-heading">
         <span class="eyebrow">07 • TRANSFORMAÇÃO DOS AMBIENTES</span>
         <h2>Sucessão ecológica</h2>
-        <p>As comunidades se transformam gradualmente ao longo do tempo.</p>
+        <p>Sucessão ecológica é a mudança na composição e na estrutura de uma comunidade ao longo do tempo, após a formação de um novo ambiente ou uma perturbação. O ritmo e o resultado dependem do clima, do solo, da disponibilidade de espécies e de novos distúrbios.</p>
     </div>
 
     <div class="activity glass">
@@ -758,7 +762,30 @@
         </div>
     </div>
 
-    <div class="info-grid">
+    <div class="activity glass succession-chart-card">
+        <h3>Como a comunidade se transforma?</h3>
+        <p>Representação conceitual: biomassa, diversidade e complexidade tendem a aumentar durante muitas trajetórias sucessionais, mas podem oscilar ou seguir caminhos diferentes conforme o ambiente e os distúrbios.</p>
+        <div class="succession-chart-wrap"><canvas id="successionCanvas" height="230" aria-label="Gráfico conceitual da mudança da biomassa, diversidade e complexidade durante a sucessão ecológica"></canvas></div>
+        <div class="chart-legend"><span><i class="legend-biomass"></i>Biomassa</span><span><i class="legend-diversity"></i>Diversidade</span><span><i class="legend-structure"></i>Complexidade estrutural</span></div>
+        <button class="glass-button" id="animateSuccessionChart" type="button">Reproduzir evolução</button>
+    </div>
+
+    <div class="info-grid succession-stages">
+        <article class="info-card glass">
+            <span class="eyebrow">1 • ESPÉCIES PIONEIRAS</span>
+            <h3>Colonização inicial</h3>
+            <p>Líquens, musgos e algumas gramíneas podem ocupar primeiro áreas disponíveis, quando as condições permitem. Esses organismos contribuem para reter partículas, matéria orgânica e umidade, favorecendo mudanças no ambiente.</p>
+        </article>
+        <article class="info-card glass">
+            <span class="eyebrow">2 • COMUNIDADES INTERMEDIÁRIAS</span>
+            <h3>Maior diversidade e estrutura</h3>
+            <p>À medida que solo, sombra, umidade e recursos se modificam, outras plantas e animais podem se estabelecer. A vegetação ganha diferentes alturas e aumentam as oportunidades de alimentação, abrigo e interação.</p>
+        </article>
+        <article class="info-card glass">
+            <span class="eyebrow">3 • COMUNIDADE MAIS DESENVOLVIDA</span>
+            <h3>Maior complexidade ecológica</h3>
+            <p>Pode se formar uma comunidade com estrutura mais complexa, maior biomassa e diversas interações, de acordo com as condições locais. Não existe uma etapa final única e imutável para todos os ecossistemas.</p>
+        </article>
         <article class="info-card glass">
             <h3>Sucessão primária</h3>
             <p>Começa em uma área sem comunidade anterior e sem solo desenvolvido, como uma rocha recém-exposta.</p>
@@ -772,11 +799,7 @@
     <div class="warning glass">
         <strong>Comunidade clímax</strong>
         <p>
-            Líquens e musgos podem atuar como pioneiros, contribuindo
-            para o intemperismo e a formação do solo. Com o tempo,
-            podem surgir gramíneas, arbustos e árvores. A comunidade
-            madura apresenta maior complexidade, mas não é imóvel:
-            permanece em equilíbrio dinâmico e sujeita a perturbações.
+            O avanço sucessional envolve mudanças graduais na composição das espécies, na biomassa, na disponibilidade de recursos, na estrutura da comunidade e nas relações ecológicas. A sequência pode variar: uma seca, uma queimada, o tipo de solo ou a chegada de novas espécies pode alterar a trajetória. Uma comunidade mais desenvolvida não é imóvel; permanece em equilíbrio dinâmico e sujeita a perturbações.
         </p>
     </div>
 </section>
@@ -1035,6 +1058,8 @@
             <li>BEGON, Michael; TOWNSEND, Colin R.; HARPER, John L. <i>Ecologia: de indivíduos a ecossistemas.</i></li>
             <li>HANAZAKI, Natalia et al. <i>Introdução à Ecologia.</i></li>
             <li>IBGE. <i>Biomas brasileiros.</i> IBGE Educa.</li>
+            <li>EMBRAPA. <i>Prosopis juliflora: origem, introdução e uso no Nordeste brasileiro.</i> Comunicado Técnico 240, 2009.</li>
+            <li>PEGADO, C. M. A. et al. <i>Efeitos da invasão biológica de algaroba sobre a Caatinga em Monteiro, PB.</i> Acta Botanica Brasilica, 2006.</li>
             <li>Toda Matéria. <i>Ecologia.</i></li>
             <li>Brasil Escola. <i>Ecologia e relações ecológicas.</i></li>
         </ol>

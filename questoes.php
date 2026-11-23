@@ -101,6 +101,8 @@ shuffle($questoes);
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Pratique Ecologia com questões e explicações para o ENEM.">
     <title>Questões</title>
     <link rel="shortcut icon" href="imgs/ecoenemicon.png" type="image/x-icon">
 
