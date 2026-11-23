@@ -29,56 +29,11 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     /* ======================================================
-       1. ANIMAÇÕES E PROGRESSO DE LEITURA
+       1. ANIMAÇÕES DE ENTRADA
+       Respeita a preferência de acessibilidade do sistema.
        ====================================================== */
 
-    const motionButton = $("#motionToggle");
     const systemReduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-    let manualReduced = false;
-
-    try {
-        manualReduced = localStorage.getItem("ecoenem-reduced-motion") === "true";
-    } catch (error) {
-        manualReduced = false;
-    }
-
-    function updateMotion() {
-        document.body.classList.toggle("reduce-motion", manualReduced);
-
-        if (motionButton) {
-            motionButton.setAttribute("aria-pressed", String(manualReduced));
-            motionButton.textContent = manualReduced
-                ? "Ativar animações"
-                : "Reduzir animações";
-        }
-
-        if (manualReduced || systemReduced.matches) {
-            $$(".reveal").forEach(function (section) {
-                section.classList.add("visible");
-            });
-        }
-    }
-
-    if (motionButton) {
-        motionButton.addEventListener("click", function () {
-            manualReduced = !manualReduced;
-
-            try {
-                localStorage.setItem(
-                    "ecoenem-reduced-motion",
-                    String(manualReduced)
-                );
-            } catch (error) {}
-
-            updateMotion();
-        });
-    }
-
-    updateMotion();
-
-    systemReduced.addEventListener("change", updateMotion);
-
     const observer = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
             if (entry.isIntersecting) {
@@ -88,28 +43,23 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }, { threshold: 0.08 });
 
-    if (!manualReduced && !systemReduced.matches) {
+    if (systemReduced.matches) {
+        $$(".reveal").forEach(function (section) {
+            section.classList.add("visible");
+        });
+    } else {
         $$(".reveal").forEach(function (element) {
             observer.observe(element);
         });
     }
 
-    function updateReadingProgress() {
-        const height = document.documentElement.scrollHeight -
-            window.innerHeight;
-
-        const progress = height > 0
-            ? (window.scrollY / height) * 100
-            : 0;
-
-        $("#readingProgress").style.width = progress + "%";
-    }
-
-    window.addEventListener("scroll", updateReadingProgress, {
-        passive: true
+    systemReduced.addEventListener("change", function (event) {
+        if (event.matches) {
+            $$(".reveal").forEach(function (section) {
+                section.classList.add("visible");
+            });
+        }
     });
-
-    updateReadingProgress();
 
     /* CONTADORES */
 

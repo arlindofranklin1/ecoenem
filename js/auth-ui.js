@@ -16,7 +16,18 @@
   const link=document.createElement('a');link.href='perfil.php';link.textContent='Meu perfil';
   const email=document.createElement('span');email.className='eco-user-email';email.textContent=profile?.email||session.user.email||'';
   const logout=document.createElement('button');logout.type='button';logout.textContent='Sair';logout.addEventListener('click',async()=>{logout.disabled=true;try{await client.auth.signOut();await EcoAuth.sync(null);location.href='login.php';}catch(e){logout.disabled=false;alert('Não foi possível sair. Tente novamente.');}});
-  menu.append(email,link,logout);wrap.append(trigger,menu);nav.appendChild(wrap);
-  trigger.addEventListener('click',()=>{menu.hidden=!menu.hidden;});document.addEventListener('click',e=>{if(!wrap.contains(e.target))menu.hidden=true;});
+  menu.append(email,link,logout);wrap.append(trigger,menu);(document.querySelector('header')||nav).appendChild(wrap);
+  trigger.addEventListener('click',()=>{menu.hidden=!menu.hidden;});
+  const current=(location.pathname.split('/').pop()||'index.php').toLowerCase();
+  const items=[
+   {href:'ecoia.php',label:'Eco IA',key:'ecoia.php',icon:'<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19"/><path d="M5 24H43M24 5C29 10 32 17 32 24C32 31 29 38 24 43M24 5C19 10 16 17 16 24C16 31 19 38 24 43M8 14H40M8 34H40"/></svg>'},
+   {href:'conteudo.php',label:'Conteúdo',key:'conteudo.php',icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21z"/><path d="M4 5.5V21M8 7h8M8 11h8"/></svg>'},
+   {href:'questoes.php',label:'Questões',key:'questoes.php',icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="m3 6 1.2 1.2L6.5 5M3 12l1.2 1.2L6.5 11M3 18l1.2 1.2L6.5 17"/></svg>'}
+  ];
+  if(!document.querySelector('.eco-bottom-bar')){
+   const bar=document.createElement('nav');bar.className='eco-bottom-bar';bar.setAttribute('aria-label','Navegação mobile');
+   items.forEach(item=>{const a=document.createElement('a');a.href=item.href;a.className='eco-bottom-item'+(current===item.key?' ativo':'');if(current===item.key)a.setAttribute('aria-current','page');a.innerHTML=item.icon+'<span>'+item.label+'</span>';bar.appendChild(a);});
+   document.body.appendChild(bar);
+  }document.addEventListener('click',e=>{if(!wrap.contains(e.target))menu.hidden=true;});
  }catch(e){console.error('Falha ao iniciar autenticação:',e);document.body.insertAdjacentHTML('afterbegin','<div class="eco-auth-warning">Não foi possível validar sua sessão. Atualize a página ou entre novamente.</div>');}
 })();

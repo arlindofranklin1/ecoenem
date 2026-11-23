@@ -14,8 +14,6 @@
 
 <body>
 
-<div class="reading-progress" id="readingProgress"></div>
-
 <header>
     <div class="logo">
         <a href="index.php">EcoENEM</a>
@@ -32,25 +30,6 @@
 <main>
 
 <!-- ÍNDICE INTERNO -->
-<nav class="section-nav" aria-label="Índice do conteúdo">
-    <span class="nav-label">Explorar conteúdo</span>
-    <a href="#inicio" class="active">Início</a>
-    <a href="#organizacao">Organização</a>
-    <a href="#conceitos">Conceitos</a>
-    <a href="#relacoes">Relações</a>
-    <a href="#energia">Energia</a>
-    <a href="#jogo">Jogo</a>
-    <a href="#ciclos">Ciclos</a>
-    <a href="#sucessao">Sucessão</a>
-    <a href="#populacoes">Populações</a>
-    <a href="#ramos">Ramos</a>
-    <a href="#biomas">Biomas</a>
-    <a href="#importancia">Importância</a>
-    <a href="#enem">ENEM</a>
-    <a href="#quiz">Quiz</a>
-    <a href="#referencias">Referências</a>
-</nav>
-
 <!-- 1. HERO -->
 <section class="titulo reveal" id="inicio">
     <div class="hero-decoration" aria-hidden="true">
@@ -1077,10 +1056,6 @@
     </div>
     <p id="guideText">Explore as seções e descubra como a natureza se conecta.</p>
 </aside>
-
-<button class="motion-toggle glass" id="motionToggle" aria-pressed="false">
-    Reduzir animações
-</button>
 
 <footer>
     <p>© 2026 EcoENEM. Todos os direitos reservados.</p>

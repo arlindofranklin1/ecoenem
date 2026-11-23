@@ -1,1 +1,37 @@
 .eco-user-menu{position:relative;display:flex;align-items:center;margin-left:8px;z-index:10001}.eco-avatar{width:42px;height:42px;min-width:42px;border-radius:50%;display:grid;place-items:center;overflow:hidden;border:1px solid rgba(255,255,255,.3);color:#fff;font:14px InterSemiBold,Inter,sans-serif;cursor:pointer;background:linear-gradient(135deg,rgba(255,255,255,.22),rgba(73,111,86,.55));box-shadow:0 5px 18px rgba(0,0,0,.25)}.eco-avatar img{width:100%;height:100%;object-fit:cover}.eco-user-dropdown{position:absolute;right:0;top:calc(100% + 12px);width:210px;padding:12px;border-radius:16px;display:flex;flex-direction:column;gap:7px;background:rgba(20,35,26,.94);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.18);box-shadow:0 14px 34px rgba(0,0,0,.4)}.eco-user-dropdown[hidden]{display:none}.eco-user-dropdown a,.eco-user-dropdown button{display:block;text-align:left;text-decoration:none;color:#fff;background:transparent;border:0;border-radius:9px;padding:10px 12px;font:13px InterSemiBold,Inter,sans-serif;cursor:pointer}.eco-user-dropdown a:hover,.eco-user-dropdown button:hover{background:rgba(255,255,255,.12)}.eco-user-email{color:#D0DDD3;font-size:11px;padding:5px 10px;overflow-wrap:anywhere}.eco-auth-warning{position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:99999;background:#2b4334;color:white;padding:10px 16px;border-radius:12px;font:13px Inter,sans-serif}@media(max-width:768px){.eco-user-menu{margin-left:3px}.eco-avatar{width:36px;height:36px;min-width:36px}.eco-user-dropdown{right:0}}
+
+/* Navegação mobile EcoENEM — extensão do cabeçalho Liquid Glass */
+.eco-bottom-bar{display:none}
+@media(max-width:768px){
+ body{padding-bottom:calc(94px + env(safe-area-inset-bottom,0px))!important;overflow-x:hidden}
+ header{padding-left:18px!important;padding-right:18px!important;min-height:68px}
+ header nav{display:none!important}
+ header .eco-user-menu{margin-left:auto;position:relative;z-index:10002}
+ .eco-bottom-bar{
+  position:fixed!important;display:flex!important;align-items:stretch;justify-content:space-around;
+  left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));width:auto;
+  min-height:68px;padding:7px 8px;gap:4px;z-index:10000;
+  border:1px solid rgba(255,255,255,.2);border-radius:22px;
+  background:linear-gradient(135deg,rgba(255,255,255,.17),rgba(255,255,255,.045) 48%,rgba(255,255,255,.10)),rgba(24,43,31,.68);
+  -webkit-backdrop-filter:blur(24px) saturate(175%);backdrop-filter:blur(24px) saturate(175%);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.38),inset 0 -1px 1px rgba(255,255,255,.1),0 8px 28px rgba(0,0,0,.38)
+ }
+ .eco-bottom-item{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  color:rgba(239,246,241,.78);text-decoration:none;border-radius:15px;font:600 10px Inter,Arial,sans-serif;
+  transition:background .2s ease,color .2s ease; -webkit-tap-highlight-color:transparent}
+ .eco-bottom-item svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+ .eco-bottom-item span{line-height:1.15;text-align:center;white-space:nowrap}
+ .eco-bottom-item.ativo{color:#fff;background:rgba(181,201,186,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+ .eco-user-dropdown{z-index:10003}
+}
+@media(max-width:360px){.eco-bottom-bar{left:8px;right:8px;padding:6px}.eco-bottom-item{font-size:9px}.eco-bottom-item svg{width:20px;height:20px}}
+
+@media(max-width:768px){
+ *,*::before,*::after{box-sizing:border-box}
+ html,body{max-width:100%;min-width:0}
+ img,video,iframe,svg{max-width:100%}
+ input,textarea,select,button{max-width:100%}
+ main,section,article,aside,footer,.container{min-width:0}
+ p,h1,h2,h3,h4,a,button,li{overflow-wrap:anywhere}
+ .eco-bottom-bar{overflow:visible}
+}
