@@ -13,7 +13,7 @@
       '<path d="M8 14H40M8 34H40" stroke="currentColor" stroke-width="2.8"/>' +
     '</svg>';
 
-  // Ordem obrigatória: EcoIA, Conteúdo, Questões.
+  // Ordem: EcoIA, Conteúdo, Questões e, à direita, Simuladão.
   const items = [
     { href: 'ecoia.php', label: 'EcoIA', key: 'ecoia.php', icon: ICONE_ECOIA },
     {
@@ -25,6 +25,11 @@
       href: 'questoes.php', label: 'Questões', key: 'questoes.php',
       // Lista com marcações: exercícios.
       icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="m3.5 6.5 1.3 1.3L7.2 5.3M3.5 12l1.3 1.3 2.4-2.5M3.5 17.5l1.3 1.3 2.4-2.5"/></svg>'
+    },
+    {
+      href: 'simulado.php', label: 'Simuladão', key: 'simulado.php',
+      // Prancheta de prova: simulado completo.
+      icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4.5H6.5A1.5 1.5 0 0 0 5 6v13.5A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H15"/><rect x="9" y="3" width="6" height="3" rx="1"/><path d="M8.5 11h7M8.5 14.5h7M8.5 18h4"/></svg>'
     }
   ];
 
@@ -42,6 +47,18 @@
       bar.appendChild(link);
     });
     document.body.appendChild(bar);
+  }
+
+  /* ---------- Título da aba no celular ---------- */
+  // Só no celular: nomes curtos para as abas de Conteúdo e Perfil. No computador, o título original é mantido.
+  const TITULOS_MOBILE = { 'conteudo.php': 'Conteúdo', 'perfil.php': 'Meu perfil' };
+  if (TITULOS_MOBILE[current] && window.matchMedia) {
+    const tituloOriginal = document.title;
+    const telaMobile = window.matchMedia('(max-width: 768px)');
+    const ajustarTitulo = () => { document.title = telaMobile.matches ? TITULOS_MOBILE[current] : tituloOriginal; };
+    ajustarTitulo();
+    if (telaMobile.addEventListener) telaMobile.addEventListener('change', ajustarTitulo);
+    else if (telaMobile.addListener) telaMobile.addListener(ajustarTitulo);
   }
 
   /* ---------- Menu de conta com a foto de perfil ---------- */
@@ -90,8 +107,8 @@
     perfilLink.href = 'perfil.php';
     perfilLink.textContent = 'Meu perfil';
 
-    // No celular o menu superior fica oculto; estas páginas continuam acessíveis por aqui.
-    const extras = [['simulado.php', 'Simuladão'], ['sobre.php', 'Sobre']].map(([href, texto]) => {
+    // No celular o menu superior fica oculto; o Simuladão está na Bottom Bar e o Sobre continua acessível por aqui.
+    const extras = [['sobre.php', 'Sobre']].map(([href, texto]) => {
       const a = document.createElement('a');
       a.href = href;
       a.textContent = texto;

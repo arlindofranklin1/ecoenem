@@ -480,11 +480,17 @@ nav a:focus-visible {
         overflow-x: hidden;
         overflow-y: auto;
         height: auto;
+
+        /* o degradê cobre toda a página: no mínimo a altura da tela
+           (antes terminava junto com o conteúdo e recomeçava em preto) */
+        min-height: 100vh;
+        min-height: 100dvh;
         background: linear-gradient(180deg,
                 #000000 0%,
                 #000000 40%,
                 #355241 75%,
-                #496F56 100%);
+                #496F56 100%) no-repeat;
+        background-color: #496F56;
     }
 
     body::before {
@@ -570,12 +576,20 @@ nav a:focus-visible {
 
     #earth-container {
         height: 350px;
-        touch-action: none;
         pointer-events: auto;
     }
 
     #earth-container canvas {
         pointer-events: auto;
+    }
+}
+
+/* Telas de toque: arrastar na horizontal gira o globo (js/script.js);
+   arrastar na vertical continua rolando a página. Não afeta o mouse. */
+@media (hover: none), (pointer: coarse) {
+
+    #earth-container canvas {
+        touch-action: pan-y pinch-zoom;
     }
 }
 

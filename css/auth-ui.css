@@ -59,7 +59,7 @@
   .eco-user-dropdown .eco-dropdown-mobile{display:block}
 
   .eco-bottom-bar{
-    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch;gap:6px;
+    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch;gap:4px;
     position:fixed;z-index:9990;
     left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));
     bottom:calc(var(--eco-bar-gap) + env(safe-area-inset-bottom,0px));
@@ -79,7 +79,7 @@
     background:linear-gradient(90deg,transparent,#B5C9BA,transparent);opacity:.8}
 
   .eco-bottom-item{position:relative;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
-    padding:4px 2px;border-radius:18px;color:rgba(208,221,211,.85);text-decoration:none;text-align:center;
+    padding:4px 1px;border-radius:18px;color:rgba(208,221,211,.85);text-decoration:none;text-align:center;
     font:12px/1.1 InterSemiBold,Inter,Arial,sans-serif;letter-spacing:.01em;-webkit-tap-highlight-color:transparent;
     border:1px solid transparent;transition:background .25s ease,color .25s ease,box-shadow .25s ease,border-color .25s ease}
   .eco-bottom-item svg{display:block;width:24px;height:24px;flex:0 0 24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
@@ -102,8 +102,8 @@
   header{padding-left:12px!important;padding-right:10px!important}
   header .logo a{font-size:19px!important;padding:8px 8px!important}
   .eco-avatar{width:36px;height:36px;min-width:36px;flex-basis:36px}
-  .eco-bottom-bar{left:8px;right:8px;gap:4px;padding:5px}
-  .eco-bottom-item{font-size:11px}
+  .eco-bottom-bar{left:8px;right:8px;gap:2px;padding:5px}
+  .eco-bottom-item{font-size:10.5px;letter-spacing:0}
   .eco-bottom-item svg{width:22px;height:22px;flex-basis:22px}
 }
 

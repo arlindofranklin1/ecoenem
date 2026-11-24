@@ -286,6 +286,100 @@ window.addEventListener(
     }
 );
 
+// Controle por toque (celulares e tablets)
+// O mouse continua usando os eventos acima, sem alterações.
+// Um arraste que começa na horizontal gira o globo nos dois eixos,
+// acompanhando o dedo; um arraste que começa na vertical rola a página.
+
+let modoToque = null; // null = ainda decidindo | "globo" | "rolagem"
+
+const inicioToque = {
+    x: 0,
+    y: 0
+};
+
+renderer.domElement.addEventListener(
+    "touchstart",
+
+    function (e) {
+
+        if (e.touches.length !== 1) {
+            modoToque = "rolagem";
+            return;
+        }
+
+        modoToque = null;
+
+        inicioToque.x = previousMouse.x =
+            e.touches[0].clientX;
+
+        inicioToque.y = previousMouse.y =
+            e.touches[0].clientY;
+    },
+
+    { passive: true }
+);
+
+renderer.domElement.addEventListener(
+    "touchmove",
+
+    function (e) {
+
+        if (e.touches.length !== 1 || modoToque === "rolagem" || !earth)
+            return;
+
+        const toque = e.touches[0];
+
+        if (modoToque === null) {
+
+            const distanciaX = Math.abs(toque.clientX - inicioToque.x);
+            const distanciaY = Math.abs(toque.clientY - inicioToque.y);
+
+            // pequena margem para distinguir toque de arraste
+            if (distanciaX < 6 && distanciaY < 6)
+                return;
+
+            modoToque =
+                distanciaX >= distanciaY ? "globo" : "rolagem";
+
+            if (modoToque === "rolagem")
+                return;
+        }
+
+        if (e.cancelable)
+            e.preventDefault();
+
+        // mesma sensibilidade do arraste com o mouse
+        earth.rotation.y +=
+            (toque.clientX - previousMouse.x) * 0.01;
+
+        earth.rotation.x +=
+            (toque.clientY - previousMouse.y) * 0.005;
+
+        previousMouse.x =
+            toque.clientX;
+
+        previousMouse.y =
+            toque.clientY;
+    },
+
+    { passive: false }
+);
+
+["touchend", "touchcancel"].forEach(function (evento) {
+
+    renderer.domElement.addEventListener(
+        evento,
+
+        function () {
+
+            modoToque = null;
+        },
+
+        { passive: true }
+    );
+});
+
 // Animação
 
 function animate() {
@@ -326,4 +420,4 @@ window.addEventListener(
             container.clientHeight
         );
     }
-);
+);
