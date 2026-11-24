@@ -56,3 +56,119 @@
  .eco-bottom-item svg{width:21px!important;height:21px!important;flex-basis:21px!important}
  .eco-bottom-item span{font-size:9px!important}
 }
+
+/* Ajustes finais da navegação responsiva: barra fixa e perfil no extremo direito. */
+@media (max-width: 768px) {
+  header {
+    position: relative;
+    z-index: 10010;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+  header .logo,
+  header .header-esq {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    margin-right: auto !important;
+  }
+  header .eco-user-menu {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    margin-left: 12px !important;
+    order: 99;
+  }
+  header .eco-avatar {
+    display: grid !important;
+    flex: 0 0 40px !important;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    border-radius: 50% !important;
+  }
+  header .eco-account-options { display: none !important; }
+  body > .eco-bottom-bar {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    position: fixed !important;
+    left: max(8px, env(safe-area-inset-left, 0px)) !important;
+    right: max(8px, env(safe-area-inset-right, 0px)) !important;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+    width: auto !important;
+    height: 74px !important;
+    min-height: 74px !important;
+    max-height: 74px !important;
+    margin: 0 !important;
+    padding: 6px 5px !important;
+    gap: 3px !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    justify-content: space-between !important;
+    overflow: visible !important;
+    z-index: 2147483000 !important;
+    border: 1px solid rgba(255,255,255,.24) !important;
+    border-radius: 20px !important;
+    background: rgba(28, 48, 36, .94) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(165%) !important;
+    backdrop-filter: blur(22px) saturate(165%) !important;
+    box-shadow: 0 8px 28px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.25) !important;
+  }
+  body > .eco-bottom-bar > .eco-bottom-item {
+    display: flex !important;
+    flex: 1 1 20% !important;
+    width: 20% !important;
+    min-width: 0 !important;
+    max-width: 20% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 5px 1px !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    color: rgba(255,255,255,.82) !important;
+    text-decoration: none !important;
+    border: 0 !important;
+    border-radius: 14px !important;
+    background: transparent !important;
+    font: 600 10px/1.1 Inter, Arial, sans-serif !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+  }
+  body > .eco-bottom-bar > .eco-bottom-item svg {
+    display: block !important;
+    flex: 0 0 23px !important;
+    width: 23px !important;
+    height: 23px !important;
+    max-width: 23px !important;
+    fill: none !important;
+    stroke: currentColor !important;
+    stroke-width: 1.7 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+  }
+  body > .eco-bottom-bar > .eco-bottom-item span {
+    display: block !important;
+    max-width: 100% !important;
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+  }
+  body > .eco-bottom-bar > .eco-bottom-item.ativo {
+    color: #fff !important;
+    background: rgba(181,201,186,.24) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.22) !important;
+  }
+}
+@media (max-width: 380px) {
+  body > .eco-bottom-bar { left: 5px !important; right: 5px !important; padding-inline: 3px !important; }
+  body > .eco-bottom-bar > .eco-bottom-item span { font-size: 8px !important; }
+  header .eco-avatar { width: 36px !important; height: 36px !important; min-width: 36px !important; flex-basis: 36px !important; }
+}
