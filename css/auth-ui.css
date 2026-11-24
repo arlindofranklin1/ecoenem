@@ -7,66 +7,61 @@
 .eco-user-dropdown a,.eco-user-dropdown button{display:block;text-align:left;text-decoration:none;color:#fff;background:transparent;border:0;border-radius:9px;padding:10px 12px;font:13px InterSemiBold,Inter,sans-serif;cursor:pointer}
 .eco-user-dropdown a:hover,.eco-user-dropdown button:hover{background:rgba(255,255,255,.12)}
 .eco-user-email{color:#D0DDD3;font-size:11px;padding:5px 10px;overflow-wrap:anywhere}
+.eco-account-options{width:25px;height:30px;border:0;border-radius:9px;color:#fff;background:rgba(255,255,255,.10);font-size:20px;line-height:1;cursor:pointer}
 .eco-auth-warning{position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:99999;background:#2b4334;color:white;padding:10px 16px;border-radius:12px;font:13px Inter,sans-serif}
 
-/* ============================================================
-   HEADER: logo à esquerda, foto de perfil no canto direito.
-   O menu do topo foi removido; a navegação fica só na bottom bar.
-   ============================================================ */
-header nav{display:none!important}
-header{justify-content:space-between!important;align-items:center!important}
-header .eco-user-menu{margin-left:auto!important}
+/* Bottom Bar: exclusiva do celular. No computador o menu do topo permanece. */
+.eco-bottom-bar{display:none}
+@media(max-width:768px){
+ *,*::before,*::after{box-sizing:border-box}
+ html,body{max-width:100%;min-width:0}
+ html{scroll-padding-bottom:84px}
+ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))!important;overflow-x:hidden}
+ img,video,iframe,svg{max-width:100%}
+ input,textarea,select,button{max-width:100%}
+ main,section,article,aside,footer,.container{min-width:0}
+ p,h1,h2,h3,h4,a,button,li{overflow-wrap:anywhere}
+ header{box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;width:100%;min-width:0;padding-left:16px!important;padding-right:16px!important;min-height:68px}
+ header .logo{min-width:0;flex:1 1 auto;margin-right:auto}
+ header .logo a{white-space:nowrap}
+ header nav{display:none!important}
+ header .eco-user-menu{margin-left:auto!important;position:relative;z-index:10002;gap:0}
+ .eco-account-options{display:none!important}
+ .eco-avatar{width:40px;height:40px;min-width:40px;flex-basis:40px}
+ .eco-user-dropdown{right:0;top:calc(100% + 8px);z-index:10003}
 
-/* ============================================================
-   BOTTOM BAR — fixa na base, em todas as páginas e telas
-   ============================================================ */
-html{scroll-padding-bottom:84px}
-body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))!important}
-
-.eco-bottom-bar{
+ .eco-bottom-bar{
   position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;
   width:100%!important;height:calc(64px + env(safe-area-inset-bottom,0px))!important;
-  margin:0!important;padding:6px 8px env(safe-area-inset-bottom,0px)!important;box-sizing:border-box!important;
-  display:flex!important;align-items:stretch!important;justify-content:center!important;gap:4px!important;
-  z-index:2147483000!important;visibility:visible!important;opacity:1!important;
-  transform:none!important;translate:none!important;
-  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.03)),rgba(24,43,31,.88)!important;
+  margin:0!important;padding:6px 6px env(safe-area-inset-bottom,0px)!important;
+  display:flex!important;align-items:stretch!important;justify-content:center!important;gap:2px!important;
+  z-index:2147483000!important;visibility:visible!important;opacity:1!important;transform:none!important;translate:none!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.03)),rgba(24,43,31,.90)!important;
   -webkit-backdrop-filter:blur(22px) saturate(170%)!important;backdrop-filter:blur(22px) saturate(170%)!important;
-  border-top:1px solid rgba(255,255,255,.18)!important;
+  border:0!important;border-top:1px solid rgba(255,255,255,.18)!important;border-radius:0!important;
   box-shadow:0 -4px 22px rgba(0,0,0,.35)!important;
-}
-.eco-bottom-item{
-  flex:1 1 0!important;max-width:120px!important;min-width:0!important;
-  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;
-  padding:4px 2px!important;margin:0!important;border:0!important;border-radius:12px!important;background:transparent!important;
-  color:#fff!important;text-decoration:none!important;text-align:center!important;
-  font:500 11px/1.1 Inter,Arial,sans-serif!important;-webkit-tap-highlight-color:transparent;
-  transition:background .2s ease;
-}
-.eco-bottom-item svg{
-  display:block!important;width:22px!important;height:22px!important;flex:0 0 22px!important;
-  fill:none!important;stroke:#fff!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important;
-}
-.eco-bottom-item span{display:block!important;color:#fff!important;font-size:11px!important;line-height:1.1!important;white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-.eco-bottom-item:hover{background:rgba(255,255,255,.10)!important}
-.eco-bottom-item.ativo{background:rgba(181,201,186,.24)!important}
-.eco-bottom-item.ativo span{font-weight:700!important}
-.eco-bottom-item:focus-visible{outline:2px solid rgba(255,255,255,.85);outline-offset:1px}
+ }
+ .eco-bottom-item{flex:1 1 0!important;min-width:0!important;max-width:none!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;
+  padding:4px 1px!important;margin:0!important;color:#fff!important;text-decoration:none!important;text-align:center!important;
+  border:0!important;border-radius:12px!important;background:transparent!important;font:500 10px/1.1 Inter,Arial,sans-serif!important;
+  -webkit-tap-highlight-color:transparent;transition:background .2s ease;
+ }
+ .eco-bottom-item svg{display:block!important;width:22px!important;height:22px!important;flex:0 0 22px!important;max-width:22px!important;fill:none!important;stroke:#fff!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+ .eco-bottom-item span{display:block!important;color:#fff!important;font-size:10px!important;line-height:1.1!important;white-space:nowrap!important;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+ .eco-bottom-item.ativo{background:rgba(181,201,186,.24)!important}
+ .eco-bottom-item.ativo span{font-weight:700!important}
+ .eco-bottom-item:focus-visible{outline:2px solid rgba(255,255,255,.85);outline-offset:1px}
 
-@media(max-width:768px){
-  header .eco-avatar{width:40px;height:40px;min-width:40px;flex-basis:40px}
+ /* elementos fixos de cada página ficam acima da barra */
+ .input-area{bottom:calc(76px + env(safe-area-inset-bottom,0px))!important}
+ .nature-guide{bottom:calc(80px + env(safe-area-inset-bottom,0px))!important}
+ #chat{padding-bottom:calc(250px + env(safe-area-inset-bottom,0px))!important}
+ .boas-vindas{padding-bottom:calc(220px + env(safe-area-inset-bottom,0px))!important}
 }
 @media(max-width:380px){
-  .eco-bottom-bar{padding-left:4px!important;padding-right:4px!important;gap:2px!important}
-  .eco-bottom-item span{font-size:10px!important}
-  .eco-bottom-item svg{width:20px!important;height:20px!important;flex-basis:20px!important}
+ header{padding-left:12px!important;padding-right:12px!important}
+ .eco-avatar{width:36px;height:36px;min-width:36px;flex-basis:36px}
+ .eco-bottom-bar{padding-left:3px!important;padding-right:3px!important}
+ .eco-bottom-item svg{width:20px!important;height:20px!important;flex-basis:20px!important}
+ .eco-bottom-item span{font-size:9px!important}
 }
-
-/* Elementos fixos de cada página sobem para ficar acima da bottom bar */
-.input-area{bottom:calc(76px + env(safe-area-inset-bottom,0px))!important}
-.nature-guide{bottom:calc(80px + env(safe-area-inset-bottom,0px))!important}
-@media(max-width:768px){
-  .nature-guide{bottom:calc(80px + env(safe-area-inset-bottom,0px))!important}
-}
-#chat{padding-bottom:calc(250px + env(safe-area-inset-bottom,0px))!important}
-.boas-vindas{padding-bottom:calc(220px + env(safe-area-inset-bottom,0px))!important}

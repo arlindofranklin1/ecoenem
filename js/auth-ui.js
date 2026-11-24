@@ -1,7 +1,7 @@
 /* Navegação mobile e menu de conta compartilhados entre as páginas protegidas. */
 (function () {
   let current = (location.pathname.split('/').pop() || 'index.php').toLowerCase();
-  if (current === '' || current === '/') current = 'index.php';
+  if (current === '') current = 'index.php';
   const items = [
     {
       href: 'index.php', label: 'Início', key: 'index.php',
@@ -35,7 +35,7 @@
   if (!document.querySelector('.eco-bottom-bar') && document.body) {
     const bar = document.createElement('nav');
     bar.className = 'eco-bottom-bar';
-    bar.setAttribute('aria-label', 'Navegação principal');
+    bar.setAttribute('aria-label', 'Navegação principal mobile');
     items.forEach(item => {
       const link = document.createElement('a');
       link.href = item.href;
@@ -97,6 +97,13 @@
         trigger.textContent = iniciais;
       }
 
+      trigger.addEventListener('click', event => {
+        if (window.matchMedia('(max-width: 768px)').matches) {
+          event.preventDefault();
+          menu.hidden = !menu.hidden;
+        }
+      });
+
       const menu = document.createElement('div');
       menu.className = 'eco-user-dropdown glass';
       menu.hidden = true;
@@ -122,19 +129,17 @@
       });
       menu.append(email, link, logout);
 
-      trigger.addEventListener('click', event => {
-        event.preventDefault();
-        menu.hidden = !menu.hidden;
-        trigger.setAttribute('aria-expanded', String(!menu.hidden));
-      });
-      trigger.setAttribute('aria-haspopup', 'true');
-      trigger.setAttribute('aria-expanded', 'false');
-      trigger.setAttribute('aria-label', 'Abrir menu do perfil');
+      const menuTrigger = document.createElement('button');
+      menuTrigger.type = 'button';
+      menuTrigger.className = 'eco-account-options';
+      menuTrigger.textContent = '⋯';
+      menuTrigger.setAttribute('aria-label', 'Mais opções da conta');
+      menuTrigger.addEventListener('click', () => { menu.hidden = !menu.hidden; });
 
-      wrap.append(trigger, menu);
+      wrap.append(menuTrigger, trigger, menu);
       header.appendChild(wrap);
       document.addEventListener('click', event => {
-        if (!wrap.contains(event.target)) { menu.hidden = true; trigger.setAttribute('aria-expanded', 'false'); }
+        if (!wrap.contains(event.target)) menu.hidden = true;
       });
     } catch (error) {
       console.error('Falha ao iniciar autenticação:', error);

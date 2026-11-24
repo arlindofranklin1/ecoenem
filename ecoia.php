@@ -51,6 +51,14 @@
 
     </div>
 
+    <nav>
+        <a href="ecoia.php">EcoIA</a>
+        <a href="conteudo.php">Conteúdo</a>
+        <a href="questoes.php">Questões</a>
+        <a href="simulado.php">Simuladão</a>
+        <a href="sobre.php">Sobre</a>
+    </nav>
+
 </header>
 
 <!-- botão do histórico: círculo de vidro logo abaixo do cabeçalho -->
