@@ -33,7 +33,9 @@
   // Cria a barra antes de consultar a sessão: a navegação não depende
   // do carregamento do perfil ou de uma resposta do Supabase.
   if (!document.querySelector('.eco-bottom-bar') && document.body) {
-    const bar = document.createElement('nav');
+    const bar = document.createElement('div');
+    // div (e não nav) para não herdar as regras antigas de "nav" das folhas de estilo de cada página.
+    bar.setAttribute('role', 'navigation');
     bar.className = 'eco-bottom-bar';
     bar.setAttribute('aria-label', 'Navegação principal mobile');
     items.forEach(item => {

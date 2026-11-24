@@ -688,46 +688,11 @@ nav a:focus-visible::before,
     }
 
     /* menu vira dock de vidro na base */
-    nav {
-        position: fixed;
-        bottom: 16px;
-        left: 50%;
-        transform: translateX(-50%);
+    
 
-        max-width: calc(100% - 24px);
-        overflow-x: auto;
-        scrollbar-width: none;
+    
 
-        padding: 6px;
-        gap: 4px;
-        border-radius: 999px;
-
-        background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.16) 0%,
-                rgba(255, 255, 255, 0.04) 45%,
-                rgba(255, 255, 255, 0.09) 100%),
-            rgba(10, 20, 14, 0.30);
-        -webkit-backdrop-filter: blur(20px) saturate(170%);
-        backdrop-filter: blur(20px) saturate(170%);
-        border: 1px solid rgba(255, 255, 255, 0.16);
-        box-shadow:
-            inset 0 1px 1px rgba(255, 255, 255, 0.45),
-            inset 0 -1px 1px rgba(255, 255, 255, 0.10),
-            0 14px 34px rgba(0, 0, 0, 0.42);
-
-        pointer-events: auto;
-        z-index: 99999;
-    }
-
-    nav::-webkit-scrollbar {
-        display: none;
-    }
-
-    nav a {
-        flex-shrink: 0;
-        padding: 10px 13px;
-        font-size: 14px;
-    }
+    
 
     .container {
         margin-top: 96px;
@@ -1014,96 +979,13 @@ nav a:focus-visible::before,
     }
 
     /* MENU ORIGINAL TRANSFORMADO EM BOLINHAS */
-    header nav {
-        position: fixed;
-        top: 50%;
-        right: 18px;
-        left: auto;
-        bottom: auto;
+    
 
-        transform: translateY(-50%);
+    
 
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+    
 
-        width: auto;
-        max-width: none;
-        gap: 14px;
-
-        padding: 0;
-        margin: 0;
-
-        overflow: visible;
-        background: none;
-        border: none;
-        border-radius: 0;
-        box-shadow: none;
-
-        -webkit-backdrop-filter: none;
-        backdrop-filter: none;
-
-        z-index: 99999;
-    }
-
-    header nav::-webkit-scrollbar {
-        display: none;
-    }
-
-    header nav a {
-        flex: none;
-
-        width: 50px;
-        height: 50px;
-        min-width: 50px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        padding: 0;
-        margin: 0;
-
-        border-radius: 50%;
-
-        font-size: 0;
-        line-height: 0;
-        color: transparent;
-
-        background: linear-gradient(
-            135deg,
-            rgba(181, 201, 186, 0.32),
-            rgba(255, 255, 255, 0.07)
-        );
-
-        -webkit-backdrop-filter: blur(18px) saturate(170%);
-        backdrop-filter: blur(18px) saturate(170%);
-
-        border: 2px solid rgba(255, 255, 255, 0.35);
-
-        box-shadow:
-            inset 0 1px 2px rgba(255, 255, 255, 0.35),
-            0 5px 18px rgba(0, 0, 0, 0.35);
-
-        transition: .3s ease;
-    }
-
-    header nav a:hover,
-    header nav a:focus-visible,
-    header nav a:active {
-        color: transparent;
-        background: rgba(181, 201, 186, 0.45);
-
-        border-color: white;
-
-        box-shadow:
-            0 0 12px rgba(181, 201, 186, 0.7),
-            0 0 25px rgba(255, 255, 255, 0.25);
-
-        transform: scale(1.12);
-        outline: none;
-    }
+    
 
     .container {
         margin-top: 96px;
@@ -1178,16 +1060,9 @@ nav a:focus-visible::before,
 
 @media (max-width: 380px) {
 
-    header nav {
-        right: 12px;
-        gap: 11px;
-    }
+    
 
-    header nav a {
-        width: 44px;
-        height: 44px;
-        min-width: 44px;
-    }
+    
 
     .questao {
         padding: 16px;
@@ -1226,7 +1101,7 @@ nav a:focus-visible::before,
 @media(max-width:768px){
  body{display:flex;flex-direction:column;align-items:stretch;min-width:0;padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
  header{height:70px;min-height:70px;padding:0 16px;justify-content:space-between}
- header nav{display:none!important}
+ 
  .container{width:100%;max-width:100%;margin:88px auto 0;padding:0 14px;min-width:0}
  #questaoBox,.progresso-container,#contadorQuestoes{width:100%;max-width:100%;min-width:0}
  .questao,.alternativas,.alt{min-width:0;max-width:100%}
