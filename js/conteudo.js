@@ -1,24 +1,18 @@
-const cards = document.querySelectorAll('.card');
-
-cards.forEach(card => {
-
-    card.addEventListener('click', () => {
-
-        card.classList.toggle('flip');
-
-    });
-
-});
-
-
 /* ==========================================================
    ECOENEM — JAVASCRIPT DA PÁGINA DE CONTEÚDO
    JavaScript puro, organizado por funcionalidades.
    ========================================================== */
 
-document.addEventListener("DOMContentLoaded", function () {
+function iniciarInteracoesConteudo() {
 
     "use strict";
+
+    // Elementos com efeito de virar cartão são conectados após o DOM estar pronto.
+    document.querySelectorAll('.card').forEach(function (card) {
+        card.addEventListener('click', function () {
+            card.classList.toggle('flip');
+        });
+    });
 
     const $ = function (selector, parent) {
         return (parent || document).querySelector(selector);
@@ -33,104 +27,83 @@ document.addEventListener("DOMContentLoaded", function () {
        Respeita a preferência de acessibilidade do sistema.
        ====================================================== */
 
-    const systemReduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-                entry.target.classList.add("visible");
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.08 });
-
-    if (systemReduced.matches) {
-        $$(".reveal").forEach(function (section) {
-            section.classList.add("visible");
-        });
-    } else {
-        $$(".reveal").forEach(function (element) {
-            observer.observe(element);
-        });
+    const systemReduced = window.matchMedia
+        ? window.matchMedia("(prefers-reduced-motion: reduce)")
+        : { matches: false };
+    const hasIntersectionObserver = typeof window.IntersectionObserver === "function";
+    let observer = null;
+    if (hasIntersectionObserver) {
+        observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("visible");
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.08 });
     }
 
-    systemReduced.addEventListener("change", function (event) {
-        if (event.matches) {
-            $$(".reveal").forEach(function (section) {
-                section.classList.add("visible");
-            });
+    if (systemReduced.matches || !hasIntersectionObserver) {
+        $$(".reveal").forEach(function (section) { section.classList.add("visible"); });
+    } else {
+        $$(".reveal").forEach(function (element) { observer.observe(element); });
+    }
+
+    const onMotionChange = function (event) {
+        if (event.matches) $$(".reveal").forEach(function (section) { section.classList.add("visible"); });
+    };
+    if (systemReduced.addEventListener) systemReduced.addEventListener("change", onMotionChange);
+    else if (systemReduced.addListener) systemReduced.addListener(onMotionChange);
+
+    /* CONTADORES — funcionam também em navegadores sem IntersectionObserver. */
+    function animateCounter(element) {
+        if (element.dataset.counted === "true") return;
+        element.dataset.counted = "true";
+        const target = Number(element.dataset.count);
+        const start = performance.now();
+        const duration = 1100;
+        function animate(now) {
+            const progress = Math.min((now - start) / duration, 1);
+            element.textContent = Math.floor(target * progress);
+            if (progress < 1 && !systemReduced.matches) requestAnimationFrame(animate);
+            else element.textContent = target;
         }
-    });
-
-    /* CONTADORES */
-
-    const statObserver = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-            if (!entry.isIntersecting) return;
-
-            const element = entry.target;
-            const target = Number(element.dataset.count);
-            const start = performance.now();
-            const duration = 1100;
-
-            function animate(now) {
-                const progress = Math.min((now - start) / duration, 1);
-
-                element.textContent = Math.floor(
-                    target * progress
-                );
-
-                if (progress < 1 && !systemReduced.matches) {
-                    requestAnimationFrame(animate);
-                } else {
-                    element.textContent = target;
-                }
-            }
-
-            if (systemReduced.matches) {
-                element.textContent = target;
-            } else {
-                requestAnimationFrame(animate);
-            }
-
-            statObserver.unobserve(element);
+        if (systemReduced.matches) element.textContent = target;
+        else requestAnimationFrame(animate);
+    }
+    if (hasIntersectionObserver) {
+        const statObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (!entry.isIntersecting) return;
+                animateCounter(entry.target);
+                statObserver.unobserve(entry.target);
+            });
         });
-    });
-
-    $$("[data-count]").forEach(function (element) {
-        statObserver.observe(element);
-    });
+        $$('[data-count]').forEach(function (element) { statObserver.observe(element); });
+    } else {
+        $$('[data-count]').forEach(animateCounter);
+    }
 
     /* SCROLLSPY */
 
     const sections = $$(".content-section, .titulo");
     const internalLinks = $$(".section-nav a");
 
-    const spy = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-            if (!entry.isIntersecting) return;
-
-            internalLinks.forEach(function (link) {
-                const active = link.getAttribute("href") ===
-                    "#" + entry.target.id;
-
-                link.classList.toggle("active", active);
-
-                if (active && window.innerWidth <= 768) {
-                    link.scrollIntoView({
-                        behavior: systemReduced.matches ? "auto" : "smooth",
-                        block: "nearest",
-                        inline: "center"
-                    });
-                }
+    if (hasIntersectionObserver) {
+        const spy = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (!entry.isIntersecting) return;
+                internalLinks.forEach(function (link) {
+                    const active = link.getAttribute("href") === "#" + entry.target.id;
+                    link.classList.toggle("active", active);
+                    if (active && window.innerWidth <= 768 && typeof link.scrollIntoView === "function") {
+                        link.scrollIntoView({ behavior: systemReduced.matches ? "auto" : "smooth", block: "nearest", inline: "center" });
+                    }
+                });
             });
-        });
-    }, {
-        rootMargin: "-25% 0px -65% 0px"
-    });
-
-    sections.forEach(function (section) {
-        spy.observe(section);
-    });
+        }, { rootMargin: "-25% 0px -65% 0px" });
+        sections.forEach(function (section) { spy.observe(section); });
+    }
 
     /* ======================================================
        2. GUIA DE ESTUDO
@@ -1512,6 +1485,7 @@ document.addEventListener("DOMContentLoaded", function () {
         successionCanvas.width = Math.round(width * dpr);
         successionCanvas.height = Math.round(height * dpr);
         const ctx = successionCanvas.getContext("2d");
+        if (!ctx) return;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.clearRect(0, 0, width, height);
         const pad = { left: 38, right: 14, top: 22, bottom: 35 };
@@ -1566,13 +1540,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     if (successionCanvas) {
         drawSuccessionChart(0);
-        const successionObserver = new IntersectionObserver(function (entries) {
-            if (entries.some(entry => entry.isIntersecting)) {
-                animateSuccessionChart();
-                successionObserver.disconnect();
-            }
-        }, { threshold: 0.25 });
-        successionObserver.observe(successionCanvas);
+        if (hasIntersectionObserver) {
+            const successionObserver = new IntersectionObserver(function (entries) {
+                if (entries.some(entry => entry.isIntersecting)) {
+                    animateSuccessionChart();
+                    successionObserver.disconnect();
+                }
+            }, { threshold: 0.25 });
+            successionObserver.observe(successionCanvas);
+        } else {
+            animateSuccessionChart();
+        }
     }
     if (successionButton) successionButton.addEventListener("click", animateSuccessionChart);
     window.addEventListener("resize", function () { drawSuccessionChart(successionProgress || 1); });
@@ -1604,6 +1582,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function drawChart(values, capacity) {
         const canvas = $("#populationCanvas");
         const ctx = canvas.getContext("2d");
+        if (!ctx) return;
 
         const width = Math.max(280, canvas.clientWidth);
         const height = 220;
@@ -2282,4 +2261,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-});
+}
+
+// Garante a inicialização mesmo quando o arquivo é carregado tardiamente.
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", iniciarInteracoesConteudo, { once: true });
+} else {
+    iniciarInteracoesConteudo();
+}

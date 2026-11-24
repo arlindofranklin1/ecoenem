@@ -1086,7 +1086,7 @@
     <p>© 2026 EcoENEM. Todos os direitos reservados.</p>
 </footer>
 
-<script src="js/conteudo.js"></script>
+<script src="js/conteudo.js?v=20261124-2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>window.ECOENEM_SERVER_SESSION = <?php echo json_encode($ecoenem_sessao_servidor, JSON_UNESCAPED_SLASHES); ?>;</script>
 <script src="js/auth.js"></script>
