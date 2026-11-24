@@ -101,7 +101,7 @@ shuffle($questoes);
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="Pratique Ecologia com questões e explicações para o ENEM.">
     <title>Questões</title>
     <link rel="shortcut icon" href="imgs/ecoenemicon.png" type="image/x-icon">
@@ -117,10 +117,10 @@ shuffle($questoes);
             <a href="index.php">EcoENEM</a>
         </div>
 
-        <nav>
+        <nav aria-label="Navegação principal">
             <a href="ecoia.php">EcoIA</a>
             <a href="conteudo.php">Conteúdo</a>
-            <a href="questoes.php">Questões</a>
+            <a href="questoes.php" aria-current="page">Questões</a>
             <a href="simulado.php">Simuladão</a>
             <a href="sobre.php">Sobre</a>
         </nav>
@@ -128,11 +128,11 @@ shuffle($questoes);
 
     <div class="container">
 
-        <div class="progresso-container">
+        <div class="progresso-container" aria-hidden="true">
             <div id="progressoBar"></div>
         </div>
 
-        <div id="contadorQuestoes">
+        <div id="contadorQuestoes" aria-live="polite">
             0 / <?php echo count($questoes); ?> respondidas
         </div>
 
@@ -140,8 +140,8 @@ shuffle($questoes);
         <div id="questaoBox"></div>
 
         <div class="botoes">
-            <button id="prevBtn">⬅</button>
-            <button id="nextBtn">➡</button>
+            <button id="prevBtn" type="button" aria-label="Questão anterior">⬅</button>
+            <button id="nextBtn" type="button" aria-label="Próxima questão">➡</button>
         </div>
 
     </div>

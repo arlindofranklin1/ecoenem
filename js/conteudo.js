@@ -84,27 +84,6 @@ function iniciarInteracoesConteudo() {
         $$('[data-count]').forEach(animateCounter);
     }
 
-    /* SCROLLSPY */
-
-    const sections = $$(".content-section, .titulo");
-    const internalLinks = $$(".section-nav a");
-
-    if (hasIntersectionObserver) {
-        const spy = new IntersectionObserver(function (entries) {
-            entries.forEach(function (entry) {
-                if (!entry.isIntersecting) return;
-                internalLinks.forEach(function (link) {
-                    const active = link.getAttribute("href") === "#" + entry.target.id;
-                    link.classList.toggle("active", active);
-                    if (active && window.innerWidth <= 768 && typeof link.scrollIntoView === "function") {
-                        link.scrollIntoView({ behavior: systemReduced.matches ? "auto" : "smooth", block: "nearest", inline: "center" });
-                    }
-                });
-            });
-        }, { rootMargin: "-25% 0px -65% 0px" });
-        sections.forEach(function (section) { spy.observe(section); });
-    }
-
     /* ======================================================
        2. GUIA DE ESTUDO
        ====================================================== */
@@ -1465,95 +1444,240 @@ function iniciarInteracoesConteudo() {
 
     updateSuccession();
 
-    /* Gráfico conceitual animado da sucessão ecológica — mesmo canvas Liquid Glass do simulador populacional. */
+    /* ------------------------------------------------------
+       GRÁFICOS DE LINHA COMPARTILHADOS
+       O simulador de sucessão usa exatamente o mesmo desenho
+       (eixos, rótulo, linha tracejada de referência e traço)
+       e a mesma animação ponto a ponto do simulador de
+       crescimento populacional.
+       ------------------------------------------------------ */
+
+    function desenharGraficoLinhas(canvas, opcoes) {
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        const width = Math.max(280, canvas.clientWidth);
+        const height = 220;
+        const dpr = window.devicePixelRatio || 1;
+
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, width, height);
+
+        const padding = 25;
+        const graphWidth = width - padding * 2;
+        const graphHeight = height - padding * 2;
+        const maximo = opcoes.maximo;
+        const yDe = valor => height - padding - (valor / maximo) * graphHeight;
+
+        // eixos
+        ctx.strokeStyle = "rgba(255,255,255,.25)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(padding, padding);
+        ctx.lineTo(padding, height - padding);
+        ctx.lineTo(width - padding, height - padding);
+        ctx.stroke();
+
+        // rótulo do eixo
+        ctx.fillStyle = "#B5C9BA";
+        ctx.font = "11px Inter";
+        ctx.fillText(opcoes.rotulo, padding, 13);
+
+        // linhas tracejadas de referência (capacidade de suporte / etapas)
+        ctx.strokeStyle = "rgba(181,201,186,.65)";
+        ctx.setLineDash([5, 4]);
+        (opcoes.referenciasY || []).forEach(function (valor) {
+            ctx.beginPath();
+            ctx.moveTo(padding, yDe(valor));
+            ctx.lineTo(width - padding, yDe(valor));
+            ctx.stroke();
+        });
+        (opcoes.referenciasX || []).forEach(function (ref) {
+            const x = padding + ref.fracao * graphWidth;
+            ctx.beginPath();
+            ctx.moveTo(x, padding);
+            ctx.lineTo(x, height - padding);
+            ctx.stroke();
+            if (ref.texto) {
+                ctx.fillText(ref.texto, Math.min(x + 4, width - padding - ctx.measureText(ref.texto).width), padding + 11);
+            }
+        });
+        ctx.setLineDash([]);
+
+        // rótulos das etapas no eixo horizontal
+        (opcoes.rotulosX || []).forEach(function (rotulo) {
+            const x = padding + rotulo.fracao * graphWidth - ctx.measureText(rotulo.texto).width / 2;
+            ctx.fillText(rotulo.texto, Math.max(padding, Math.min(x, width - padding - ctx.measureText(rotulo.texto).width)), height - 8);
+        });
+
+        // séries
+        opcoes.series.forEach(function (serie) {
+            const valores = serie.valores;
+            if (!valores.length) return;
+            const total = opcoes.totalPontos || valores.length;
+
+            ctx.strokeStyle = serie.cor;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+
+            valores.forEach(function (value, index) {
+                const x = padding + (index / Math.max(total - 1, 1)) * graphWidth;
+                const y = yDe(value);
+                if (index === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+
+            ctx.stroke();
+        });
+    }
+
+    // Animação ponto a ponto com requestAnimationFrame (mesmo ritmo nos dois gráficos).
+    function animarPontoAPonto(totalPassos, desenharPasso, aoTerminar) {
+        let index = 0;
+        let quadro = null;
+
+        function passo() {
+            if (index >= totalPassos) {
+                quadro = null;
+                if (aoTerminar) aoTerminar();
+                return;
+            }
+            desenharPasso(index);
+            index++;
+            if (systemReduced.matches) passo();
+            else quadro = requestAnimationFrame(passo);
+        }
+
+        passo();
+        return function cancelar() { if (quadro) cancelAnimationFrame(quadro); };
+    }
+
+    /* ------------------------------------------------------
+       SIMULADOR DO AVANÇO DA SUCESSÃO (valores relativos)
+       ------------------------------------------------------ */
+
     const successionCanvas = $("#successionCanvas");
     const successionButton = $("#animateSuccessionChart");
-    const successionSeries = [
-        { label: "Biomassa", color: "#D0DDD3", values: [3, 8, 18, 34, 52, 69, 78] },
-        { label: "Diversidade", color: "#B5C9BA", values: [2, 12, 25, 39, 51, 57, 55] },
-        { label: "Complexidade", color: "#8FB59A", values: [1, 3, 10, 23, 43, 62, 76] }
-    ];
-    let successionProgress = 0;
-    let successionFrame = null;
+    const successionExplanation = $("#successionExplanation");
+    const PONTOS_SUCESSAO = 30;
+    const MOMENTO_QUEIMADA = 0.56;
+    const coresSucessao = { biomassa: "#E8F0EA", diversidade: "#9FD9B3", complexidade: "#4F9869" };
 
-    function drawSuccessionChart(progress) {
-        if (!successionCanvas) return;
-        const rect = successionCanvas.getBoundingClientRect();
-        const width = Math.max(280, rect.width);
-        const height = 230;
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        successionCanvas.width = Math.round(width * dpr);
-        successionCanvas.height = Math.round(height * dpr);
-        const ctx = successionCanvas.getContext("2d");
-        if (!ctx) return;
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        ctx.clearRect(0, 0, width, height);
-        const pad = { left: 38, right: 14, top: 22, bottom: 35 };
-        const gw = width - pad.left - pad.right;
-        const gh = height - pad.top - pad.bottom;
-        ctx.strokeStyle = "rgba(255,255,255,.22)";
-        ctx.lineWidth = 1;
-        for (let tick = 0; tick <= 4; tick++) {
-            const y = pad.top + gh - tick * gh / 4;
-            ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(width - pad.right, y); ctx.stroke();
+    const logistica = (t, k, meio) => 1 / (1 + Math.exp(-k * (t - meio)));
+
+    // Curvas conceituais: biomassa e complexidade crescem de forma gradual;
+    // a diversidade costuma ser maior nas fases intermediárias.
+    function curvaTipica(t) {
+        return {
+            biomassa: 4 + 88 * logistica(t, 9, 0.5),
+            diversidade: 4 + 70 * logistica(t, 10, 0.38) - 10 * logistica(t, 9, 0.82),
+            complexidade: 3 + 85 * logistica(t, 8, 0.6)
+        };
+    }
+
+    const trajetorias = {
+        tipica: {
+            calcular: curvaTipica,
+            final: "Simulação concluída. Sem grandes distúrbios, a biomassa e a complexidade aumentam aos poucos. A diversidade costuma ser maior nas fases intermediárias e pode se estabilizar ou diminuir um pouco na comunidade mais desenvolvida."
+        },
+        disturbio: {
+            calcular: function (t) {
+                const normal = curvaTipica(t);
+                if (t < MOMENTO_QUEIMADA) return normal;
+                const antes = curvaTipica(MOMENTO_QUEIMADA);
+                const restante = { biomassa: 0.2, diversidade: 0.45, complexidade: 0.25 };
+                const recuperacao = 1 - Math.exp(-(t - MOMENTO_QUEIMADA) / 0.16);
+                const resultado = {};
+                Object.keys(normal).forEach(function (chave) {
+                    const depois = antes[chave] * restante[chave];
+                    resultado[chave] = depois + (normal[chave] - depois) * recuperacao;
+                });
+                return resultado;
+            },
+            final: "Simulação concluída. A queimada reduziu a biomassa, a diversidade e a complexidade. Como o solo permaneceu, começa uma sucessão secundária, que costuma ser mais rápida que a primária: o processo não é uma linha reta."
+        },
+        semiarido: {
+            calcular: function (t) {
+                return {
+                    biomassa: 4 + 48 * logistica(t, 7, 0.55),
+                    diversidade: 4 + 52 * logistica(t, 8, 0.45) - 5 * logistica(t, 9, 0.85),
+                    complexidade: 3 + 45 * logistica(t, 7, 0.62)
+                };
+            },
+            final: "Simulação concluída. Com pouca água e chuvas irregulares, a sucessão tende a ser mais lenta e a comunidade mais desenvolvida acumula menos biomassa — como a vegetação da Caatinga, adaptada à seca. As condições locais definem o resultado."
         }
-        ctx.beginPath(); ctx.moveTo(pad.left, pad.top); ctx.lineTo(pad.left, height - pad.bottom); ctx.lineTo(width - pad.right, height - pad.bottom); ctx.stroke();
-        ctx.fillStyle = "#D0DDD3"; ctx.font = "10px Inter, sans-serif";
-        ctx.fillText("Tendência relativa", pad.left, 13);
-        ["Início", "Intermediária", "Mais desenvolvida"].forEach((label, i) => {
-            const x = pad.left + i * gw / 2;
-            ctx.fillText(label, Math.max(0, Math.min(width - ctx.measureText(label).width, x - (i ? 28 : 0))), height - 10);
-        });
-        successionSeries.forEach(series => {
-            const totalSegments = series.values.length - 1;
-            const visible = Math.max(0, Math.min(totalSegments, progress * totalSegments));
-            ctx.strokeStyle = series.color; ctx.lineWidth = 2.6; ctx.lineJoin = "round"; ctx.lineCap = "round";
-            ctx.beginPath();
-            for (let i = 0; i <= Math.floor(visible); i++) {
-                const x = pad.left + (i / totalSegments) * gw;
-                const y = pad.top + gh - (series.values[i] / 100) * gh;
-                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-            }
-            const fractional = visible - Math.floor(visible);
-            if (visible < totalSegments && visible >= 0) {
-                const i = Math.floor(visible);
-                const v = series.values[i] + (series.values[i + 1] - series.values[i]) * fractional;
-                ctx.lineTo(pad.left + (visible / totalSegments) * gw, pad.top + gh - (v / 100) * gh);
-            }
-            ctx.stroke();
+    };
+
+    let trajetoriaAtual = "tipica";
+    let successionValues = null;
+    let pontosVisiveis = 0;
+    let cancelarSucessao = null;
+
+    function gerarSerieSucessao(nome) {
+        const series = { biomassa: [], diversidade: [], complexidade: [] };
+        for (let i = 0; i < PONTOS_SUCESSAO; i++) {
+            const ponto = trajetorias[nome].calcular(i / (PONTOS_SUCESSAO - 1));
+            Object.keys(series).forEach(function (chave) { series[chave].push(ponto[chave]); });
+        }
+        return series;
+    }
+
+    function drawSuccessionChart() {
+        if (!successionCanvas) return;
+        const valores = successionValues || { biomassa: [], diversidade: [], complexidade: [] };
+        const fracaoVisivel = (pontosVisiveis - 1) / (PONTOS_SUCESSAO - 1);
+        const referenciasX = [{ fracao: 1 / 3 }, { fracao: 2 / 3 }];
+        if (trajetoriaAtual === "disturbio" && fracaoVisivel >= MOMENTO_QUEIMADA) {
+            referenciasX.push({ fracao: MOMENTO_QUEIMADA, texto: "queimada" });
+        }
+        desenharGraficoLinhas(successionCanvas, {
+            rotulo: "Valor relativo",
+            maximo: 100,
+            totalPontos: PONTOS_SUCESSAO,
+            referenciasX: referenciasX,
+            // rótulos curtos em telas estreitas, para não se sobreporem
+            rotulosX: (successionCanvas.clientWidth < 460
+                ? ["Pioneiras", "Intermediária", "Desenvolvida"]
+                : ["Pioneiras", "Intermediárias", "Mais desenvolvida"]
+            ).map(function (texto, i) { return { fracao: (2 * i + 1) / 6, texto: texto }; }),
+            series: ["biomassa", "diversidade", "complexidade"].map(function (chave) {
+                return { cor: coresSucessao[chave], valores: valores[chave].slice(0, pontosVisiveis) };
+            })
         });
     }
 
     function animateSuccessionChart() {
         if (!successionCanvas) return;
-        if (successionFrame) cancelAnimationFrame(successionFrame);
-        if (systemReduced.matches) { successionProgress = 1; drawSuccessionChart(1); return; }
-        const started = performance.now();
-        const duration = 1800;
-        function frame(now) {
-            successionProgress = Math.min(1, (now - started) / duration);
-            drawSuccessionChart(successionProgress);
-            if (successionProgress < 1) successionFrame = requestAnimationFrame(frame);
-            else successionFrame = null;
-        }
-        successionFrame = requestAnimationFrame(frame);
+        if (cancelarSucessao) cancelarSucessao();
+        successionValues = gerarSerieSucessao(trajetoriaAtual);
+        pontosVisiveis = 0;
+        if (successionExplanation) successionExplanation.textContent = "Observe a variação da comunidade ao longo da sucessão.";
+        cancelarSucessao = animarPontoAPonto(PONTOS_SUCESSAO, function (index) {
+            pontosVisiveis = index + 1;
+            drawSuccessionChart();
+        }, function () {
+            if (successionExplanation) successionExplanation.textContent = trajetorias[trajetoriaAtual].final;
+        });
     }
+
     if (successionCanvas) {
-        drawSuccessionChart(0);
-        if (hasIntersectionObserver) {
-            const successionObserver = new IntersectionObserver(function (entries) {
-                if (entries.some(entry => entry.isIntersecting)) {
-                    animateSuccessionChart();
-                    successionObserver.disconnect();
-                }
-            }, { threshold: 0.25 });
-            successionObserver.observe(successionCanvas);
-        } else {
-            animateSuccessionChart();
-        }
+        drawSuccessionChart();
+        $$("[data-path]").forEach(function (botao) {
+            botao.addEventListener("click", function () {
+                trajetoriaAtual = botao.dataset.path;
+                $$("[data-path]").forEach(function (item) {
+                    item.classList.toggle("active", item === botao);
+                    item.setAttribute("aria-pressed", String(item === botao));
+                });
+                animateSuccessionChart();
+            });
+        });
+        if (successionButton) successionButton.addEventListener("click", animateSuccessionChart);
+        window.addEventListener("resize", drawSuccessionChart);
     }
-    if (successionButton) successionButton.addEventListener("click", animateSuccessionChart);
-    window.addEventListener("resize", function () { drawSuccessionChart(successionProgress || 1); });
 
     /* ======================================================
        12. DINÂMICA POPULACIONAL
@@ -1580,72 +1704,12 @@ function iniciarInteracoesConteudo() {
     drawPopulation();
 
     function drawChart(values, capacity) {
-        const canvas = $("#populationCanvas");
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-
-        const width = Math.max(280, canvas.clientWidth);
-        const height = 220;
-        const dpr = window.devicePixelRatio || 1;
-
-        canvas.width = width * dpr;
-        canvas.height = height * dpr;
-
-        ctx.scale(dpr, dpr);
-        ctx.clearRect(0, 0, width, height);
-
-        const padding = 25;
-        const graphWidth = width - padding * 2;
-        const graphHeight = height - padding * 2;
-
-        ctx.strokeStyle = "rgba(255,255,255,.25)";
-        ctx.lineWidth = 1;
-
-        ctx.beginPath();
-        ctx.moveTo(padding, padding);
-        ctx.lineTo(padding, height - padding);
-        ctx.lineTo(width - padding, height - padding);
-        ctx.stroke();
-
-        ctx.fillStyle = "#B5C9BA";
-        ctx.font = "11px Inter";
-
-        ctx.fillText("População", padding, 13);
-
-        ctx.strokeStyle = "rgba(181,201,186,.65)";
-        ctx.setLineDash([5, 4]);
-
-        const capacityY =
-            height - padding - (capacity / 200) * graphHeight;
-
-        ctx.beginPath();
-        ctx.moveTo(padding, capacityY);
-        ctx.lineTo(width - padding, capacityY);
-        ctx.stroke();
-
-        ctx.setLineDash([]);
-
-        if (!values.length) return;
-
-        ctx.strokeStyle = "#D0DDD3";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-
-        values.forEach(function (value, index) {
-            const x = padding +
-                (index / Math.max(values.length - 1, 1)) * graphWidth;
-
-            const y = height - padding -
-                (value / 200) * graphHeight;
-
-            if (index === 0) {
-                ctx.moveTo(x, y);
-            } else {
-                ctx.lineTo(x, y);
-            }
+        desenharGraficoLinhas($("#populationCanvas"), {
+            rotulo: "População",
+            maximo: 200,
+            referenciasY: [capacity],
+            series: [{ cor: "#D0DDD3", valores: values }]
         });
-
-        ctx.stroke();
     }
 
     let populationValues = [];

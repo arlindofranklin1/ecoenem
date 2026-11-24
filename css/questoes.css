@@ -301,6 +301,7 @@ nav a:focus-visible {
 }
 
 .questao {
+    min-width: 0;
     padding: 32px;
     border-radius: 32px;
     background:
@@ -313,6 +314,7 @@ nav a:focus-visible {
 
 .questao p {
     color: #EEF4F0;
+    overflow-wrap: break-word;
     font-family: 'Inter', sans-serif;
     font-size: 20px;
     line-height: 31px;
@@ -330,12 +332,19 @@ nav a:focus-visible {
 }
 
 .questao img {
+    display: block;
     width: 300px;
+    max-width: 100%;
     height: auto;
     border-radius: 18px;
     margin-bottom: 20px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* enunciados com mais de um parágrafo (texto-base + comando) */
+.questao .enunciado {
+    white-space: pre-line;
 }
 
 /* ALTERNATIVAS */
@@ -347,6 +356,11 @@ nav a:focus-visible {
 }
 
 .alt {
+    display: block;
+    width: 100%;
+    text-align: left;
+    overflow-wrap: break-word;
+    font: inherit;
     padding: 16px 20px;
     color: white;
     line-height: 24px;
@@ -438,6 +452,12 @@ nav a:focus-visible {
 
 .botoes button:hover {
     transform: translateY(-2px);
+}
+
+.botoes button:disabled {
+    opacity: .4;
+    cursor: default;
+    transform: none;
 }
 
 .botoes button:active {
@@ -644,113 +664,6 @@ nav a:focus-visible::before,
     }
 }
 
-/* ----------------------------------------------------------
-   MOBILE
-   ---------------------------------------------------------- */
-
-@media (max-width: 768px) {
-
-    body {
-        overflow-x: hidden;
-        overflow-y: auto;
-        height: auto;
-
-        background: linear-gradient(180deg,
-                #000000 0%,
-                #000000 40%,
-                #355241 75%,
-                #496F56 100%);
-    }
-
-    body::before {
-        width: 340px;
-        height: 340px;
-        left: -140px;
-        bottom: auto;
-        top: 220px;
-    }
-
-    body::after {
-        width: 300px;
-        height: 300px;
-        right: -120px;
-        top: -120px;
-    }
-
-    header {
-        padding: 0 16px;
-        height: 70px;
-    }
-
-    .logo a {
-        font-size: 20px;
-        padding: 8px 14px;
-    }
-
-    /* menu vira dock de vidro na base */
-    
-
-    
-
-    
-
-    .container {
-        margin-top: 96px;
-    }
-
-    #questaoBox {
-        width: 92%;
-        max-width: 900px;
-    }
-
-    .questao {
-        padding: 20px;
-        border-radius: 26px;
-    }
-
-    .questao p {
-        font-size: 16px;
-        line-height: 26px;
-    }
-
-    .fonte {
-        font-size: 16px;
-    }
-
-    .questao img {
-        width: 100%;
-        max-width: 300px;
-        height: auto;
-    }
-
-    .alt {
-        padding: 13px 16px;
-        font-size: 14px;
-        border-radius: 18px;
-    }
-
-    .botoes {
-        margin-top: 20px;
-        margin-bottom: 20px;
-        gap: 15px;
-        justify-content: center;
-    }
-
-    .botoes button {
-        width: 50px;
-        height: 50px;
-    }
-
-    footer {
-        padding-bottom: 92px; /* espaço para o dock */
-    }
-
-    footer p {
-        font-size: 13px;
-        padding: 12px 22px;
-    }
-}
-
 /* ==========================================================
    CONVITE ECOIA — CARTÃO FLUTUANTE
 ========================================================== */
@@ -921,31 +834,86 @@ nav a:focus-visible::before,
     font-size: 20px;
 }
 
-/* MOBILE */
+/* ==========================================================
+   RESPONSIVIDADE — PÁGINA DE QUESTÕES
+   Causas corrigidas:
+   • o convite da EcoIA era fixo sobre a tela e cobria as
+     alternativas em notebooks, tablets e celulares;
+   • larguras em % somadas a paddings fixos e regras repetidas
+     (três blocos mobile conflitantes) desalinhavam a coluna;
+   • imagem com largura fixa (300px) e textos sem quebra.
+   ========================================================== */
 
-@media (max-width: 768px) {
+/* Notebooks e telas médias: o convite passa a ocupar o fluxo,
+   logo abaixo da navegação, em vez de flutuar sobre a questão. */
+@media (max-width: 1599px) {
 
     .ecoia-convite {
-        right: 15px;
-        bottom: 105px;
+        position: relative;
+        right: auto;
+        bottom: auto;
 
-        width: min(290px, calc(100% - 30px));
-        padding: 18px;
+        display: none;
+        flex-direction: row;
+        align-items: center;
+        gap: 18px;
+
+        width: min(900px, 90%);
+        margin: 0 auto 28px;
+        transform: none;
     }
 
+    .ecoia-convite.ativo {
+        display: flex;
+    }
+
+    .ecoia-icone {
+        flex: 0 0 48px;
+    }
+
+    .ecoia-texto {
+        flex: 1;
+        min-width: 0;
+    }
+
+    #perguntarEcoIA {
+        width: auto;
+        flex: 0 0 auto;
+        gap: 14px;
+    }
 }
 
-/* ----------------------------------------------------------
-   MOBILE — MENU EM BOLINHAS NO CANTO DIREITO
-   ---------------------------------------------------------- */
+/* Tablets */
+@media (min-width: 769px) and (max-width: 1100px) {
 
+    .container {
+        margin-top: 104px;
+    }
+
+    .progresso-container,
+    #contadorQuestoes,
+    #questaoBox {
+        width: 92%;
+    }
+
+    .questao {
+        padding: 28px;
+    }
+
+    .questao p {
+        font-size: 18px;
+        line-height: 29px;
+    }
+
+    .ecoia-convite {
+        width: 92%;
+    }
+}
+
+/* Celulares */
 @media (max-width: 768px) {
 
     body {
-        overflow-x: hidden;
-        overflow-y: auto;
-        height: auto;
-
         background: linear-gradient(180deg,
             #000000 0%,
             #000000 40%,
@@ -968,146 +936,144 @@ nav a:focus-visible::before,
         top: -120px;
     }
 
-    header {
-        padding: 0 16px;
-        height: 70px;
-    }
-
-    .logo a {
-        font-size: 20px;
-        padding: 8px 14px;
-    }
-
-    /* MENU ORIGINAL TRANSFORMADO EM BOLINHAS */
-    
-
-    
-
-    
-
-    
-
     .container {
-        margin-top: 96px;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        margin: 88px auto 0;
+        padding: 0 14px;
     }
 
     .progresso-container,
-    #contadorQuestoes {
-        width: 92%;
+    #contadorQuestoes,
+    #questaoBox {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
     }
 
-    #questaoBox {
-        width: 92%;
-        max-width: 900px;
+    .progresso-container {
+        height: 10px;
+    }
+
+    #contadorQuestoes {
+        font-size: 12px;
+        margin: 0 2px 14px;
     }
 
     .questao {
-        padding: 20px;
-        border-radius: 26px;
-    }
-
-    .questao p {
-        font-size: 16px;
-        line-height: 26px;
+        width: 100%;
+        min-width: 0;
+        padding: clamp(16px, 4.5vw, 24px);
+        border-radius: 22px;
     }
 
     .fonte {
-        font-size: 16px;
-    }
-
-    .questao img {
-        width: 100%;
-        max-width: 300px;
-        height: auto;
-    }
-
-    .alt {
-        padding: 13px 16px;
-        font-size: 14px;
-        border-radius: 18px;
-    }
-
-    .botoes {
-        margin-top: 20px;
-        margin-bottom: 20px;
-        gap: 15px;
-        justify-content: center;
-    }
-
-    .botoes button {
-        width: 50px;
-        height: 50px;
-    }
-
-    footer {
-        padding-bottom: 28px;
-    }
-
-    footer p {
-        font-size: 13px;
-        padding: 12px 22px;
-    }
-
-    .ecoia-convite {
-        right: 15px;
-        bottom: 105px;
-        width: min(290px, calc(100% - 30px));
-        padding: 18px;
-    }
-}
-
-/* CELULARES MENORES */
-
-@media (max-width: 380px) {
-
-    
-
-    
-
-    .questao {
-        padding: 16px;
+        font-size: 15px;
+        margin-bottom: 12px;
     }
 
     .questao p {
-        font-size: 15px;
-        line-height: 24px;
+        font-size: clamp(15px, 3.9vw, 17px);
+        line-height: 1.65;
+        margin-bottom: 18px;
+    }
+
+    .questao img {
+        display: block;
+        width: 100%;
+        max-width: 420px;
+        margin: 0 auto 18px;
+        border-radius: 14px;
+    }
+
+    .alternativas {
+        gap: 10px;
+    }
+
+    .alt {
+        padding: 13px 14px;
+        font-size: 14.5px;
+        line-height: 1.55;
+        border-radius: 16px;
+    }
+
+    .feedback-correto,
+    .feedback-errado {
+        margin-top: 18px;
+        padding: 15px 16px;
+        border-radius: 18px;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .botoes {
+        width: 100%;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 18px 0;
+    }
+
+    .botoes button {
+        width: 52px;
+        height: 52px;
+    }
+
+    .resultado-final h2 {
+        font-size: 24px;
+    }
+
+    .ecoia-convite {
+        width: calc(100% - 28px);
+        margin: 0 auto 20px;
+        padding: 18px;
+        border-radius: 22px;
+    }
+
+    footer {
+        padding: 8px 14px 18px;
+    }
+
+    footer p {
+        font-size: 12px;
+        line-height: 1.5;
+        padding: 12px 18px;
+        border-radius: 22px;
     }
 }
-/* Ajustes estruturais para telas estreitas */
-@media(max-width:768px){
- .container{width:100%;max-width:100%;min-width:0;margin-top:94px;padding:0 14px;box-sizing:border-box}
- .progresso-container,#contadorQuestoes,#questaoBox{width:100%;max-width:100%;min-width:0}
- #contadorQuestoes{font-size:12px;margin:0 2px 14px}
- .questao{box-sizing:border-box;width:100%;min-width:0;padding:clamp(17px,4vw,25px);border-radius:22px}
- .questao p{font-size:clamp(15px,3.8vw,18px);line-height:1.65;overflow-wrap:anywhere;word-break:normal}
- .fonte{font-size:16px;overflow-wrap:anywhere}
- .questao img{display:block;width:100%;max-width:min(100%,360px);height:auto;object-fit:contain}
- .alternativas{width:100%;min-width:0;gap:10px}
- .alt{box-sizing:border-box;width:100%;min-width:0;padding:13px 14px;font-size:14px;line-height:1.55;overflow-wrap:anywhere;word-break:normal}
- .botoes{width:100%;display:flex;justify-content:space-between;gap:14px;padding:0 2px}
- .botoes button{min-width:52px;min-height:46px}
- .ecoia-convite{position:relative!important;inset:auto!important;width:calc(100% - 28px)!important;max-width:100%;margin:24px auto;padding:18px;box-sizing:border-box}
- .ecoia-convite button{max-width:100%;white-space:normal}
- footer{padding:12px 14px 24px}
- footer p{font-size:12px;padding:12px 16px;line-height:1.5}
-}
-@media(max-width:380px){
- .container{padding-left:10px;padding-right:10px}
- .questao{padding:15px;border-radius:18px}
- .alt{padding:12px;font-size:13px}
+
+/* Convite em coluna quando não há largura para a linha */
+@media (max-width: 600px) {
+
+    .ecoia-convite {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    #perguntarEcoIA {
+        width: 100%;
+    }
 }
 
-/* Estrutura fluida da página de questões em telas estreitas */
-@media(max-width:768px){
- body{display:flex;flex-direction:column;align-items:stretch;min-width:0;padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
- header{height:70px;min-height:70px;padding:0 16px;justify-content:space-between}
- 
- .container{width:100%;max-width:100%;margin:88px auto 0;padding:0 14px;min-width:0}
- #questaoBox,.progresso-container,#contadorQuestoes{width:100%;max-width:100%;min-width:0}
- .questao,.alternativas,.alt{min-width:0;max-width:100%}
- .questao img{height:auto;max-width:100%}
- .botoes{display:flex;justify-content:space-between;gap:12px}
- .ecoia-convite{position:relative!important;inset:auto!important;margin:22px auto;width:calc(100% - 28px)!important;max-width:600px}
- footer{margin-top:20px}
+/* Celulares pequenos */
+@media (max-width: 360px) {
+
+    .container {
+        padding: 0 10px;
+    }
+
+    .questao {
+        padding: 14px;
+        border-radius: 18px;
+    }
+
+    .alt {
+        padding: 11px 12px;
+        font-size: 13.5px;
+    }
+
+    .ecoia-convite {
+        width: calc(100% - 20px);
+    }
 }
-@media(max-width:380px){.container{padding-left:10px;padding-right:10px}.questao{padding:14px}.alt{padding:11px;font-size:13px}}

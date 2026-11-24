@@ -4,7 +4,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="Explore a Ecologia, as relações ecológicas, os biomas brasileiros e prepare-se para o ENEM.">
     <title>Ecologia | EcoENEM</title>
     <link rel="shortcut icon" href="imgs/ecoenemicon.png" type="image/x-icon">
@@ -188,27 +188,49 @@
         <article class="comparison glass">
             <span class="concept-icon">01</span>
             <h3>Habitat</h3>
-            <p>É o endereço de uma espécie: o lugar onde ela encontra condições para viver.</p>
+            <p>É o <b>lugar onde uma espécie vive</b>: o “endereço” onde encontra as condições físicas e os recursos de que precisa. Responde à pergunta “onde vive?”.</p>
             <div class="example">
-                <b>Exemplo</b>
-                <p>O mandacaru (<i>Cereus jamacaru</i>) tem como habitat áreas da Caatinga, onde enfrenta longos períodos secos e alta insolação. Seu caule armazena água e suas folhas modificadas em espinhos ajudam a reduzir a perda de água.</p>
+                <b>Exemplo da Caatinga — mandacaru</b>
+                <p>O mandacaru (<i>Cereus jamacaru</i>) vive em áreas de Caatinga, muitas vezes em solos rasos e pedregosos, sob forte insolação, chuvas irregulares e longos períodos secos. Esse é o seu habitat. Ele permanece nesse ambiente graças a adaptações ao clima semiárido: o caule suculento armazena água, as folhas são transformadas em espinhos (o que reduz a perda de água) e os estômatos abrem principalmente à noite, quando está mais fresco.</p>
             </div>
         </article>
 
         <article class="comparison glass">
             <span class="concept-icon">02</span>
             <h3>Nicho ecológico</h3>
-            <p>É a profissão da espécie: seu modo de vida, alimentação, reprodução e função ecológica.</p>
+            <p>É o <b>modo de vida da espécie</b>: o conjunto de condições, recursos, hábitos e funções que ela desempenha no ecossistema. Responde à pergunta “como vive e qual é o seu papel?”.</p>
             <div class="example">
-                <b>Exemplo</b>
-                <p>A asa-branca (<i>Patagioenas picazuro</i>) alimenta-se principalmente de frutos e sementes e se desloca entre áreas em busca de alimento. Ao consumir frutos, pode contribuir para a dispersão de sementes; assim, participa das relações alimentares e da dinâmica da vegetação.</p>
+                <b>Exemplo da Caatinga — asa-branca</b>
+                <p>A asa-branca (<i>Patagioenas picazuro</i>) se alimenta principalmente de sementes e grãos que encontra no chão, além de alguns frutos. Faz deslocamentos regionais acompanhando a disponibilidade de alimento e água, que muda com as chuvas. Ao comer sementes, ela atua como consumidora (e pode destruir muitas delas); ao mesmo tempo, serve de alimento para gaviões e outros predadores. Alimentação, comportamento e relações com outras espécies formam o seu nicho.</p>
             </div>
         </article>
     </div>
 
     <div class="warning glass">
-        <strong>Habitat x Nicho ecológico</strong>
-        <p><b>Habitat</b> é o lugar onde uma espécie vive. Na Caatinga, o preá (<i>Galea spixii</i>) pode ocupar áreas com vegetação baixa, onde encontra alimento e abrigo. <b>Nicho ecológico</b> é o conjunto de condições, recursos, hábitos e funções que caracterizam seu modo de vida: o preá consome partes de plantas, utiliza a cobertura vegetal para se proteger e também serve de alimento a predadores. Portanto, habitat responde “onde vive?” e nicho responde “como vive e qual é seu papel?”.</p>
+        <strong>Habitat x Nicho ecológico: o exemplo do preá</strong>
+        <p>O preá (<i>Galea spixii</i>) mostra como uma espécie se relaciona com o ambiente. Seu <b>habitat</b> são áreas de Caatinga com vegetação baixa, moitas e pedras, onde encontra alimento e esconderijo. Seu <b>nicho</b> inclui comer capins, folhas e brotos, usar a vegetação densa como abrigo contra o sol e os predadores, e servir de presa para raposas, serpentes e aves de rapina. Quando a seca reduz a vegetação verde, diminuem o alimento e o abrigo disponíveis, o que pode afetar a população.</p>
+    </div>
+
+    <div class="niche-compare">
+        <h3>Mesmo habitat, nichos diferentes</h3>
+        <p>As três espécies podem viver na Caatinga, mas cada uma explora o ambiente de um jeito.</p>
+        <div class="concept-grid">
+            <article class="info-card glass">
+                <h3>Mandacaru</h3>
+                <p><b>Onde vive?</b> Solos rasos e pedregosos da Caatinga.</p>
+                <p><b>Como vive?</b> Produtor: faz fotossíntese, armazena água e oferece flores e frutos que alimentam outros animais.</p>
+            </article>
+            <article class="info-card glass">
+                <h3>Asa-branca</h3>
+                <p><b>Onde vive?</b> Áreas abertas e bordas de mata da Caatinga.</p>
+                <p><b>Como vive?</b> Consumidora de sementes e frutos; desloca-se conforme as chuvas e é presa de gaviões.</p>
+            </article>
+            <article class="info-card glass">
+                <h3>Preá</h3>
+                <p><b>Onde vive?</b> Moitas, pedras e vegetação baixa da Caatinga.</p>
+                <p><b>Como vive?</b> Herbívoro: come capins e brotos, abriga-se na vegetação e é presa de vários predadores.</p>
+            </article>
+        </div>
     </div>
 
     <div class="concept-grid">
@@ -272,18 +294,21 @@
     </div>
 
     <div class="warning glass">
-        <strong>Espécies invasoras</strong>
+        <strong>Espécies exóticas e espécies exóticas invasoras</strong>
         <p>
-            Uma espécie <b>exótica</b> é aquela transportada, de forma intencional ou acidental, para fora de sua área natural. Ela só é considerada <b>exótica invasora</b> quando consegue se estabelecer, espalhar-se e causar impactos ecológicos, econômicos ou sociais.
+            Uma espécie <b>exótica</b> é aquela levada, de forma intencional ou acidental, para fora de sua área natural de ocorrência. Nem toda espécie exótica é invasora: muitas não conseguem se reproduzir sozinhas ou permanecem restritas aos locais de cultivo. Ela só passa a ser chamada de <b>exótica invasora</b> quando se estabelece, se reproduz e se espalha sem ajuda humana, causando impactos ecológicos, econômicos ou sociais.
         </p>
         <p>
-            <b>Exemplo brasileiro — algaroba (<i>Prosopis juliflora</i>):</b> árvore originária do México, da América Central e do norte da América do Sul. Foi introduzida no Nordeste a partir da década de 1940, inicialmente para fornecer forragem na seca e também madeira e lenha. É resistente à estiagem, cresce rapidamente, rebrota após cortes e produz vagens cujas sementes podem ser dispersadas por animais.
+            <b>Exemplo do Nordeste — algaroba (<i>Prosopis juliflora</i>):</b> árvore da família das leguminosas, originária do México, da América Central e do norte da América do Sul. Foi introduzida no semiárido nordestino a partir da década de 1940, com incentivo governamental, para fornecer vagens como forragem ao gado durante a seca, além de madeira, lenha e sombra.
         </p>
         <p>
-            Em determinados ambientes da Caatinga, especialmente baixios e áreas próximas a cursos d’água, a algaroba pode formar agrupamentos densos e competir com plantas nativas por espaço, luz e recursos. Estudos em áreas de Monteiro e Gurjão, na Paraíba, registraram mudanças na composição e na estrutura da vegetação e redução da diversidade em locais invadidos. Esses efeitos dependem do ambiente e da intensidade da invasão: nem toda planta introduzida se torna invasora, e os impactos não são iguais em todos os locais.
+            <b>Por que ela se espalha?</b> A algaroba tolera longas estiagens, cresce rápido, tem raízes profundas, rebrota depois de cortada e produz muitas vagens doces. Animais como bois, cabras e jumentos comem essas vagens e eliminam as sementes nas fezes, levando a planta para novas áreas.
         </p>
         <p>
-            A tilápia-do-nilo, por exemplo, também exige atenção em ambientes aquáticos onde foi introduzida; a avaliação de seu caráter invasor e de seus efeitos deve considerar cada ecossistema.
+            <b>Impactos na Caatinga e na Paraíba:</b> a invasão é mais intensa em baixios, várzeas e margens de rios e açudes, onde o solo é mais úmido e profundo. Nesses locais, a algaroba pode formar agrupamentos densos que competem com plantas nativas por água, luz e espaço e dificultam o crescimento de novas mudas. Um estudo no município de Monteiro, no Cariri paraibano, encontrou cerca de 90% dos indivíduos adultos da área invadida pertencentes à algaroba e registrou mudanças na composição, na estrutura e na diversidade da vegetação nativa. Ao reduzir a variedade de plantas, a invasão também pode afetar os animais que dependem delas.
+        </p>
+        <p>
+            <b>Atenção:</b> esses efeitos dependem do ambiente. Em áreas mais secas e de solo raso, a algaroba costuma se espalhar menos, e os impactos não são iguais em toda a Caatinga. O exemplo mostra como uma espécie introduzida com boas intenções pode, em certas condições, tornar-se invasora e provocar desequilíbrios ambientais.
         </p>
     </div>
 
@@ -391,8 +416,8 @@
             <h3>Competição intraespecífica</h3>
             <div class="effect"><span>- Prejuízo</span><span>- Prejuízo</span></div>
             <p>Indivíduos da mesma espécie disputam recursos limitados, como alimento, território e parceiros.</p>
-            <div class="relation-example"><b>Exemplo:</b> dois indivíduos machos da mesma espécie de sabiá-laranjeira (<i>Turdus rufiventris</i>) podem defender e disputar um território com recursos alimentares e locais adequados para reprodução.</div>
-            <div class="relation-curiosity"><b>Por que é intraespecífica?</b> Porque os dois competidores pertencem à mesma espécie. A disputa por território e recursos pode influenciar o acesso a alimento e a parceiros reprodutivos.</div>
+            <div class="relation-example"><b>Exemplo da Caatinga:</b> na época reprodutiva, dois machos de galo-de-campina (<i>Paroaria dominicana</i>) — ambos da <b>mesma espécie</b> — cantam, fazem exibições e chegam a se perseguir para defender o mesmo território, onde há sementes, insetos, locais de ninho e fêmeas.</div>
+            <div class="relation-curiosity"><b>Por que é intraespecífica?</b> Porque os dois competidores pertencem à mesma espécie e precisam dos mesmos recursos. O macho que perde fica com uma área pior ou sem território, e ambos gastam energia na disputa — por isso a relação é desarmônica para os dois lados.</div>
         </article>
 
         <article class="relation-card glass" data-type="inter-harmonica" data-name="Mutualismo">
@@ -763,43 +788,58 @@
     </div>
 
     <div class="activity glass succession-chart-card">
-        <h3>Como a comunidade se transforma?</h3>
-        <p>Representação conceitual: biomassa, diversidade e complexidade tendem a aumentar durante muitas trajetórias sucessionais, mas podem oscilar ou seguir caminhos diferentes conforme o ambiente e os distúrbios.</p>
-        <div class="succession-chart-wrap"><canvas id="successionCanvas" height="230" aria-label="Gráfico conceitual da mudança da biomassa, diversidade e complexidade durante a sucessão ecológica"></canvas></div>
-        <div class="chart-legend"><span><i class="legend-biomass"></i>Biomassa</span><span><i class="legend-diversity"></i>Diversidade</span><span><i class="legend-structure"></i>Complexidade estrutural</span></div>
-        <button class="glass-button" id="animateSuccessionChart" type="button">Reproduzir evolução</button>
+        <h3>Simulador do avanço da sucessão</h3>
+        <p>Escolha uma trajetória e observe como a biomassa, a diversidade de espécies e a complexidade da comunidade mudam ao longo do tempo. Os valores são <b>relativos</b> (representação conceitual): a sucessão não segue um único caminho igual em todos os ecossistemas.</p>
+        <div class="tabs succession-paths" role="group" aria-label="Trajetória da sucessão">
+            <button class="tab active" type="button" data-path="tipica" aria-pressed="true">Sem grandes distúrbios</button>
+            <button class="tab" type="button" data-path="disturbio" aria-pressed="false">Com uma queimada no caminho</button>
+            <button class="tab" type="button" data-path="semiarido" aria-pressed="false">Ambiente semiárido</button>
+        </div>
+        <button class="glass-button" id="animateSuccessionChart" type="button">Simular</button>
+        <div class="population-chart succession-chart-wrap">
+            <canvas id="successionCanvas" height="220" aria-label="Gráfico conceitual da mudança da biomassa, da diversidade e da complexidade durante a sucessão ecológica"></canvas>
+        </div>
+        <div class="chart-legend"><span><i class="legend-biomass"></i>Biomassa</span><span><i class="legend-diversity"></i>Diversidade de espécies</span><span><i class="legend-structure"></i>Complexidade da comunidade</span></div>
+        <p id="successionExplanation" class="feedback" aria-live="polite">Escolha uma trajetória e inicie a simulação.</p>
     </div>
 
     <div class="info-grid succession-stages">
         <article class="info-card glass">
             <span class="eyebrow">1 • ESPÉCIES PIONEIRAS</span>
             <h3>Colonização inicial</h3>
-            <p>Líquens, musgos e algumas gramíneas podem ocupar primeiro áreas disponíveis, quando as condições permitem. Esses organismos contribuem para reter partículas, matéria orgânica e umidade, favorecendo mudanças no ambiente.</p>
+            <p>Organismos resistentes, como líquens, musgos e algumas gramíneas, são os primeiros a ocupar uma área disponível, se as condições permitirem. Os líquens liberam substâncias que desgastam a rocha; restos desses organismos se misturam às partículas minerais e começam a formar um solo fino, que retém um pouco mais de água e nutrientes.</p>
         </article>
         <article class="info-card glass">
             <span class="eyebrow">2 • COMUNIDADES INTERMEDIÁRIAS</span>
-            <h3>Maior diversidade e estrutura</h3>
-            <p>À medida que solo, sombra, umidade e recursos se modificam, outras plantas e animais podem se estabelecer. A vegetação ganha diferentes alturas e aumentam as oportunidades de alimentação, abrigo e interação.</p>
+            <h3>Novas espécies chegam</h3>
+            <p>Com mais solo, umidade e matéria orgânica, ervas, arbustos e árvores de crescimento rápido conseguem se estabelecer. Surgem sombra, camadas de vegetação e novos abrigos, o que atrai insetos, aves e outros animais. A diversidade aumenta e as relações ecológicas (polinização, dispersão, predação, competição) ficam mais numerosas. Algumas pioneiras, que precisam de muita luz, passam a ser substituídas.</p>
         </article>
         <article class="info-card glass">
             <span class="eyebrow">3 • COMUNIDADE MAIS DESENVOLVIDA</span>
             <h3>Maior complexidade ecológica</h3>
-            <p>Pode se formar uma comunidade com estrutura mais complexa, maior biomassa e diversas interações, de acordo com as condições locais. Não existe uma etapa final única e imutável para todos os ecossistemas.</p>
+            <p>Forma-se uma comunidade mais estável, com vegetação em vários estratos, maior biomassa e muitas interações. A produção de matéria orgânica tende a se equilibrar com o consumo (respiração e decomposição). O tipo de comunidade depende do clima e do solo: em uma região úmida pode ser uma floresta alta; na Caatinga, uma vegetação adaptada à seca. Não existe uma etapa final única e imutável.</p>
         </article>
         <article class="info-card glass">
             <h3>Sucessão primária</h3>
-            <p>Começa em uma área sem comunidade anterior e sem solo desenvolvido, como uma rocha recém-exposta.</p>
+            <p>Começa em uma área sem comunidade anterior e sem solo desenvolvido, como uma rocha recém-exposta, uma duna ou lava resfriada.</p>
         </article>
         <article class="info-card glass">
             <h3>Sucessão secundária</h3>
-            <p>Ocorre após um distúrbio em uma área anteriormente ocupada, onde o solo permanece, como em certas áreas após queimadas.</p>
+            <p>Ocorre após um distúrbio em uma área já ocupada, onde o solo permanece, como após queimadas ou o abandono de uma roça. Na Caatinga, a regeneração costuma começar com ervas e arbustos pioneiros, como o marmeleiro e a jurema-preta, que preparam o terreno para outras espécies.</p>
         </article>
     </div>
 
     <div class="warning glass">
-        <strong>Comunidade clímax</strong>
+        <strong>O que muda ao longo da sucessão?</strong>
+        <ul class="succession-changes">
+            <li><b>Composição das espécies:</b> pioneiras dão lugar, aos poucos, a espécies que dependem das condições criadas antes delas.</li>
+            <li><b>Biomassa:</b> a quantidade de matéria orgânica acumulada aumenta.</li>
+            <li><b>Disponibilidade de recursos:</b> solo, umidade e nutrientes aumentam; a luz no chão diminui com a sombra.</li>
+            <li><b>Estrutura da comunidade:</b> a vegetação ganha camadas (estratos) e mais tipos de abrigo.</li>
+            <li><b>Relações ecológicas:</b> teias alimentares mais complexas e mais interações entre as espécies.</li>
+        </ul>
         <p>
-            O avanço sucessional envolve mudanças graduais na composição das espécies, na biomassa, na disponibilidade de recursos, na estrutura da comunidade e nas relações ecológicas. A sequência pode variar: uma seca, uma queimada, o tipo de solo ou a chegada de novas espécies pode alterar a trajetória. Uma comunidade mais desenvolvida não é imóvel; permanece em equilíbrio dinâmico e sujeita a perturbações.
+            Essas mudanças são graduais e nem sempre lineares: uma seca, uma queimada, o tipo de solo ou a chegada de novas espécies podem atrasar, interromper ou desviar a trajetória. Uma comunidade mais desenvolvida (às vezes chamada de <b>clímax</b>) não é imóvel; permanece em equilíbrio dinâmico e sujeita a perturbações.
         </p>
     </div>
 </section>
